@@ -703,4 +703,4 @@ You can customize various aspects of inVerus by modifying the configuration file
 
 ## License
 
-Apache License 2.0
+Apache License 2.0 inVerus
