@@ -26,37 +26,47 @@ export function Header({ hasSidebar }: { hasSidebar: boolean }) {
       <header className="h-app-header pointer-events-none fixed top-0 right-0 left-0 z-50">
         <div className="relative mx-auto flex h-full max-w-full items-center justify-between bg-transparent px-4 sm:px-6 lg:bg-transparent lg:px-8">
           <div className="flex flex-1 items-center justify-between">
-          {!isLoggedIn ? (
-            <div className="pointer-events-auto flex flex-1 items-center justify-end gap-4">
-              <AppInfoTrigger
-                trigger={
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="bg-background hover:bg-muted text-muted-foreground h-8 w-8 rounded-full"
-                    aria-label={`About ${APP_NAME}`}
-                  >
-                    <Info className="size-4" />
-                  </Button>
-                }
-              />
-              <Link
-                href="/auth"
-                className="font-base text-muted-foreground hover:text-foreground text-base transition-colors"
-              >
-                Login
+            {/* Logo and APP_NAME on the left */}
+            <div className="pointer-events-auto flex items-center gap-3">
+              <Link href="/" className="flex items-center gap-3">
+                <div className="text-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                  <InverusIcon className="size-7" />
+                </div>
+                <span className="text-foreground text-xl font-medium">{APP_NAME}</span>
               </Link>
             </div>
-          ) : (
-            <div className="pointer-events-auto flex flex-1 items-center justify-end gap-2">
-              <DialogPublish />
-              <ButtonNewChat />
-              {!hasSidebar && <HistoryTrigger />}
-            </div>
-          )}
+            
+            {!isLoggedIn ? (
+              <div className="pointer-events-auto flex items-center gap-4">
+                <AppInfoTrigger
+                  trigger={
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="bg-background hover:bg-muted text-muted-foreground h-8 w-8 rounded-full"
+                      aria-label={`About ${APP_NAME}`}
+                    >
+                      <Info className="size-4" />
+                    </Button>
+                  }
+                />
+                <Link
+                  href="/auth"
+                  className="font-base text-muted-foreground hover:text-foreground text-base transition-colors"
+                >
+                  Login
+                </Link>
+              </div>
+            ) : (
+              <div className="pointer-events-auto flex items-center gap-2">
+                <DialogPublish />
+                <ButtonNewChat />
+                {!hasSidebar && <HistoryTrigger />}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
     )
   }
 
