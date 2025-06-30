@@ -10,21 +10,42 @@ import {
 } from "../../routes"
 
 export async function getChatsForUserInDb(userId: string): Promise<Chats[]> {
+  console.log("=== GET CHATS FOR USER IN DB ===")
+  console.log("userId:", userId)
+  
   const supabase = createClient()
-  if (!supabase) return []
-
-  const { data, error } = await supabase
-    .from("chats")
-    .select("*")
-    .eq("user_id", userId)
-    .order("updated_at", { ascending: false })
-
-  if (!data || error) {
-    console.error("Failed to fetch chats:", error)
+  console.log("supabase client:", !!supabase)
+  
+  if (!supabase) {
+    console.log("No supabase client, returning empty array")
     return []
   }
 
-  return data
+  try {
+    console.log("Executing supabase query...")
+    const { data, error } = await supabase
+      .from("chats")
+      .select("*")
+      .eq("user_id", userId)
+      .order("updated_at", { ascending: false })
+
+    console.log("Supabase query result:")
+    console.log("data:", data)
+    console.log("error:", error)
+
+    if (!data || error) {
+      console.error("Failed to fetch chats:", error)
+      return []
+    }
+
+    console.log("Returning data from getChatsForUserInDb:", data)
+    return data
+  } catch (error) {
+    console.log("=== GET CHATS FOR USER IN DB ERROR ===")
+    console.log("Error:", error)
+    console.log("====================================")
+    throw error
+  }
 }
 
 export async function updateChatTitleInDb(id: string, title: string) {
@@ -80,17 +101,34 @@ export async function createChatInDb(
 }
 
 export async function fetchAndCacheChats(userId: string): Promise<Chats[]> {
+  console.log("=== FETCH AND CACHE CHATS ===")
+  console.log("userId:", userId)
+  console.log("isSupabaseEnabled:", isSupabaseEnabled)
+  console.log("===========================")
+  
   if (!isSupabaseEnabled) {
+    console.log("Supabase not enabled, returning cached chats")
     return await getCachedChats()
   }
 
-  const data = await getChatsForUserInDb(userId)
+  try {
+    console.log("Calling getChatsForUserInDb...")
+    const data = await getChatsForUserInDb(userId)
+    console.log("getChatsForUserInDb result:", data)
 
-  if (data.length > 0) {
-    await writeToIndexedDB("chats", data)
+    if (data.length > 0) {
+      console.log("Writing chats to IndexedDB...")
+      await writeToIndexedDB("chats", data)
+    }
+
+    console.log("Returning data:", data)
+    return data
+  } catch (error) {
+    console.log("=== FETCH AND CACHE CHATS ERROR ===")
+    console.log("Error:", error)
+    console.log("===================================")
+    throw error
   }
-
-  return data
 }
 
 export async function getCachedChats(): Promise<Chats[]> {

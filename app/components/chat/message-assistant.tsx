@@ -13,6 +13,7 @@ import { Reasoning } from "./reasoning"
 import { SearchImages } from "./search-images"
 import { SourcesList } from "./sources-list"
 import { ToolInvocation } from "./tool-invocation"
+import { PeopleSearchResults } from "../search/people-search-results"
 
 type MessageAssistantProps = {
   children: string
@@ -23,6 +24,7 @@ type MessageAssistantProps = {
   onReload?: () => void
   parts?: MessageAISDK["parts"]
   status?: "streaming" | "ready" | "submitted" | "error"
+  userQuery?: string
 }
 
 export function MessageAssistant({
@@ -34,6 +36,7 @@ export function MessageAssistant({
   onReload,
   parts,
   status,
+  userQuery,
 }: MessageAssistantProps) {
   const { preferences } = useUserPreferences()
   const sources = getSources(parts)
@@ -84,6 +87,13 @@ export function MessageAssistant({
 
         {searchImageResults.length > 0 && (
           <SearchImages results={searchImageResults} />
+        )}
+
+        {userQuery && (
+          <PeopleSearchResults 
+            results={[]} 
+            searchQuery={userQuery} 
+          />
         )}
 
         {contentNullOrEmpty ? null : (

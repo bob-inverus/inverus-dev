@@ -56,6 +56,10 @@ export function ChatsProvider({
   const [chats, setChats] = useState<Chats[]>([])
 
   useEffect(() => {
+    console.log("=== CHATS PROVIDER USEEFFECT ===")
+    console.log("userId:", userId)
+    console.log("===============================")
+    
     if (!userId) return
 
     const load = async () => {
@@ -64,8 +68,16 @@ export function ChatsProvider({
       setChats(cached)
 
       try {
+        console.log("=== FETCHING FRESH CHATS ===")
         const fresh = await fetchAndCacheChats(userId)
+        console.log("Fresh chats fetched successfully:", fresh.length)
         setChats(fresh)
+      } catch (error) {
+        console.log("=== FETCH CHATS ERROR ===")
+        console.log("Error:", error)
+        console.log("========================")
+        // Don't show error toast for this - it's not critical and happens on page load
+        // Just keep the cached chats that we already set
       } finally {
         setIsLoading(false)
       }
@@ -123,6 +135,16 @@ export function ChatsProvider({
     systemPrompt?: string,
     projectId?: string
   ) => {
+    console.log("=== CREATE NEW CHAT CALLED ===")
+    console.log("userId:", userId)
+    console.log("title:", title)
+    console.log("model:", model)
+    console.log("isAuthenticated:", isAuthenticated)
+    console.log("systemPrompt:", systemPrompt)
+    console.log("projectId:", projectId)
+    console.log("Stack trace:", new Error().stack)
+    console.log("============================")
+    
     if (!userId) return
     const prev = [...chats]
 
@@ -155,7 +177,10 @@ export function ChatsProvider({
       ])
 
       return newChat
-    } catch {
+    } catch (error) {
+      console.log("=== CREATE NEW CHAT ERROR ===")
+      console.log("Error:", error)
+      console.log("============================")
       setChats(prev)
       toast({ title: "Failed to create chat", status: "error" })
     }

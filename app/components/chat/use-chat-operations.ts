@@ -77,6 +77,19 @@ export function useChatOperations({
   }
 
   const ensureChatExists = async (userId: string) => {
+    // Check if this is a people search - if so, return a fake chat ID to bypass DB creation
+    const isPeopleSearch = input.toLowerCase().includes("first name:") && 
+                          input.toLowerCase().includes("last name:")
+    
+    console.log("=== ENSURE CHAT EXISTS DEBUG ===")
+    console.log("Input in ensureChatExists:", input)
+    console.log("isPeopleSearch in ensureChatExists:", isPeopleSearch)
+    console.log("==============================")
+    
+    if (isPeopleSearch) {
+      return "people-search-local"
+    }
+
     if (!isAuthenticated) {
       const storedGuestChatId = localStorage.getItem("guestChatId")
       if (storedGuestChatId) return storedGuestChatId

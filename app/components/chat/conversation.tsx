@@ -49,6 +49,17 @@ export function Conversation({
             const hasScrollAnchor =
               isLast && messages.length > initialMessageCount.current
 
+            // Find the previous user message for assistant messages
+            let userQuery = ""
+            if (message.role === "assistant" && index > 0) {
+              for (let i = index - 1; i >= 0; i--) {
+                if (messages[i].role === "user") {
+                  userQuery = messages[i].content
+                  break
+                }
+              }
+            }
+
             return (
               <Message
                 key={message.id}
@@ -62,6 +73,7 @@ export function Conversation({
                 hasScrollAnchor={hasScrollAnchor}
                 parts={message.parts}
                 status={status}
+                userQuery={userQuery}
               >
                 {message.content}
               </Message>

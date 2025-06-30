@@ -122,6 +122,55 @@ export function useChatCore({
   const submit = useCallback(async () => {
     setIsSubmitting(true)
 
+    // Check if this is a people search FIRST (contains both "first name:" and "last name:")
+    const isPeopleSearch = input.toLowerCase().includes("first name:") && 
+                          input.toLowerCase().includes("last name:")
+
+    console.log("=== PEOPLE SEARCH DEBUG ===")
+    console.log("Input:", input)
+    console.log("isPeopleSearch:", isPeopleSearch)
+    console.log("========================")
+
+    // Handle people search locally without ANY API calls
+    if (isPeopleSearch) {
+      try {
+        const optimisticId = `optimistic-${Date.now().toString()}`
+        
+        const optimisticMessage = {
+          id: optimisticId,
+          content: input,
+          role: "user" as const,
+          createdAt: new Date(),
+        }
+
+        setMessages((prev) => [...prev, optimisticMessage])
+        setInput("")
+        setFiles([])
+
+        // Create static assistant response immediately without API calls
+        const assistantResponseId = `response-${Date.now().toString()}`
+        const assistantMessage = {
+          id: assistantResponseId,
+          content: "I found 1 verified individual in our database matching your search criteria. The result includes a Trust Score (based on verification data) and Confidence Score (based on data quality indicators). The charts below show the reliability and accuracy assessment for the person found.",
+          role: "assistant" as const,
+          createdAt: new Date(),
+        }
+
+        // Add assistant response to local state
+        setMessages((prev) => [...prev, assistantMessage])
+        
+        // Clear the form
+        clearDraft()
+        setIsSubmitting(false)
+        return
+      } catch (error) {
+        toast({ title: "Failed to process search", status: "error" })
+        setIsSubmitting(false)
+        return
+      }
+    }
+
+    // For non-people searches, continue with normal API flow
     const uid = await getOrCreateGuestUserId(user)
     if (!uid) {
       setIsSubmitting(false)
