@@ -24,18 +24,24 @@ export const searchUserDataTool = tool({
 
       if (!apiResponse.ok) {
         const errorData = await apiResponse.json().catch(() => ({}))
-        return `🔎 Searching for: '${query}'...\n\n❌ Error: ${errorData.error || apiResponse.statusText}\n\nPlease try again with a different search term.`
+        return `🔎 Searching for: '${query}'...\n\n❌ I encountered an issue while searching the database. ${errorData.error || apiResponse.statusText}\n\n💡 Please try rephrasing your search or check if you've entered the information correctly. I'm here to help you find the right person!`
       }
 
       const data = await apiResponse.json()
       
       if (data.error) {
-        return `🔎 Searching for: '${query}'...\n\n❌ No results found.\n\n💡 Suggestions:\n${data.suggestions?.map((s: string) => `• ${s}`).join('\n') || '• Try using full names, email addresses, or phone numbers\n• Check spelling and try different variations'}`
+        return `🔎 Searching for: '${query}'...\n\n🤔 I couldn't find anyone matching "${query}" in the database.\n\n💡 **Let me help you search more effectively:**\n${data.suggestions?.map((s: string) => `• ${s}`).join('\n') || '• Try using full names (first and last name)\n• Include email addresses if you have them\n• Add phone numbers for better matches\n• Check your spelling and try variations'}\n\n🎯 **Pro tip:** The more specific information you provide, the better I can help you find the right person!`
       }
 
       if (data.count === 0) {
-        return `🔎 Searching for: '${query}'...\n\n📋 Found 0 matching record(s)\n\n💡 Try:\n• Using full names instead of just first names\n• Including email addresses or phone numbers\n• Checking spelling and trying variations\n• Using location information (city, state)`
+        return `🔎 Searching for: '${query}'...\n\n📋 Found 0 matching records\n\n🤔 **I didn't find anyone matching your search.** This could mean:\n• The person isn't in our database\n• The information might be spelled differently\n• You might need to be more specific\n\n💡 **Here's how to get better results:**\n• Try searching with full names instead of just first names\n• Include email addresses or phone numbers if available\n• Add location information (city, state)\n• Check spelling and try different variations\n\n🎯 **Need help?** Feel free to ask me to search using different terms or provide more details about who you're looking for!`
       }
+
+      // Analyze the quality of results for guidance
+      const hasHighConfidence = data.results.some((r: any) => r.confidence_score >= 80)
+      const hasEmailMatches = data.results.some((r: any) => r.match_reasons?.includes('Email match'))
+      const hasPhoneMatches = data.results.some((r: any) => r.match_reasons?.includes('Phone match'))
+      const isVagueSearch = query.split(' ').length === 1 && query.length <= 4
 
       // Show initial results summary
       response += `📋 Found ${data.count} matching record(s):\n`
@@ -57,10 +63,21 @@ export const searchUserDataTool = tool({
         response += `    ... and ${data.count - 3} more matches\n`
       }
 
-      response += `\n🤖 Generating detailed response...\n\n`
+      response += `\n🤖 Analyzing results and generating detailed response...\n\n`
+
+      // Add AI-generated analysis based on result quality
+      if (isVagueSearch && data.count > 5) {
+        response += `🤔 **I notice you searched for just "${query}" - that's quite broad!** I found ${data.count} people, but you might want to be more specific.\n\n`
+      } else if (hasHighConfidence && (hasEmailMatches || hasPhoneMatches)) {
+        response += `✅ **Great news!** I found some very promising matches with high confidence scores.\n\n`
+      } else if (data.confidence_level === 'low') {
+        response += `🔍 **I found some potential matches, but the confidence is lower than I'd like.** Let me show you what I found, and then I'll suggest how to get better results.\n\n`
+      } else {
+        response += `📊 **Here's what I found in the database:**\n\n`
+      }
 
       // Add the detailed response section
-      response += `📝 Response:\n`
+      response += `📝 **Detailed Results:**\n`
       response += `Found ${data.count} matching record(s) for '${query}':\n\n`
       
       // Show detailed results
@@ -87,20 +104,31 @@ export const searchUserDataTool = tool({
         response += '\n'
       })
 
-      // Add confidence level guidance
-      if (data.confidence_level === 'low') {
-        response += `💡 **Low confidence results**: For better matches, try:\n• Full email addresses\n• Complete phone numbers\n• First and last names together\n• Specific location details`
+      // Add personalized guidance based on results
+      if (data.confidence_level === 'low' || isVagueSearch) {
+        response += `💡 **To get more accurate results, try:**\n`
+        response += `• Searching with full names (first and last name together)\n`
+        response += `• Including email addresses if you know them\n`
+        response += `• Adding phone numbers for exact matches\n`
+        response += `• Specifying location details (city, state)\n`
+        response += `• Using quotes for exact phrases\n\n`
+        response += `🎯 **Example:** Instead of "${query}", try "John Smith Massachusetts" or "john.smith@email.com"`
       } else if (data.confidence_level === 'medium') {
-        response += `✅ **Medium confidence**: These results are likely relevant to your search.`
+        response += `✅ **These results look promising!** The matches have decent confidence scores, but if you're looking for someone specific, you might want to search with more details like email or phone number for exact matches.`
       } else {
-        response += `🎯 **High confidence**: These results are very likely what you're looking for.`
+        response += `🎯 **Excellent matches!** These results have high confidence scores and are very likely what you're looking for. The database found strong matches based on your search criteria.`
+      }
+
+      // Add helpful closing
+      if (data.count > 5) {
+        response += `\n\n📊 **Found ${data.count} total matches** - I'm showing you the most relevant ones. If you need to see more results or want to narrow down your search, just let me know!`
       }
 
       return response
 
     } catch (error) {
       console.error('Search tool error:', error)
-      return `🔎 Searching for: '${query}'...\n\n❌ Error: ${error instanceof Error ? error.message : 'Unknown error'}\n\nPlease try again with a different search term.`
+      return `🔎 Searching for: '${query}'...\n\n❌ I encountered an unexpected error while searching the database: ${error instanceof Error ? error.message : 'Unknown error'}\n\n🤔 **Don't worry, let's try again!** This might be a temporary issue. Please try:\n• Rephrasing your search query\n• Using different search terms\n• Checking your spelling\n\n💡 I'm here to help you find the information you need - just give me another search term to try!`
     }
   },
 }) 
