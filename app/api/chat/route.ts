@@ -63,10 +63,17 @@ export async function POST(req: Request) {
     }
 
     const allModels = await getAllModels()
-    const modelConfig = allModels.find((m) => m.id === model)
+    let modelConfig = allModels.find((m) => m.id === model)
 
+    // Fallback to default model if requested model is not found
     if (!modelConfig || !modelConfig.apiSdk) {
-      throw new Error(`Model ${model} not found`)
+      const { MODEL_FALLBACK } = await import("@/lib/config")
+      console.warn(`Model ${model} not found, falling back to ${MODEL_FALLBACK}`)
+      modelConfig = allModels.find((m) => m.id === MODEL_FALLBACK)
+      
+      if (!modelConfig || !modelConfig.apiSdk) {
+        throw new Error(`Model ${model} not found and fallback model ${MODEL_FALLBACK} also not available`)
+      }
     }
 
     const effectiveSystemPrompt = systemPrompt || SYSTEM_PROMPT_DEFAULT

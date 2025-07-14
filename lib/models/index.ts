@@ -11,8 +11,8 @@ import { ModelConfig } from "./types"
 
 // Static models (always available)
 const STATIC_MODELS: ModelConfig[] = [
-  ...ollamaModels, // Ollama models as primary
-  ...mistralModels,
+  ...mistralModels, // Mistral models as primary fallback
+  ...ollamaModels, // Ollama models when available
   // ...deepseekModels,
   // ...claudeModels,
   // ...grokModels,
