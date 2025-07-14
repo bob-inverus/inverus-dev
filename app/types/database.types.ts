@@ -301,12 +301,148 @@ export type Database = {
           },
         ]
       }
+      search_data: {
+        Row: {
+          id: string
+          reg_date: string | null
+          name: string | null
+          email: string | null
+          result: string | null
+          is_valid: boolean | null
+          mobile_phone: string | null
+          line_type: string | null
+          status: string | null
+          first_name: string | null
+          last_name: string | null
+          address: string | null
+          city: string | null
+          state: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          reg_date?: string | null
+          name?: string | null
+          email?: string | null
+          result?: string | null
+          is_valid?: boolean | null
+          mobile_phone?: string | null
+          line_type?: string | null
+          status?: string | null
+          first_name?: string | null
+          last_name?: string | null
+          address?: string | null
+          city?: string | null
+          state?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          reg_date?: string | null
+          name?: string | null
+          email?: string | null
+          result?: string | null
+          is_valid?: boolean | null
+          mobile_phone?: string | null
+          line_type?: string | null
+          status?: string | null
+          first_name?: string | null
+          last_name?: string | null
+          address?: string | null
+          city?: string | null
+          state?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      people_db: {
+        Row: {
+          id: string
+          reg_date: string | null
+          name: string | null
+          email: string | null
+          result: string | null
+          is_valid: boolean | null
+          mobile_phone: string | null
+          line_type: string | null
+          status: string | null
+          first_name: string | null
+          last_name: string | null
+          address: string | null
+          city: string | null
+          state: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          reg_date?: string | null
+          name?: string | null
+          email?: string | null
+          result?: string | null
+          is_valid?: boolean | null
+          mobile_phone?: string | null
+          line_type?: string | null
+          status?: string | null
+          first_name?: string | null
+          last_name?: string | null
+          address?: string | null
+          city?: string | null
+          state?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          reg_date?: string | null
+          name?: string | null
+          email?: string | null
+          result?: string | null
+          is_valid?: boolean | null
+          mobile_phone?: string | null
+          line_type?: string | null
+          status?: string | null
+          first_name?: string | null
+          last_name?: string | null
+          address?: string | null
+          city?: string | null
+          state?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      search_user_data: {
+        Args: {
+          search_term: string
+        }
+        Returns: {
+          id: string
+          reg_date: string | null
+          name: string | null
+          email: string | null
+          result: string | null
+          is_valid: boolean | null
+          mobile_phone: string | null
+          line_type: string | null
+          status: string | null
+          first_name: string | null
+          last_name: string | null
+          address: string | null
+          city: string | null
+          state: string | null
+          created_at: string | null
+          updated_at: string | null
+        }[]
+      }
     }
     Enums: Record<string, never>
     CompositeTypes: {

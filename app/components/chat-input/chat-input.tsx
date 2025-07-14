@@ -148,7 +148,7 @@ export function ChatInput({
           <FileList files={files} onFileRemove={onFileRemove} />
           
           <PromptInputTextarea
-            placeholder="Tell me who you're looking for and I'll help you find them..."
+            placeholder="Ask me anything or search for people in the database..."
             onKeyDown={handleKeyDown}
             onPaste={handlePaste}
             className="min-h-[44px] pt-3 pl-4 text-base leading-[1.3] sm:text-base md:text-base"
@@ -167,13 +167,7 @@ export function ChatInput({
                 isUserAuthenticated={isUserAuthenticated}
                 className="rounded-full"
               />
-              {hasSearchSupport ? (
-                <ButtonSearch
-                  isSelected={enableSearch}
-                  onToggle={setEnableSearch}
-                  isAuthenticated={isUserAuthenticated}
-                />
-              ) : null}
+              {/* Search button removed - database search is always available */}
             </div>
             <PromptInputAction
               tooltip={status === "streaming" ? "Stop" : "Send"}
