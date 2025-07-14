@@ -10,7 +10,7 @@ type UserPreferences = {
 }
 
 const defaultPreferences: UserPreferences = {
-  showToolInvocations: true,
+  showToolInvocations: false,
   showConversationPreviews: true,
   hiddenModels: [],
 }
