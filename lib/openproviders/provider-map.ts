@@ -77,6 +77,7 @@ const MODEL_PROVIDER_MAP: Record<string, Provider> = {
   "grok-beta": "xai",
 
   // Static Ollama models
+  "llama3.2:1b": "ollama",
   "llama3.2:latest": "ollama",
   "qwen2.5-coder:latest": "ollama",
 }

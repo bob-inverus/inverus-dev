@@ -83,7 +83,7 @@ export type OpenRouterModel =
   | "openrouter:google/gemini-2.5-flash-preview-05-20"
 
 // Static Ollama models for type safety
-export type StaticOllamaModel = "llama3.2:latest" | "qwen2.5-coder:latest"
+export type StaticOllamaModel = "llama3.2:1b" | "llama3.2:latest" | "qwen2.5-coder:latest"
 
 // Dynamic Ollama model type - allows any string for auto-detected models
 export type OllamaModel = StaticOllamaModel | (string & {})
