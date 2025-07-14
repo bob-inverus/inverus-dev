@@ -5,18 +5,16 @@ export const DAILY_FILE_UPLOAD_LIMIT = 5;
 export const DAILY_LIMIT_PRO_MODELS = 500;
 
 export const FREE_MODELS_IDS = [
+  "mistral-large-latest",
+  "deepseek-r1",
+  "pixtral-large-latest",
   "llama3.2:1b",
   "llama3.2:latest",
   "qwen2.5-coder:latest",
-  "deepseek-r1",
-  "pixtral-large-latest",
-  "mistral-large-latest",
 ];
 
-// Default model with fallback for when Ollama is not available
-export const MODEL_DEFAULT = process.env.DISABLE_OLLAMA === "true" 
-  ? "mistral-large-latest" 
-  : "llama3.2:1b";
+// Default model - using Mistral for better reliability
+export const MODEL_DEFAULT = "mistral-large-latest";
 
 // Fallback model for production when Ollama models are not available
 export const MODEL_FALLBACK = "mistral-large-latest";
