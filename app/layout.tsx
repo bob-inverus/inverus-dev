@@ -15,7 +15,6 @@ import { ThemeProvider } from "next-themes"
 import Script from "next/script"
 import { LayoutClient } from "./layout-client"
 import { UpgradeSuccessToast } from "./components/upgrade-success-toast"
-import { DebugEnvCheck } from "./components/debug-env-check"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -73,7 +72,6 @@ export default async function RootLayout({
                         <SidebarProvider defaultOpen>
                           <Toaster position="top-center" />
                           <UpgradeSuccessToast />
-                          <DebugEnvCheck />
                           {children}
                         </SidebarProvider>
                       </ThemeProvider>

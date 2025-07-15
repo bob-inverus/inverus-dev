@@ -49,7 +49,7 @@ export function AppNavMain({
     }
     
     try {
-      const newChat = await createNewChat(user.id)
+      const newChat = await createNewChat(user.id, undefined, undefined, true)
       if (newChat) {
         router.push(`/c/${newChat.id}`)
       }

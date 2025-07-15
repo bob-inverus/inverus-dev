@@ -5,6 +5,7 @@ export const DAILY_FILE_UPLOAD_LIMIT = 5;
 export const DAILY_LIMIT_PRO_MODELS = 500;
 
 export const FREE_MODELS_IDS = [
+  "ministral-8b-latest",
   "mistral-large-latest",
   "deepseek-r1",
   "pixtral-large-latest",
@@ -14,10 +15,10 @@ export const FREE_MODELS_IDS = [
 ];
 
 // Default model - using Mistral for better reliability
-export const MODEL_DEFAULT = "mistral-large-latest";
+export const MODEL_DEFAULT = "ministral-8b-latest";
 
 // Fallback model for production when Ollama models are not available
-export const MODEL_FALLBACK = "mistral-large-latest";
+export const MODEL_FALLBACK = "ministral-8b-latest";
 
 export const APP_NAME = "inVerus";
 export const APP_DOMAIN = "https://inVerus.chat";

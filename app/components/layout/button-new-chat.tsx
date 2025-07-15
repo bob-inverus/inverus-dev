@@ -19,7 +19,7 @@ export function ButtonNewChat() {
     }
     
     try {
-      const newChat = await createNewChat(user.id)
+      const newChat = await createNewChat(user.id, undefined, undefined, true)
       if (newChat) {
         router.push(`/c/${newChat.id}`)
       }
@@ -37,31 +37,14 @@ export function ButtonNewChat() {
   if (pathname === "/") return null
   
   return (
-    <a
-      tabIndex={0}
-      className="group cursor-pointer flex items-center justify-between w-full px-3 py-2 text-sm text-foreground hover:bg-accent rounded-lg transition-colors"
+    <button
+      className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:hover:bg-accent/50 size-9 text-muted-foreground hover:text-foreground hover:bg-muted bg-background rounded-full p-1.5 transition-colors"
       data-testid="create-new-chat-button"
       onClick={handleNewChat}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault()
-          handleNewChat()
-        }
-      }}
+      title="New chat (⌘⇧U)"
     >
-              <div className="flex min-w-0 items-center gap-1.5">
-          <div className="flex items-center justify-center group-disabled:opacity-50 group-data-disabled:opacity-50">
-            <Edit className="h-5 w-5" />
-          </div>
-          <div className="flex min-w-0 grow items-center gap-2">
-            <div className="truncate">New chat</div>
-          </div>
-        </div>
-              <div className="text-muted-foreground flex items-center self-stretch">
-          <div className="trailing highlight">
-            <div className="touch:hidden text-xs">⌘⇧U</div>
-          </div>
-        </div>
-    </a>
+      <Edit className="size-5" />
+      <span className="sr-only">New chat</span>
+    </button>
   )
 }

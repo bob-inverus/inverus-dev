@@ -5,6 +5,8 @@ import { searchUserDataTool } from "@/lib/tools/search-tool"
 import type { ProviderWithoutOllama } from "@/lib/user-keys"
 import { Attachment } from "@ai-sdk/ui-utils"
 import { Message as MessageAISDK, streamText, ToolSet } from "ai"
+import type { SupabaseClient } from "@supabase/supabase-js"
+import type { Database } from "@/app/types/database.types"
 import {
   logUserMessage,
   storeAssistantMessage,
@@ -22,6 +24,69 @@ type ChatRequest = {
   isAuthenticated: boolean
   systemPrompt: string
   enableSearch: boolean
+}
+
+// Function to generate a meaningful title from the first user message
+function generateTitleFromMessage(message: string): string {
+  // Remove extra whitespace and limit length
+  const cleanMessage = message.trim().replace(/\s+/g, ' ')
+  
+  // If message is short enough, use it directly
+  if (cleanMessage.length <= 50) {
+    return cleanMessage
+  }
+  
+  // For longer messages, take first 50 characters and add ellipsis
+  return cleanMessage.substring(0, 47) + '...'
+}
+
+// Function to update chat title if it's still "New Chat"
+async function updateChatTitleIfNeeded(
+  supabase: SupabaseClient<Database>,
+  chatId: string,
+  messages: MessageAISDK[]
+): Promise<void> {
+  try {
+    // Get current chat title
+    const { data: chat, error: fetchError } = await supabase
+      .from("chats")
+      .select("title")
+      .eq("id", chatId)
+      .single()
+    
+    if (fetchError || !chat) {
+      console.error("Error fetching chat for title update:", fetchError)
+      return
+    }
+    
+    // Only update if title is still "New Chat"
+    if (chat.title !== "New Chat") {
+      return
+    }
+    
+    // Find the first user message
+    const firstUserMessage = messages.find(msg => msg.role === "user")
+    if (!firstUserMessage || typeof firstUserMessage.content !== "string") {
+      return
+    }
+    
+    // Generate new title from first message
+    const newTitle = generateTitleFromMessage(firstUserMessage.content)
+    
+    // Update the chat title
+    const { error: updateError } = await supabase
+      .from("chats")
+      .update({ title: newTitle, updated_at: new Date().toISOString() })
+      .eq("id", chatId)
+    
+    if (updateError) {
+      console.error("Error updating chat title:", updateError)
+    } else {
+      console.log(`Updated chat title to: "${newTitle}"`)
+    }
+  } catch (error) {
+    console.error("Error in updateChatTitleIfNeeded:", error)
+  }
 }
 
 export async function POST(req: Request) {
@@ -112,6 +177,9 @@ export async function POST(req: Request) {
             messages:
               response.messages as unknown as import("@/app/types/api.types").Message[],
           })
+          
+          // Auto-update chat title if it's still "New Chat"
+          await updateChatTitleIfNeeded(supabase, chatId, messages)
         }
       },
     })
