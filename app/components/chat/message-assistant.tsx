@@ -12,7 +12,7 @@ import { getSources } from "./get-sources"
 import { Reasoning } from "./reasoning"
 import { SearchImages } from "./search-images"
 import { SourcesList } from "./sources-list"
-import { ToolInvocation } from "./tool-invocation"
+
 
 type MessageAssistantProps = {
   children: string
@@ -37,9 +37,7 @@ export function MessageAssistant({
 }: MessageAssistantProps) {
   const { preferences } = useUserPreferences()
   const sources = getSources(parts)
-  const toolInvocationParts = parts?.filter(
-    (part) => part.type === "tool-invocation"
-  )
+
   const reasoningParts = parts?.find((part) => part.type === "reasoning")
   const contentNullOrEmpty = children === null || children === ""
   const isLastStreaming = status === "streaming" && isLast
@@ -76,11 +74,7 @@ export function MessageAssistant({
           />
         )}
 
-        {toolInvocationParts &&
-          toolInvocationParts.length > 0 &&
-          preferences.showToolInvocations && (
-            <ToolInvocation toolInvocations={toolInvocationParts} />
-          )}
+
 
         {searchImageResults.length > 0 && (
           <SearchImages results={searchImageResults} />

@@ -4,13 +4,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { createContext, ReactNode, useContext } from "react"
 
 type UserPreferences = {
-  showToolInvocations: boolean
   showConversationPreviews: boolean
   hiddenModels: string[] // Array of model IDs that should be hidden
 }
 
 const defaultPreferences: UserPreferences = {
-  showToolInvocations: false,
   showConversationPreviews: true,
   hiddenModels: [],
 }
@@ -19,7 +17,6 @@ const PREFERENCES_STORAGE_KEY = "user-preferences"
 
 interface UserPreferencesContextType {
   preferences: UserPreferences
-  setShowToolInvocations: (enabled: boolean) => void
   setShowConversationPreviews: (enabled: boolean) => void
   toggleModelVisibility: (modelId: string) => void
   isModelHidden: (modelId: string) => boolean
@@ -81,9 +78,7 @@ export function UserPreferencesProvider({
 
   const updatePreferences = mutation.mutate
 
-  const setShowToolInvocations = (enabled: boolean) => {
-    updatePreferences({ showToolInvocations: enabled })
-  }
+
 
   const setShowConversationPreviews = (enabled: boolean) => {
     updatePreferences({ showConversationPreviews: enabled })
@@ -107,7 +102,6 @@ export function UserPreferencesProvider({
     <UserPreferencesContext.Provider
       value={{
         preferences,
-        setShowToolInvocations,
         setShowConversationPreviews,
         toggleModelVisibility,
         isModelHidden,
