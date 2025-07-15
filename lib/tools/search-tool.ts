@@ -835,10 +835,6 @@ export const searchUserDataTool = tool({
         return `🔎 Searching for: '${query}'...\n\n🤔 I couldn't find anyone matching "${query}" in the database.\n\n💡 **Let me help you search more effectively:**\n${data.suggestions?.map((s: string) => `• ${s}`).join('\n') || '• Try using full names (first and last name)\n• Include email addresses if you have them\n• Add phone numbers for better matches\n• Check your spelling and try variations'}\n\n🎯 **Pro tip:** The more specific information you provide, the better I can help you find the right person!`
       }
 
-      if (data.count === 0) {
-        return `🔎 Searching for: '${query}'...\n\n📋 Found 0 matching records\n\n🤔 **I didn't find anyone matching your search.** This could mean:\n• The person isn't in our database\n• The information might be spelled differently\n• You might need to be more specific\n\n💡 **Here's how to get better results:**\n• Try searching with full names instead of just first names\n• Include email addresses or phone numbers if available\n• Add location information (city, state)\n• Check spelling and try different variations\n\n🎯 **Need help?** Feel free to ask me to search using different terms or provide more details about who you're looking for!`
-      }
-
       // Check if this is insufficient information and generate AI-powered guidance
       if (data.queryType && data.queryType !== 'sufficient') {
         const capitalizedQuery = query.charAt(0).toUpperCase() + query.slice(1)
@@ -913,6 +909,11 @@ export const searchUserDataTool = tool({
         response += `${aiGuidance}\n\n`
         response += `🎯 **Next Step:** Please provide more specific information so I can search the database effectively!`
         return response
+      }
+
+      // Handle case where query was sufficient but no results found
+      if (data.count === 0) {
+        return `🔎 Searching for: '${query}'...\n\n📋 Found 0 matching records\n\n🤔 **I didn't find anyone matching your search.** This could mean:\n• The person isn't in our database\n• The information might be spelled differently\n• You might need to be more specific\n\n💡 **Here's how to get better results:**\n• Try searching with full names instead of just first names\n• Include email addresses or phone numbers if available\n• Add location information (city, state)\n• Check spelling and try different variations\n\n🎯 **Need help?** Feel free to ask me to search using different terms or provide more details about who you're looking for!`
       }
 
       // Analyze the quality of results for guidance
