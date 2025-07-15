@@ -16,6 +16,7 @@ interface SearchResponse {
   suggestions?: string[]
   message?: string
   pii_masked?: boolean
+  queryType?: 'single_name' | 'phone' | 'address' | 'number' | 'short' | 'sufficient'
 }
 
 // Helper function to calculate confidence score based on search input and matches
@@ -204,9 +205,96 @@ function hasSpecificIdentifiers(query: string): boolean {
   return false
 }
 
+// Function to dynamically analyze if a query has insufficient information
+function analyzeQuerySufficiency(query: string, words: string[]): {
+  insufficient: boolean
+  queryType: 'single_name' | 'phone' | 'address' | 'number' | 'short' | 'sufficient'
+  originalQuery: string
+} {
+  const singleWord = words[0]?.toLowerCase()
+  
+  // Single word analysis
+  if (words.length === 1) {
+    
+    // Check if it's likely a phone number (digits, dashes, parentheses)
+    const phonePattern = /^[\d\-\(\)\s\+\.]+$/
+    if (phonePattern.test(singleWord) && singleWord.replace(/\D/g, '').length >= 7) {
+      return {
+        insufficient: true,
+        queryType: 'phone',
+        originalQuery: query
+      }
+    }
+    
+    // Check if it's just a number (could be address number)
+    const isJustNumber = /^\d+$/.test(singleWord)
+    if (isJustNumber) {
+      return {
+        insufficient: true,
+        queryType: 'number',
+        originalQuery: query
+      }
+    }
+    
+    // Check if it's likely an address component (street types, directionals)
+    const addressIndicators = ['street', 'st', 'avenue', 'ave', 'road', 'rd', 'drive', 'dr', 'lane', 'ln', 'boulevard', 'blvd', 'circle', 'cir', 'court', 'ct', 'place', 'pl', 'way', 'north', 'south', 'east', 'west', 'n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw', 'main', 'first', 'second', 'third', 'fourth', 'fifth', 'oak', 'maple', 'park']
+    if (addressIndicators.includes(singleWord)) {
+      return {
+        insufficient: true,
+        queryType: 'address',
+        originalQuery: query
+      }
+    }
+    
+    // Check if it's very short (likely incomplete)
+    if (singleWord.length <= 3) {
+      return {
+        insufficient: true,
+        queryType: 'short',
+        originalQuery: query
+      }
+    }
+    
+    // Check if it's likely a single name (alphabetic, proper length)
+    const isLikelyName = /^[a-zA-Z]+$/.test(singleWord) && singleWord.length >= 2
+    if (isLikelyName) {
+      return {
+        insufficient: true,
+        queryType: 'single_name',
+        originalQuery: query
+      }
+    }
+  }
+  
+  // Multi-word analysis for other insufficient cases
+  if (words.length === 2) {
+    // Check if it's just two names (could be first + last, but still might be too broad)
+    const allAlphabetic = words.every(word => /^[a-zA-Z]+$/.test(word))
+    if (allAlphabetic) {
+      // This is probably a first name + last name, which is usually sufficient
+      // But let's check if it's too common or short
+      const totalLength = words.join('').length
+      if (totalLength <= 6) { // Very short names like "Jo Li" or "Ed Wu"
+        return {
+          insufficient: true,
+          queryType: 'short',
+          originalQuery: query
+        }
+      }
+    }
+  }
+  
+  // If we get here, the query seems sufficient
+  return {
+    insufficient: false,
+    queryType: 'sufficient',
+    originalQuery: query
+  }
+}
+
 // Function to analyze search specificity and provide guidance
 function analyzeSearchSpecificity(query: string, resultsCount: number): {
-  searchType: 'specific' | 'partial' | 'broad'
+  searchType: 'specific' | 'partial' | 'broad' | 'insufficient'
   shouldMaskPII: boolean
   guidanceMessage: string
   suggestions: string[]
@@ -224,138 +312,7 @@ function analyzeSearchSpecificity(query: string, resultsCount: number): {
     }
   }
   
-  // Check for insufficient information cases
-  if (words.length === 1) {
-    const singleWord = words[0]
-    
-    // Check if it's just a first name (common first names)
-    const commonFirstNames = [
-      'john', 'jane', 'michael', 'sarah', 'david', 'jennifer', 'robert', 'lisa', 'james', 'mary',
-      'william', 'patricia', 'richard', 'linda', 'joseph', 'elizabeth', 'thomas', 'barbara',
-      'charles', 'susan', 'christopher', 'jessica', 'daniel', 'karen', 'matthew', 'nancy',
-      'anthony', 'betty', 'mark', 'helen', 'donald', 'sandra', 'steven', 'donna', 'paul',
-      'carol', 'andrew', 'ruth', 'joshua', 'sharon', 'kenneth', 'michelle', 'kevin', 'laura',
-      'brian', 'sarah', 'george', 'kimberly', 'edward', 'deborah', 'ronald', 'dorothy',
-      'timothy', 'amy', 'jason', 'angela', 'jeffrey', 'ashley', 'ryan', 'brenda', 'jacob',
-      'emma', 'gary', 'olivia', 'nicholas', 'cynthia', 'eric', 'marie', 'jonathan', 'janet',
-      'stephen', 'catherine', 'larry', 'frances', 'justin', 'christine', 'scott', 'samantha',
-      'brandon', 'debra', 'benjamin', 'rachel', 'samuel', 'carolyn', 'gregory', 'janet',
-      'alexander', 'virginia', 'frank', 'maria', 'raymond', 'heather', 'jack', 'diane',
-      'dennis', 'julie', 'jerry', 'joyce', 'tyler', 'victoria', 'aaron', 'christina',
-      'jose', 'kelly', 'henry', 'joan', 'douglas', 'evelyn', 'adam', 'lauren', 'peter',
-      'judith', 'zachary', 'megan', 'kyle', 'cheryl', 'walter', 'andrea', 'harold', 'hannah',
-      'patrick', 'jacqueline', 'jordan', 'martha', 'jeremy', 'gloria', 'arthur', 'teresa',
-      'seth', 'sara', 'noah', 'janice', 'mason', 'kathryn', 'lucas', 'ann', 'wayne',
-      'jean', 'ralph', 'alice', 'roy', 'madison', 'eugene', 'doris', 'louis', 'abigail',
-      'albert', 'julia', 'keith', 'judy', 'roger', 'grace', 'carl', 'denise', 'phillip',
-      'marilyn', 'terry', 'beverly', 'sean', 'charlotte', 'lawrence', 'natalie', 'austin',
-      'helen', 'craig', 'kayla', 'joe', 'diana', 'chad', 'brittany', 'alan', 'ruth',
-      'ethan', 'anna', 'ivan', 'rose', 'alex', 'jane', 'oscar', 'nicole', 'victor',
-      'sophie', 'carlos', 'emily', 'luis', 'claire', 'ben', 'eve', 'tom', 'grace'
-    ]
-    
-    // Check if it's just a surname (common surnames)
-    const commonSurnames = [
-      'smith', 'johnson', 'williams', 'brown', 'jones', 'garcia', 'miller', 'davis',
-      'rodriguez', 'martinez', 'hernandez', 'lopez', 'gonzalez', 'wilson', 'anderson',
-      'thomas', 'taylor', 'moore', 'jackson', 'martin', 'lee', 'perez', 'thompson',
-      'white', 'harris', 'sanchez', 'clark', 'ramirez', 'lewis', 'robinson', 'walker',
-      'young', 'allen', 'king', 'wright', 'scott', 'torres', 'nguyen', 'hill', 'flores',
-      'green', 'adams', 'nelson', 'baker', 'hall', 'rivera', 'campbell', 'mitchell',
-      'carter', 'roberts', 'gomez', 'phillips', 'evans', 'turner', 'diaz', 'parker',
-      'cruz', 'edwards', 'collins', 'reyes', 'stewart', 'morris', 'morales', 'murphy',
-      'cook', 'rogers', 'gutierrez', 'ortiz', 'morgan', 'cooper', 'peterson', 'bailey',
-      'reed', 'kelly', 'howard', 'ramos', 'kim', 'cox', 'ward', 'richardson', 'watson',
-      'brooks', 'chavez', 'wood', 'james', 'bennett', 'gray', 'mendoza', 'ruiz', 'hughes',
-      'price', 'alvarez', 'castillo', 'sanders', 'patel', 'myers', 'long', 'ross', 'foster',
-      'jimenez', 'powell', 'jenkins', 'perry', 'russell', 'sullivan', 'bell', 'coleman',
-      'butler', 'henderson', 'barnes', 'gonzales', 'fisher', 'vasquez', 'simmons', 'romero',
-      'jordan', 'patterson', 'alexander', 'hamilton', 'graham', 'reynolds', 'griffin'
-    ]
-    
-    // Check if it's just an address component (street numbers, directionals, etc.)
-    const addressComponents = [
-      'street', 'st', 'avenue', 'ave', 'road', 'rd', 'drive', 'dr', 'lane', 'ln',
-      'boulevard', 'blvd', 'circle', 'cir', 'court', 'ct', 'place', 'pl', 'way',
-      'north', 'south', 'east', 'west', 'n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw',
-      'main', 'first', 'second', 'third', 'fourth', 'fifth', 'oak', 'maple', 'park',
-      'washington', 'lincoln', 'jefferson', 'madison', 'jackson', 'monroe', 'adams'
-    ]
-    
-    // Check if it's just a number (could be address number)
-    const isJustNumber = /^\d+$/.test(singleWord)
-    
-    if (commonFirstNames.includes(singleWord)) {
-      return {
-        searchType: 'broad',
-        shouldMaskPII: true,
-        guidanceMessage: `❌ **Not enough information!** Searching for just a first name "${singleWord}" is too broad.`,
-        suggestions: [
-          '🚨 **"' + singleWord.charAt(0).toUpperCase() + singleWord.slice(1) + '" is a common first name. I need more details:**',
-          '• **Add last name:** "' + singleWord.charAt(0).toUpperCase() + singleWord.slice(1) + ' Smith"',
-          '• **Include location:** "' + singleWord.charAt(0).toUpperCase() + singleWord.slice(1) + ' Boston" or "' + singleWord.charAt(0).toUpperCase() + singleWord.slice(1) + ' Massachusetts"',
-          '• **Provide email:** "' + singleWord + '.smith@email.com"',
-          '• **Include phone:** "' + singleWord.charAt(0).toUpperCase() + singleWord.slice(1) + ' 555-123-4567"',
-          '',
-          '⚠️ **Note:** First names alone return too many results and contact details are masked for privacy.',
-          '🎯 **Be specific to get the exact person you\'re looking for!**'
-        ]
-      }
-    }
-    
-    if (commonSurnames.includes(singleWord)) {
-      return {
-        searchType: 'broad',
-        shouldMaskPII: true,
-        guidanceMessage: `❌ **Not enough information!** Searching for just a surname "${singleWord}" is too broad.`,
-        suggestions: [
-          '🚨 **"' + singleWord.charAt(0).toUpperCase() + singleWord.slice(1) + '" is a common surname. I need more details:**',
-          '• **Add first name:** "John ' + singleWord.charAt(0).toUpperCase() + singleWord.slice(1) + '"',
-          '• **Include location:** "' + singleWord.charAt(0).toUpperCase() + singleWord.slice(1) + ' Boston" or "' + singleWord.charAt(0).toUpperCase() + singleWord.slice(1) + ' Massachusetts"',
-          '• **Provide email:** "john.' + singleWord + '@email.com"',
-          '• **Include phone:** "' + singleWord.charAt(0).toUpperCase() + singleWord.slice(1) + ' 555-123-4567"',
-          '',
-          '⚠️ **Note:** Surnames alone return too many results and contact details are masked for privacy.',
-          '🎯 **Be specific to get the exact person you\'re looking for!**'
-        ]
-      }
-    }
-    
-    if (addressComponents.includes(singleWord) || isJustNumber) {
-      return {
-        searchType: 'broad',
-        shouldMaskPII: true,
-        guidanceMessage: `❌ **Not enough information!** Searching for just "${singleWord}" (address component) is too vague.`,
-        suggestions: [
-          '🚨 **Address searches need more complete information:**',
-          '• **Full address:** "123 Main Street Boston MA 02101"',
-          '• **Name + address:** "John Smith 123 Main Street"',
-          '• **Address + city:** "123 Main Street Boston"',
-          '• **Or search by person:** "John Smith" instead of just address',
-          '',
-          '⚠️ **Note:** Partial addresses return too many results and contact details are masked for privacy.',
-          '🎯 **Include person\'s name or complete address for better results!**'
-        ]
-      }
-    }
-    
-    // If it's a single word but not recognized as common name/surname/address
-    if (singleWord.length <= 3) {
-      return {
-        searchType: 'broad',
-        shouldMaskPII: true,
-        guidanceMessage: `❌ **Not enough information!** "${singleWord}" is too short and vague.`,
-        suggestions: [
-          '🚨 **Very short searches don\'t provide good results:**',
-          '• **Use full names:** "John Smith" instead of "' + singleWord + '"',
-          '• **Include more details:** Add location, email, or phone',
-          '• **Be specific:** The more information you provide, the better results you\'ll get',
-          '',
-          '🎯 **Try searching with at least 4+ characters or multiple words!**'
-        ]
-      }
-    }
-  }
+
   
   // Partial search - name + surname + city/location
   if (words.length >= 2 && words.length <= 5) {
@@ -426,7 +383,7 @@ function analyzeSearchSpecificity(query: string, resultsCount: number): {
 }
 
 // Function to mask PII in search results
-function maskResultsPII(results: SearchResult[], searchType: 'specific' | 'partial' | 'broad', searchTerm: string): SearchResult[] {
+function maskResultsPII(results: SearchResult[], searchType: 'specific' | 'partial' | 'broad' | 'insufficient', searchTerm: string): SearchResult[] {
   if (!results || results.length === 0) return results
   
   const lowerSearchTerm = searchTerm.toLowerCase()
@@ -435,8 +392,8 @@ function maskResultsPII(results: SearchResult[], searchType: 'specific' | 'parti
     try {
       const maskedResult = { ...result }
       
-      // Mask name fields for broad searches
-      if (searchType === 'broad') {
+      // Mask name fields for broad searches and insufficient searches
+      if (searchType === 'broad' || searchType === 'insufficient') {
         const nameFields = ['Name', 'name', 'First_name', 'Last_name', 'first_name', 'last_name', 'firstName', 'lastName']
         nameFields.forEach(field => {
           if (maskedResult[field]) {
@@ -652,6 +609,22 @@ async function searchPeopleDB(supabase: any, query: string): Promise<SearchRespo
   // Extract actual search terms from natural language
   const searchTerm = extractSearchTerms(originalQuery)
 
+  // Dynamic detection of insufficient information - return early without database search
+  const words = searchTerm.trim().toLowerCase().split(/\s+/)
+  const isInsufficientInformation = analyzeQuerySufficiency(searchTerm.trim().toLowerCase(), words)
+  
+  if (isInsufficientInformation.insufficient) {
+    return {
+      results: [],
+      count: 0,
+      query: originalQuery,
+      confidence_level: 'low',
+      message: `🔍 **Not enough information to search effectively.** Query type: ${isInsufficientInformation.queryType}`,
+      suggestions: ['AI will provide intelligent guidance based on your specific search'],
+      queryType: isInsufficientInformation.queryType
+    }
+  }
+
   const queryAnalysis = analyzeSearchQuery(searchTerm)
 
   try {
@@ -864,6 +837,82 @@ export const searchUserDataTool = tool({
 
       if (data.count === 0) {
         return `🔎 Searching for: '${query}'...\n\n📋 Found 0 matching records\n\n🤔 **I didn't find anyone matching your search.** This could mean:\n• The person isn't in our database\n• The information might be spelled differently\n• You might need to be more specific\n\n💡 **Here's how to get better results:**\n• Try searching with full names instead of just first names\n• Include email addresses or phone numbers if available\n• Add location information (city, state)\n• Check spelling and try different variations\n\n🎯 **Need help?** Feel free to ask me to search using different terms or provide more details about who you're looking for!`
+      }
+
+      // Check if this is insufficient information and generate AI-powered guidance
+      if (data.queryType && data.queryType !== 'sufficient') {
+        const capitalizedQuery = query.charAt(0).toUpperCase() + query.slice(1)
+        
+        // Generate AI-powered contextual guidance based on query type
+        let aiGuidance = ''
+        
+        switch (data.queryType) {
+          case 'single_name':
+            aiGuidance = `🤖 **AI Analysis:** I notice you searched for "${capitalizedQuery}" - this appears to be a single name. Here's the issue:\n\n` +
+                        `❌ **Not enough information!** Single names like "${capitalizedQuery}" are too broad and could match hundreds of people in our database.\n\n` +
+                        `🧠 **Smart Search Strategy:**\n` +
+                        `• **Add last name:** "${capitalizedQuery} Johnson" or "${capitalizedQuery} Smith"\n` +
+                        `• **Include location:** "${capitalizedQuery} Boston" or "${capitalizedQuery} in Massachusetts"\n` +
+                        `• **Provide email:** "${query.toLowerCase()}.lastname@company.com"\n` +
+                        `• **Include phone:** "${capitalizedQuery} 555-123-4567"\n\n` +
+                        `💡 **Why this matters:** Single names return too many results and I have to mask contact details for privacy. Be specific to get the exact person you're looking for!`
+            break
+            
+          case 'phone':
+            aiGuidance = `🤖 **AI Analysis:** I detected "${query}" as a phone number. Here's the problem:\n\n` +
+                        `❌ **Not enough information!** Phone numbers alone don't provide context about who you're looking for.\n\n` +
+                        `🧠 **Smart Search Strategy:**\n` +
+                        `• **Add person's name:** "John Smith ${query}"\n` +
+                        `• **Include location:** "${query} Boston" or "${query} Massachusetts"\n` +
+                        `• **Provide email too:** "john.smith@email.com ${query}"\n\n` +
+                        `💡 **Why this matters:** Phone numbers could match multiple people or be incomplete. I need to know WHO you're looking for, not just their number!`
+            break
+            
+          case 'address':
+            aiGuidance = `🤖 **AI Analysis:** I detected "${capitalizedQuery}" as an address component. Here's the issue:\n\n` +
+                        `❌ **Not enough information!** Address parts alone are too vague to search effectively.\n\n` +
+                        `🧠 **Smart Search Strategy:**\n` +
+                        `• **Full address:** "123 ${capitalizedQuery} Boston MA 02101"\n` +
+                        `• **Name + address:** "John Smith 123 ${capitalizedQuery}"\n` +
+                        `• **Address + city:** "123 ${capitalizedQuery} Boston"\n` +
+                        `• **Or search by person:** "John Smith" instead of just address\n\n` +
+                        `💡 **Why this matters:** Partial addresses return too many results. Give me complete information or search by person's name!`
+            break
+            
+          case 'number':
+            aiGuidance = `🤖 **AI Analysis:** You searched for "${query}" which is just a number. Here's the problem:\n\n` +
+                        `❌ **Not enough information!** Numbers alone are too ambiguous - could be anything!\n\n` +
+                        `🧠 **Smart Search Strategy:**\n` +
+                        `• **If it's an address:** "${query} Main Street Boston"\n` +
+                        `• **If it's with a name:** "John Smith ${query}"\n` +
+                        `• **If it's part of phone:** "John Smith ${query}-123-4567"\n\n` +
+                        `💡 **Why this matters:** Numbers alone could mean house numbers, phone digits, or anything else. I need context to help you!`
+            break
+            
+          case 'short':
+            aiGuidance = `🤖 **AI Analysis:** "${query}" is very short (${query.length} characters). Here's the issue:\n\n` +
+                        `❌ **Not enough information!** Very short searches don't provide good results.\n\n` +
+                        `🧠 **Smart Search Strategy:**\n` +
+                        `• **Use full names:** "John Smith" instead of "${query}"\n` +
+                        `• **Include more details:** Add location, email, or phone\n` +
+                        `• **Be specific:** The more information you provide, the better results you'll get\n\n` +
+                        `💡 **Why this matters:** Short searches are too vague and return too many irrelevant results. Give me more to work with!`
+            break
+            
+          default:
+            aiGuidance = `🤖 **AI Analysis:** I need more specific information to search effectively.\n\n` +
+                        `❌ **Not enough information!** Your search "${query}" is too broad or unclear.\n\n` +
+                        `🧠 **Smart Search Strategy:**\n` +
+                        `• **Use full names:** "John Smith"\n` +
+                        `• **Include contact info:** Add email or phone\n` +
+                        `• **Add location:** Include city or state\n` +
+                        `• **Be specific:** The more details, the better!\n\n` +
+                        `💡 **Why this matters:** Vague searches return too many results and I have to mask details for privacy.`
+        }
+        
+        response += `${aiGuidance}\n\n`
+        response += `🎯 **Next Step:** Please provide more specific information so I can search the database effectively!`
+        return response
       }
 
       // Analyze the quality of results for guidance
