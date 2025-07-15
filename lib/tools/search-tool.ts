@@ -134,8 +134,8 @@ function maskPIIData(value: any, type: 'email' | 'phone' | 'id' | 'address' | 'n
         const username = emailParts[0]
         const domain = emailParts[1]
         const maskedUsername = username.length > 2 
-          ? username.substring(0, 2) + '*'.repeat(username.length - 2)
-          : username
+          ? username.substring(0, 2) + '*'.repeat(Math.max(3, username.length - 2))
+          : username.substring(0, 1) + '*'.repeat(2)
         return `${maskedUsername}@${domain}`
       }
       return stringValue
@@ -143,19 +143,31 @@ function maskPIIData(value: any, type: 'email' | 'phone' | 'id' | 'address' | 'n
     case 'phone':
       const phoneDigits = stringValue.replace(/\D/g, '')
       if (phoneDigits.length >= 10) {
+        // Format: 555-***-1234 (show first 3 digits and last 4)
         return phoneDigits.substring(0, 3) + '-***-' + phoneDigits.substring(phoneDigits.length - 4)
+      } else if (phoneDigits.length >= 7) {
+        // Shorter number: ***-1234
+        return '***-' + phoneDigits.substring(phoneDigits.length - 4)
       }
-      return '***-***-' + stringValue.slice(-4)
+      // Very short or no digits: mask most of it
+      return '***-***-' + stringValue.slice(-2)
     
     case 'id':
       return stringValue.length > 4 ? '***' + stringValue.slice(-4) : '***'
     
     case 'address':
       const parts = stringValue.split(' ')
-      if (parts.length > 2) {
+      if (parts.length > 3) {
+        // Show first part and last part: "123 *** *** Street"
+        return parts[0] + ' *** *** ' + parts[parts.length - 1]
+      } else if (parts.length > 2) {
+        // Show first and last: "123 *** Street"
         return parts[0] + ' *** ' + parts[parts.length - 1]
+      } else if (parts.length === 2) {
+        // Show only last part: "*** Street"
+        return '*** ' + parts[parts.length - 1]
       }
-      return '*** ' + parts[parts.length - 1]
+      return '*** Address'
     
     case 'name':
       // Mask name: show first letter, then mask the rest
@@ -282,24 +294,32 @@ function analyzeSearchSpecificity(query: string, resultsCount: number): {
 
 // Function to mask PII in search results
 function maskResultsPII(results: SearchResult[], searchType: 'specific' | 'partial' | 'broad', searchTerm: string): SearchResult[] {
+  if (!results || results.length === 0) return results
+  
   const lowerSearchTerm = searchTerm.toLowerCase()
   
   return results.map((result, index) => {
-    const maskedResult = { ...result }
-    
-    // Mask name fields for broad searches
-    if (searchType === 'broad') {
-      const nameFields = ['Name', 'name', 'First_name', 'Last_name', 'first_name', 'last_name', 'firstName', 'lastName']
-      nameFields.forEach(field => {
-        if (maskedResult[field]) {
-          const fieldValue = String(maskedResult[field]).toLowerCase()
-          // Don't mask if this field contains the search term
-          if (!fieldValue.includes(lowerSearchTerm)) {
-            maskedResult[field] = maskPIIData(maskedResult[field], 'name')
+    try {
+      const maskedResult = { ...result }
+      
+      // Mask name fields for broad searches
+      if (searchType === 'broad') {
+        const nameFields = ['Name', 'name', 'First_name', 'Last_name', 'first_name', 'last_name', 'firstName', 'lastName']
+        nameFields.forEach(field => {
+          if (maskedResult[field]) {
+            try {
+              const fieldValue = String(maskedResult[field]).toLowerCase()
+              // Don't mask if this field contains the search term
+              if (!fieldValue.includes(lowerSearchTerm)) {
+                maskedResult[field] = maskPIIData(maskedResult[field], 'name')
+              }
+            } catch (e) {
+              // If masking fails, keep original value
+              console.error('Error masking name field:', e)
+            }
           }
-        }
-      })
-    }
+        })
+      }
     
     // Mask email fields
     const emailFields = ['email', 'Email', 'EMAIL']
@@ -364,6 +384,11 @@ function maskResultsPII(results: SearchResult[], searchType: 'specific' | 'parti
     })
     
     return maskedResult
+    } catch (error) {
+      // If any masking fails, return original result
+      console.error('Error masking result:', error)
+      return result
+    }
   })
 }
 
@@ -497,11 +522,18 @@ async function searchPeopleDB(supabase: any, query: string): Promise<SearchRespo
   const queryAnalysis = analyzeSearchQuery(searchTerm)
 
   try {
+    // Add timeout to prevent hanging
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      setTimeout(() => reject(new Error('Search timeout')), 10000) // 10 second timeout
+    })
+
     // Get sample data to determine column structure
-    const { data: sampleData, error: sampleError } = await supabase
-      .from("people_db")
-      .select("*")
-      .limit(1)
+    const sampleQuery = Promise.race([
+      supabase.from("people_db").select("*").limit(1),
+      timeoutPromise
+    ])
+
+    const { data: sampleData, error: sampleError } = await sampleQuery
 
     if (sampleError || !sampleData || sampleData.length === 0) {
       return {
@@ -557,12 +589,13 @@ async function searchPeopleDB(supabase: any, query: string): Promise<SearchRespo
       })
       .join(',')
 
-    // Execute search
-    const { data, error } = await supabase
-      .from("people_db")
-      .select("*")
-      .or(orConditions)
-      .limit(50)
+    // Execute search with timeout
+    const searchQuery = Promise.race([
+      supabase.from("people_db").select("*").or(orConditions).limit(50),
+      timeoutPromise
+    ])
+
+    const { data, error } = await searchQuery
       
 
 
@@ -619,6 +652,7 @@ async function searchPeopleDB(supabase: any, query: string): Promise<SearchRespo
     try {
       finalResults = shouldMaskPII ? maskResultsPII(resultsWithConfidence, searchAnalysis.searchType, searchTerm) : resultsWithConfidence
     } catch (error) {
+      console.error('Error in PII masking:', error)
       finalResults = resultsWithConfidence // fallback to unmasked results
     }
 
@@ -633,6 +667,25 @@ async function searchPeopleDB(supabase: any, query: string): Promise<SearchRespo
     }
 
   } catch (error) {
+    console.error('Search database error:', error)
+    
+    // Handle timeout errors specifically
+    if (error instanceof Error && error.message.includes('timeout')) {
+      return {
+        results: [],
+        count: 0,
+        query: originalQuery,
+        confidence_level: 'low',
+        message: "Search timed out - database took too long to respond",
+        suggestions: [
+          'Try a more specific search term',
+          'Search for just first name or last name',
+          'Wait a moment and try again',
+          'Check your internet connection'
+        ]
+      }
+    }
+    
     return {
       results: [],
       count: 0,
@@ -662,7 +715,15 @@ export const searchUserDataTool = tool({
         return `🔎 Searching for: '${query}'...\n\n❌ I encountered an issue while connecting to the database. Please try again later.\n\n💡 The database connection is temporarily unavailable. Please try rephrasing your search or check if you've entered the information correctly. I'm here to help you find the right person!`
       }
 
-      const data = await searchPeopleDB(supabase, query)
+      // Add timeout to the entire search process
+      const searchTimeout = new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error('Search operation timed out')), 15000) // 15 second timeout
+      })
+
+      const data = await Promise.race([
+        searchPeopleDB(supabase, query),
+        searchTimeout
+      ])
       
       if (data.message && data.count === 0 && data.message.includes('error')) {
         return `🔎 Searching for: '${query}'...\n\n🤔 I couldn't find anyone matching "${query}" in the database.\n\n💡 **Let me help you search more effectively:**\n${data.suggestions?.map((s: string) => `• ${s}`).join('\n') || '• Try using full names (first and last name)\n• Include email addresses if you have them\n• Add phone numbers for better matches\n• Check your spelling and try variations'}\n\n🎯 **Pro tip:** The more specific information you provide, the better I can help you find the right person!`
@@ -740,19 +801,19 @@ export const searchUserDataTool = tool({
         // Only show fields with actual values
         if (result.Email && result.Email.trim()) {
           const emailValue = String(result.Email)
-          const emailIcon = data.pii_masked && emailValue.includes('*') ? '🔒📧' : '📧'
+          const emailIcon = data.pii_masked && emailValue.includes('*') ? '🔒 Email:' : '📧 Email:'
           response += `   ${emailIcon} ${emailValue}\n`
         }
         
         if (result['Mobile Phone'] && String(result['Mobile Phone']).trim()) {
           const phoneValue = String(result['Mobile Phone'])
-          const phoneIcon = data.pii_masked && phoneValue.includes('*') ? '🔒📱' : '📱'
+          const phoneIcon = data.pii_masked && phoneValue.includes('*') ? '🔒 Phone:' : '📱 Phone:'
           response += `   ${phoneIcon} ${phoneValue}\n`
         }
         
         if (result.Address && String(result.Address).trim()) {
           const addressValue = String(result.Address)
-          const addressIcon = data.pii_masked && addressValue.includes('*') ? '🔒🏠' : '🏠'
+          const addressIcon = data.pii_masked && addressValue.includes('*') ? '🔒 Address:' : '🏠 Address:'
           response += `   ${addressIcon} ${addressValue}\n`
         }
         
@@ -762,7 +823,7 @@ export const searchUserDataTool = tool({
           const statePart = result.state && result.state.trim() ? result.state : ''
           const location = [cityPart, statePart].filter(Boolean).join(', ')
           if (location) {
-            response += `   📍 ${location}\n`
+            response += `   📍 Location: ${location}\n`
           }
         }
         
@@ -806,6 +867,12 @@ export const searchUserDataTool = tool({
 
     } catch (error) {
       console.error('Search tool error:', error)
+      
+      // Handle specific timeout errors
+      if (error instanceof Error && error.message.includes('timeout')) {
+        return `🔎 Searching for: '${query}'...\n\n⏱️ **Search timed out** - The database took too long to respond.\n\n🤔 **Let's try a different approach:**\n• Try a more specific search term\n• Search for just first name or last name\n• Check if you have a stable internet connection\n• Wait a moment and try again\n\n💡 If the issue persists, the database might be temporarily slow. Please try again in a few minutes!`
+      }
+      
       return `🔎 Searching for: '${query}'...\n\n❌ I encountered an unexpected error while searching the database: ${error instanceof Error ? error.message : 'Unknown error'}\n\n🤔 **Don't worry, let's try again!** This might be a temporary issue. Please try:\n• Rephrasing your search query\n• Using different search terms\n• Checking your spelling\n\n💡 I'm here to help you find the information you need - just give me another search term to try!`
     }
   },
