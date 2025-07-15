@@ -224,6 +224,139 @@ function analyzeSearchSpecificity(query: string, resultsCount: number): {
     }
   }
   
+  // Check for insufficient information cases
+  if (words.length === 1) {
+    const singleWord = words[0]
+    
+    // Check if it's just a first name (common first names)
+    const commonFirstNames = [
+      'john', 'jane', 'michael', 'sarah', 'david', 'jennifer', 'robert', 'lisa', 'james', 'mary',
+      'william', 'patricia', 'richard', 'linda', 'joseph', 'elizabeth', 'thomas', 'barbara',
+      'charles', 'susan', 'christopher', 'jessica', 'daniel', 'karen', 'matthew', 'nancy',
+      'anthony', 'betty', 'mark', 'helen', 'donald', 'sandra', 'steven', 'donna', 'paul',
+      'carol', 'andrew', 'ruth', 'joshua', 'sharon', 'kenneth', 'michelle', 'kevin', 'laura',
+      'brian', 'sarah', 'george', 'kimberly', 'edward', 'deborah', 'ronald', 'dorothy',
+      'timothy', 'amy', 'jason', 'angela', 'jeffrey', 'ashley', 'ryan', 'brenda', 'jacob',
+      'emma', 'gary', 'olivia', 'nicholas', 'cynthia', 'eric', 'marie', 'jonathan', 'janet',
+      'stephen', 'catherine', 'larry', 'frances', 'justin', 'christine', 'scott', 'samantha',
+      'brandon', 'debra', 'benjamin', 'rachel', 'samuel', 'carolyn', 'gregory', 'janet',
+      'alexander', 'virginia', 'frank', 'maria', 'raymond', 'heather', 'jack', 'diane',
+      'dennis', 'julie', 'jerry', 'joyce', 'tyler', 'victoria', 'aaron', 'christina',
+      'jose', 'kelly', 'henry', 'joan', 'douglas', 'evelyn', 'adam', 'lauren', 'peter',
+      'judith', 'zachary', 'megan', 'kyle', 'cheryl', 'walter', 'andrea', 'harold', 'hannah',
+      'patrick', 'jacqueline', 'jordan', 'martha', 'jeremy', 'gloria', 'arthur', 'teresa',
+      'seth', 'sara', 'noah', 'janice', 'mason', 'kathryn', 'lucas', 'ann', 'wayne',
+      'jean', 'ralph', 'alice', 'roy', 'madison', 'eugene', 'doris', 'louis', 'abigail',
+      'albert', 'julia', 'keith', 'judy', 'roger', 'grace', 'carl', 'denise', 'phillip',
+      'marilyn', 'terry', 'beverly', 'sean', 'charlotte', 'lawrence', 'natalie', 'austin',
+      'helen', 'craig', 'kayla', 'joe', 'diana', 'chad', 'brittany', 'alan', 'ruth',
+      'ethan', 'anna', 'ivan', 'rose', 'alex', 'jane', 'oscar', 'nicole', 'victor',
+      'sophie', 'carlos', 'emily', 'luis', 'claire', 'ben', 'eve', 'tom', 'grace'
+    ]
+    
+    // Check if it's just a surname (common surnames)
+    const commonSurnames = [
+      'smith', 'johnson', 'williams', 'brown', 'jones', 'garcia', 'miller', 'davis',
+      'rodriguez', 'martinez', 'hernandez', 'lopez', 'gonzalez', 'wilson', 'anderson',
+      'thomas', 'taylor', 'moore', 'jackson', 'martin', 'lee', 'perez', 'thompson',
+      'white', 'harris', 'sanchez', 'clark', 'ramirez', 'lewis', 'robinson', 'walker',
+      'young', 'allen', 'king', 'wright', 'scott', 'torres', 'nguyen', 'hill', 'flores',
+      'green', 'adams', 'nelson', 'baker', 'hall', 'rivera', 'campbell', 'mitchell',
+      'carter', 'roberts', 'gomez', 'phillips', 'evans', 'turner', 'diaz', 'parker',
+      'cruz', 'edwards', 'collins', 'reyes', 'stewart', 'morris', 'morales', 'murphy',
+      'cook', 'rogers', 'gutierrez', 'ortiz', 'morgan', 'cooper', 'peterson', 'bailey',
+      'reed', 'kelly', 'howard', 'ramos', 'kim', 'cox', 'ward', 'richardson', 'watson',
+      'brooks', 'chavez', 'wood', 'james', 'bennett', 'gray', 'mendoza', 'ruiz', 'hughes',
+      'price', 'alvarez', 'castillo', 'sanders', 'patel', 'myers', 'long', 'ross', 'foster',
+      'jimenez', 'powell', 'jenkins', 'perry', 'russell', 'sullivan', 'bell', 'coleman',
+      'butler', 'henderson', 'barnes', 'gonzales', 'fisher', 'vasquez', 'simmons', 'romero',
+      'jordan', 'patterson', 'alexander', 'hamilton', 'graham', 'reynolds', 'griffin'
+    ]
+    
+    // Check if it's just an address component (street numbers, directionals, etc.)
+    const addressComponents = [
+      'street', 'st', 'avenue', 'ave', 'road', 'rd', 'drive', 'dr', 'lane', 'ln',
+      'boulevard', 'blvd', 'circle', 'cir', 'court', 'ct', 'place', 'pl', 'way',
+      'north', 'south', 'east', 'west', 'n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw',
+      'main', 'first', 'second', 'third', 'fourth', 'fifth', 'oak', 'maple', 'park',
+      'washington', 'lincoln', 'jefferson', 'madison', 'jackson', 'monroe', 'adams'
+    ]
+    
+    // Check if it's just a number (could be address number)
+    const isJustNumber = /^\d+$/.test(singleWord)
+    
+    if (commonFirstNames.includes(singleWord)) {
+      return {
+        searchType: 'broad',
+        shouldMaskPII: true,
+        guidanceMessage: `❌ **Not enough information!** Searching for just a first name "${singleWord}" is too broad.`,
+        suggestions: [
+          '🚨 **"' + singleWord.charAt(0).toUpperCase() + singleWord.slice(1) + '" is a common first name. I need more details:**',
+          '• **Add last name:** "' + singleWord.charAt(0).toUpperCase() + singleWord.slice(1) + ' Smith"',
+          '• **Include location:** "' + singleWord.charAt(0).toUpperCase() + singleWord.slice(1) + ' Boston" or "' + singleWord.charAt(0).toUpperCase() + singleWord.slice(1) + ' Massachusetts"',
+          '• **Provide email:** "' + singleWord + '.smith@email.com"',
+          '• **Include phone:** "' + singleWord.charAt(0).toUpperCase() + singleWord.slice(1) + ' 555-123-4567"',
+          '',
+          '⚠️ **Note:** First names alone return too many results and contact details are masked for privacy.',
+          '🎯 **Be specific to get the exact person you\'re looking for!**'
+        ]
+      }
+    }
+    
+    if (commonSurnames.includes(singleWord)) {
+      return {
+        searchType: 'broad',
+        shouldMaskPII: true,
+        guidanceMessage: `❌ **Not enough information!** Searching for just a surname "${singleWord}" is too broad.`,
+        suggestions: [
+          '🚨 **"' + singleWord.charAt(0).toUpperCase() + singleWord.slice(1) + '" is a common surname. I need more details:**',
+          '• **Add first name:** "John ' + singleWord.charAt(0).toUpperCase() + singleWord.slice(1) + '"',
+          '• **Include location:** "' + singleWord.charAt(0).toUpperCase() + singleWord.slice(1) + ' Boston" or "' + singleWord.charAt(0).toUpperCase() + singleWord.slice(1) + ' Massachusetts"',
+          '• **Provide email:** "john.' + singleWord + '@email.com"',
+          '• **Include phone:** "' + singleWord.charAt(0).toUpperCase() + singleWord.slice(1) + ' 555-123-4567"',
+          '',
+          '⚠️ **Note:** Surnames alone return too many results and contact details are masked for privacy.',
+          '🎯 **Be specific to get the exact person you\'re looking for!**'
+        ]
+      }
+    }
+    
+    if (addressComponents.includes(singleWord) || isJustNumber) {
+      return {
+        searchType: 'broad',
+        shouldMaskPII: true,
+        guidanceMessage: `❌ **Not enough information!** Searching for just "${singleWord}" (address component) is too vague.`,
+        suggestions: [
+          '🚨 **Address searches need more complete information:**',
+          '• **Full address:** "123 Main Street Boston MA 02101"',
+          '• **Name + address:** "John Smith 123 Main Street"',
+          '• **Address + city:** "123 Main Street Boston"',
+          '• **Or search by person:** "John Smith" instead of just address',
+          '',
+          '⚠️ **Note:** Partial addresses return too many results and contact details are masked for privacy.',
+          '🎯 **Include person\'s name or complete address for better results!**'
+        ]
+      }
+    }
+    
+    // If it's a single word but not recognized as common name/surname/address
+    if (singleWord.length <= 3) {
+      return {
+        searchType: 'broad',
+        shouldMaskPII: true,
+        guidanceMessage: `❌ **Not enough information!** "${singleWord}" is too short and vague.`,
+        suggestions: [
+          '🚨 **Very short searches don\'t provide good results:**',
+          '• **Use full names:** "John Smith" instead of "' + singleWord + '"',
+          '• **Include more details:** Add location, email, or phone',
+          '• **Be specific:** The more information you provide, the better results you\'ll get',
+          '',
+          '🎯 **Try searching with at least 4+ characters or multiple words!**'
+        ]
+      }
+    }
+  }
+  
   // Partial search - name + surname + city/location
   if (words.length >= 2 && words.length <= 5) {
     const locationPatterns = [
