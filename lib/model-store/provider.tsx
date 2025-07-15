@@ -43,7 +43,7 @@ export function ModelProvider({ children }: { children: React.ReactNode }) {
     xai: false,
     anthropic: false,
   })
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   const fetchModels = useCallback(async () => {
     try {
