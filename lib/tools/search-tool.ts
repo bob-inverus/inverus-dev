@@ -42,6 +42,15 @@ export const searchUserDataTool = tool({
       const hasEmailMatches = data.results.some((r: any) => r.match_reasons?.includes('Email match'))
       const hasPhoneMatches = data.results.some((r: any) => r.match_reasons?.includes('Phone match'))
       const isVagueSearch = query.split(' ').length === 1 && query.length <= 4
+      
+      // Check if this was a natural language query that was processed
+      const wasNaturalLanguageQuery = query.toLowerCase().includes('find') || 
+                                     query.toLowerCase().includes('search') || 
+                                     query.toLowerCase().includes('who is') ||
+                                     query.toLowerCase().includes('people named') ||
+                                     query.toLowerCase().includes('everyone whose') ||
+                                     query.toLowerCase().includes('show me') ||
+                                     query.toLowerCase().includes('look for')
 
       // Show initial results summary
       response += `📋 Found ${data.count} matching record(s):\n`
@@ -66,6 +75,10 @@ export const searchUserDataTool = tool({
       response += `\n🤖 Analyzing results and generating detailed response...\n\n`
 
       // Add AI-generated analysis based on result quality
+      if (wasNaturalLanguageQuery) {
+        response += `🧠 **I understood your natural language query!** Processing your request...\n\n`
+      }
+      
       if (isVagueSearch && data.count > 5) {
         response += `🤔 **I notice you searched for just "${query}" - that's quite broad!** I found ${data.count} people, but you might want to be more specific.\n\n`
       } else if (hasHighConfidence && (hasEmailMatches || hasPhoneMatches)) {
@@ -80,13 +93,22 @@ export const searchUserDataTool = tool({
       response += `📝 **Detailed Results:**\n`
       response += `Found ${data.count} matching record(s) for '${query}':\n\n`
       
-      // Show detailed results
+      // Show detailed results with PII masking indicator
       data.results.forEach((result: any, index: number) => {
         response += `${index + 1}. ${result.Name || 'Unknown Name'}\n`
         
-        if (result.Email) response += `   📧 ${result.Email}\n`
-        if (result['Mobile Phone']) response += `   📱 ${result['Mobile Phone']}\n`
-        if (result.Address) response += `   🏠 ${result.Address}\n`
+        if (result.Email) {
+          const emailIcon = data.pii_masked && result.Email.includes('*') ? '🔒📧' : '📧'
+          response += `   ${emailIcon} ${result.Email}\n`
+        }
+        if (result['Mobile Phone']) {
+          const phoneIcon = data.pii_masked && result['Mobile Phone'].includes('*') ? '🔒📱' : '📱'
+          response += `   ${phoneIcon} ${result['Mobile Phone']}\n`
+        }
+        if (result.Address) {
+          const addressIcon = data.pii_masked && result.Address.includes('*') ? '🔒🏠' : '🏠'
+          response += `   ${addressIcon} ${result.Address}\n`
+        }
         if (result.city || result.state) {
           const location = `${result.city || 'Unknown'}, ${result.state || 'Unknown'}`
           response += `   📍 ${location}\n`
@@ -104,15 +126,29 @@ export const searchUserDataTool = tool({
         response += '\n'
       })
 
-      // Add personalized guidance based on results
-      if (data.confidence_level === 'low' || isVagueSearch) {
+      // Add personalized guidance based on results and PII masking
+      if (data.pii_masked) {
+        response += `🔒 **Privacy Protection Notice:** Some personal information has been masked for privacy protection.\n\n`
+        response += `📋 **To view complete contact information, please provide more specific search criteria:**\n`
+        response += `• Full email address (e.g., john.doe@company.com)\n`
+        response += `• Complete phone number (e.g., 555-123-4567)\n`
+        response += `• Full name with location (e.g., "John Smith Boston MA")\n`
+        response += `• Specific ID numbers or reference codes\n\n`
+        response += `🎯 **Examples:**\n`
+        response += `• Instead of "${query}", try "John Smith Massachusetts" or "john.smith@email.com"\n`
+        response += `• You can also use natural language: "find everyone whose name is John Smith"\n`
+        response += `• Or ask: "show me people named John in Boston"`
+      } else if (data.confidence_level === 'low' || isVagueSearch) {
         response += `💡 **To get more accurate results, try:**\n`
         response += `• Searching with full names (first and last name together)\n`
         response += `• Including email addresses if you know them\n`
         response += `• Adding phone numbers for exact matches\n`
         response += `• Specifying location details (city, state)\n`
         response += `• Using quotes for exact phrases\n\n`
-        response += `🎯 **Example:** Instead of "${query}", try "John Smith Massachusetts" or "john.smith@email.com"`
+        response += `🎯 **Examples:**\n`
+        response += `• Instead of "${query}", try "John Smith Massachusetts" or "john.smith@email.com"\n`
+        response += `• Natural language: "find everyone whose name is John Smith"\n`
+        response += `• Or ask: "who is John Smith in Boston"`
       } else if (data.confidence_level === 'medium') {
         response += `✅ **These results look promising!** The matches have decent confidence scores, but if you're looking for someone specific, you might want to search with more details like email or phone number for exact matches.`
       } else {
