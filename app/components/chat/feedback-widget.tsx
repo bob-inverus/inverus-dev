@@ -39,7 +39,7 @@ export function FeedbackWidget({ authUserId }: FeedbackWidgetProps) {
   }
 
   return (
-    <div className="fixed right-1 bottom-1 z-50">
+    <div className="fixed right-4 bottom-12 z-50 md:right-4">
       <MorphingPopover
         transition={TRANSITION_POPOVER}
         open={isOpen}

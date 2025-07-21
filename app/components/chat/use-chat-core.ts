@@ -50,7 +50,7 @@ export function useChatCore({
   // State management
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [hasDialogAuth, setHasDialogAuth] = useState(false)
-  const [enableSearch, setEnableSearch] = useState(false)
+  // Removed enableSearch state since search button was removed from UI
 
   // Refs and derived state
   const hasSentFirstMessageRef = useRef(false)
@@ -191,7 +191,7 @@ export function useChatCore({
           model: selectedModel,
           isAuthenticated,
           systemPrompt: systemPrompt || SYSTEM_PROMPT_DEFAULT,
-          enableSearch,
+          enableSearch: false, // Database search is always available now
         },
         experimental_attachments: attachments || undefined,
       }
@@ -227,7 +227,6 @@ export function useChatCore({
     selectedModel,
     isAuthenticated,
     systemPrompt,
-    enableSearch,
     handleSubmit,
     cacheAndAddMessage,
     clearDraft,
@@ -289,8 +288,7 @@ export function useChatCore({
     setIsSubmitting,
     hasDialogAuth,
     setHasDialogAuth,
-    enableSearch,
-    setEnableSearch,
+    // Removed enableSearch and setEnableSearch from return
 
     // Actions
     submit,

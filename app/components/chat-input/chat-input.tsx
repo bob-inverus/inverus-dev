@@ -29,8 +29,7 @@ type ChatInputProps = {
   isUserAuthenticated: boolean
   stop: () => void
   status?: "submitted" | "streaming" | "ready" | "error"
-  setEnableSearch: (enabled: boolean) => void
-  enableSearch: boolean
+  // Removed setEnableSearch and enableSearch props since search button was removed
 }
 
 export function ChatInput({
@@ -46,8 +45,7 @@ export function ChatInput({
   isUserAuthenticated,
   stop,
   status,
-  setEnableSearch,
-  enableSearch,
+  // Removed setEnableSearch and enableSearch props
 }: ChatInputProps) {
   const selectModelConfig = getModelInfo(selectedModel)
   const hasSearchSupport = Boolean(selectModelConfig?.webSearch)
@@ -130,11 +128,7 @@ export function ChatInput({
     [isUserAuthenticated, onFileUpload]
   )
 
-  useMemo(() => {
-    if (!hasSearchSupport && enableSearch) {
-      setEnableSearch?.(false)
-    }
-  }, [hasSearchSupport, enableSearch, setEnableSearch])
+  // Removed the useMemo that was handling enableSearch since it's no longer needed
 
   return (
     <div className="relative flex w-full flex-col gap-4">

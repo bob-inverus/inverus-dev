@@ -34,7 +34,7 @@ type ProjectViewProps = {
 
 export function ProjectView({ projectId }: ProjectViewProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [enableSearch, setEnableSearch] = useState(false)
+  // Removed enableSearch state since search button was removed from UI
   const [currentChatId, setCurrentChatId] = useState<string | null>(null)
   const { user } = useUser()
   const { createNewChat, bumpChat } = useChats()
@@ -254,7 +254,7 @@ export function ProjectView({ projectId }: ProjectViewProps) {
           model: selectedModel,
           isAuthenticated: true,
           systemPrompt: SYSTEM_PROMPT_DEFAULT,
-          enableSearch,
+          enableSearch: false, // Always false in project context
         },
         experimental_attachments: attachments || undefined,
       }
@@ -346,8 +346,7 @@ export function ProjectView({ projectId }: ProjectViewProps) {
       isUserAuthenticated: isAuthenticated,
       stop,
       status,
-      setEnableSearch,
-      enableSearch,
+      // Removed enableSearch props since they're no longer needed
     }),
     [
       input,
@@ -362,8 +361,7 @@ export function ProjectView({ projectId }: ProjectViewProps) {
       isAuthenticated,
       stop,
       status,
-      setEnableSearch,
-      enableSearch,
+      // Removed enableSearch props since they're no longer needed
     ]
   )
 
@@ -373,7 +371,7 @@ export function ProjectView({ projectId }: ProjectViewProps) {
   return (
     <div
       className={cn(
-        "relative flex h-full w-full flex-col items-center overflow-x-hidden overflow-y-auto",
+        "relative flex h-full w-full flex-col items-center overflow-x-hidden overflow-y-auto pb-20",
         showOnboarding && chats.length === 0
           ? "justify-center pt-0"
           : showOnboarding && chats.length > 0
@@ -397,32 +395,68 @@ export function ProjectView({ projectId }: ProjectViewProps) {
               },
             }}
           >
-            <div className="mb-6 flex items-center justify-center gap-2">
-              <ChatCircleIcon className="text-muted-foreground" size={24} />
+            <div className="text-center">
               <h1 className="text-center text-3xl font-medium tracking-tight">
                 {project?.name || ""}
               </h1>
             </div>
           </motion.div>
-        ) : (
-          <Conversation key="conversation" {...conversationProps} />
+        ) : null}
+        
+        {/* Show centered input for onboarding */}
+        {showOnboarding && (
+          <motion.div
+            className={cn(
+              "mx-auto w-full max-w-3xl flex-shrink-0"
+            )}
+            layout="position"
+            layoutId="chat-input-container"
+            transition={{
+              layout: {
+                duration: messages.length === 1 ? 0.3 : 0,
+              },
+            }}
+          >
+            <ChatInput {...chatInputProps} />
+          </motion.div>
+        )}
+        
+        {/* Show conversation for active chats */}
+        {!showOnboarding && (
+          <div className="flex-1 w-full overflow-y-auto pb-32">
+            <Conversation key="conversation" {...conversationProps} />
+          </div>
         )}
       </AnimatePresence>
 
-      <motion.div
-        className={cn(
-          "relative inset-x-0 bottom-0 z-50 mx-auto w-full max-w-3xl"
-        )}
-        layout="position"
-        layoutId="chat-input-container"
-        transition={{
-          layout: {
-            duration: messages.length === 1 ? 0.3 : 0,
-          },
-        }}
-      >
-        <ChatInput {...chatInputProps} />
-      </motion.div>
+      {/* Fixed input area at bottom - only shown when not in onboarding */}
+      {!showOnboarding && (
+        <div className="fixed bottom-8 left-0 right-0 z-10 w-full flex-shrink-0 bg-background/95 backdrop-blur-sm border-t border-border/10 md:left-[var(--sidebar-width)] md:peer-data-[state=collapsed]:left-[var(--sidebar-width-icon)]">
+          <motion.div
+            className={cn(
+              "mx-auto w-full max-w-3xl flex-shrink-0"
+            )}
+            layout="position"
+            layoutId="chat-input-container"
+            transition={{
+              layout: {
+                duration: messages.length === 1 ? 0.3 : 0,
+              },
+            }}
+          >
+            <ChatInput {...chatInputProps} />
+          </motion.div>
+        </div>
+      )}
+
+      {/* Fixed disclaimer at bottom */}
+      <div className="fixed bottom-0 left-0 right-0 z-10 w-full flex-shrink-0 bg-background/95 backdrop-blur-sm md:left-[var(--sidebar-width)] md:peer-data-[state=collapsed]:left-[var(--sidebar-width-icon)]">
+        <div className="mx-auto w-full max-w-3xl flex-shrink-0">
+          <div className="text-muted-foreground text-center text-xs sm:text-sm p-2">
+            AI can make mistakes. Consider checking important information.
+          </div>
+        </div>
+      </div>
 
       {showOnboarding && chats.length > 0 ? (
         <div className="mx-auto w-full max-w-3xl px-4 pt-6 pb-20">

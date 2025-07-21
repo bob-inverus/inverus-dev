@@ -37,24 +37,14 @@ export function Header({ hasSidebar }: { hasSidebar: boolean }) {
             </div>
             
             {!isLoggedIn ? (
-              <div className="pointer-events-auto flex items-center gap-4">
-                <AppInfoTrigger
-                  trigger={
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="bg-background hover:bg-muted text-muted-foreground h-8 w-8 rounded-full"
-                      aria-label={`About ${APP_NAME}`}
-                    >
-                      <Info className="size-4" />
-                    </Button>
-                  }
-                />
+              <div className="pointer-events-auto">
                 <Link
                   href="/auth"
-                  className="font-base text-muted-foreground hover:text-foreground text-base transition-colors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-gray-400 hover:text-gray-200 transition-colors"
                 >
-                  Login
+                  Go to App ↗
                 </Link>
               </div>
             ) : (
