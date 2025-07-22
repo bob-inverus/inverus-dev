@@ -36,6 +36,7 @@ import {
   Users,
   Shield,
   Eye,
+  ChevronDown,
 } from "lucide-react"
 
 // Shining Text Animation Component
@@ -548,10 +549,39 @@ export function ChatLandingWindow() {
           </div>
         </div>
       </div>
+
+      {/* Fixed Scroll Down Arrow - Always at bottom of screen */}
+      <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50">
+        <motion.button
+          onClick={() => {
+            document.getElementById('protocol-section')?.scrollIntoView({ 
+              behavior: 'smooth',
+              block: 'start'
+            })
+          }}
+          className="group flex flex-col items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors duration-300 cursor-pointer"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1, duration: 0.8 }}
+          whileHover={{ y: -5 }}
+        >
+          <span className="text-sm font-medium">Explore More</span>
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          >
+            <ChevronDown size={24} className="group-hover:text-gray-900 dark:group-hover:text-gray-100" />
+          </motion.div>
+        </motion.button>
+      </div>
     </div>
 
-          {/* inVerus Protocol Section - Below the fold */}
-    <section className="w-full max-w-6xl mx-auto px-4 py-16">
+                    {/* inVerus Protocol Section - Below the fold */}
+    <section id="protocol-section" className="w-full max-w-6xl mx-auto px-4 py-16">
         <div className="grid w-full grid-cols-1 items-stretch gap-8">
           <div className="grid w-full grid-cols-1 max-w-4xl mx-auto">
             <div className="flex flex-col items-center text-center">
@@ -567,7 +597,7 @@ export function ChatLandingWindow() {
           </div>
 
           <div className="w-full">
-            <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-4">
               
               {/* Trust Layer Card */}
               <div className="border border-gray-200 dark:border-gray-700 p-6 mb-4 md:mb-0 group relative w-full rounded-md last:mb-0">
