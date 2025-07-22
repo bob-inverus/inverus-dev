@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { motion } from "motion/react"
+import { motion, AnimatePresence } from "motion/react"
 import Link from "next/link"
 import {
   ChatContainerContent,
@@ -179,6 +179,44 @@ export function ChatLandingWindow() {
   const [isLoading, setIsLoading] = useState(false)
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [ctaShown, setCtaShown] = useState(false)
+  const [showScrollArrow, setShowScrollArrow] = useState(true)
+  const [currentSection, setCurrentSection] = useState(1)
+
+  // Handle scroll visibility and current section detection
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY
+      const windowHeight = window.innerHeight
+      
+      // Determine current section based on scroll position
+      if (scrollY < windowHeight * 0.8) {
+        setCurrentSection(1)
+        setShowScrollArrow(true)
+      } else if (scrollY < windowHeight * 1.8) {
+        setCurrentSection(2) 
+        setShowScrollArrow(true)
+             } else if (scrollY < windowHeight * 2.8) {
+        setCurrentSection(3)
+        setShowScrollArrow(true)
+      } else {
+        setCurrentSection(4)
+        setShowScrollArrow(false) // Hide arrow after the three main sections
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  // Get the target section ID based on current section
+  const getNextSectionId = () => {
+    switch (currentSection) {
+      case 1: return 'trust-protocol-section'
+      case 2: return 'architecture-section' 
+      case 3: return 'cta-section'
+      default: return 'trust-protocol-section'
+    }
+  }
 
   const generateMockResult = (query: string) => {
     // Extract name from query or use default
@@ -285,8 +323,8 @@ export function ChatLandingWindow() {
 
   return (
     <div className="w-full">
-      {/* Main Chat Section - Full Viewport */}
-      <div className="flex flex-col items-center justify-center min-h-screen w-full px-4 py-8">
+      {/* Section 1: Chat Demo Window */}
+      <section id="chat-demo-section" className="flex flex-col items-center justify-center h-screen w-full px-4 py-8">
         <div className="w-full max-w-[760px] h-[480px] backdrop-filter backdrop-blur-xl dark:bg-[#121212] bg-white dark:bg-opacity-80 bg-opacity-95 rounded-md relative overflow-hidden">
 
         {/* Main Chat Content */}
@@ -550,38 +588,43 @@ export function ChatLandingWindow() {
         </div>
       </div>
 
-      {/* Fixed Scroll Down Arrow - Always at bottom of screen */}
-      <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50">
-        <motion.button
-          onClick={() => {
-            document.getElementById('protocol-section')?.scrollIntoView({ 
-              behavior: 'smooth',
-              block: 'start'
-            })
-          }}
-          className="group flex flex-col items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors duration-300 cursor-pointer"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 0.8 }}
-          whileHover={{ y: -5 }}
-        >
-          <span className="text-sm font-medium">Explore More</span>
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          >
-            <ChevronDown size={24} className="group-hover:text-gray-900 dark:group-hover:text-gray-100" />
-          </motion.div>
-        </motion.button>
-      </div>
-    </div>
+      {/* Fixed Scroll Down Arrow - Only visible on first viewport */}
+      <AnimatePresence>
+        {showScrollArrow && (
+          <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50">
+            <motion.button
+              onClick={() => {
+                document.getElementById(getNextSectionId())?.scrollIntoView({ 
+                  behavior: 'smooth',
+                  block: 'start'
+                })
+              }}
+              className="group flex items-center justify-center text-blue-500 hover:text-blue-600 transition-colors duration-300 cursor-pointer"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.5 }}
+              whileHover={{ y: -5 }}
+            >
+              <motion.div
+                animate={{ y: [0, 8, 0] }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                <ChevronDown size={28} className="text-blue-500 group-hover:text-blue-600" />
+              </motion.div>
+            </motion.button>
+          </div>
+        )}
+      </AnimatePresence>
+      </section>
 
-                    {/* inVerus Protocol Section - Below the fold */}
-    <section id="protocol-section" className="w-full max-w-6xl mx-auto px-4 py-16">
+      {/* Section 2: Trust Protocol */}
+    <section id="trust-protocol-section" className="flex items-center justify-center h-screen w-full px-4 py-8">
+      <div className="w-full max-w-6xl mx-auto">
         <div className="grid w-full grid-cols-1 items-stretch gap-8">
           <div className="grid w-full grid-cols-1 max-w-4xl mx-auto">
             <div className="flex flex-col items-center text-center">
@@ -686,10 +729,12 @@ export function ChatLandingWindow() {
             </div>
           </div>
         </div>
+      </div>
       </section>
 
-            {/* Architecture of Trust Section */}
-      <section className="w-full max-w-6xl mx-auto px-4 py-16">
+      {/* Section 3: Architecture of Trust */}
+      <section id="architecture-section" className="flex items-center justify-center h-screen w-full px-4 py-8">
+        <div className="w-full max-w-6xl mx-auto">
         <div className="w-full">
           <div className="relative w-full">
             <div className="grid w-full grid-cols-12">
@@ -843,10 +888,11 @@ export function ChatLandingWindow() {
             </div>
           </div>
         </div>
+        </div>
       </section>
 
       {/* CTA Section */}
-      <section className="w-full max-w-6xl mx-auto px-4 py-16">
+      <section id="cta-section" className="w-full max-w-6xl mx-auto px-4 py-16">
         <div className="w-full">
           <div className="bg-gray-50 dark:bg-gray-900 py-16 grid grid-cols-12 rounded-lg">
             <div className="px-4 md:px-0 md:col-span-10 md:col-start-2 col-span-12 flex flex-col text-center">
