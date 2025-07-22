@@ -718,7 +718,7 @@ export function ChatLandingWindow() {
             </div>
 
             {/* Partner/Technology Logos */}
-            <div className="mt-16 mb-8 pt-8">
+            <div className="mt-24 mb-8 pt-8">
               <LogoCarousel
                 className="w-full"
                 speed={4}
@@ -803,7 +803,7 @@ export function ChatLandingWindow() {
             </div>
 
             {/* Meet the Architects CTA */}
-            <div className="flex justify-center mt-16">
+            <div className="flex justify-center mt-10">
               <a 
                 href="/mission"
                 className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive shadow-xs h-9 has-[>svg]:px-3 bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 px-8 py-3 rounded-full transition duration-200"
