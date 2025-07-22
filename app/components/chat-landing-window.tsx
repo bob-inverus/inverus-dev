@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { motion } from "motion/react"
+import Link from "next/link"
 import {
   ChatContainerContent,
   ChatContainerRoot,
@@ -19,6 +20,7 @@ import {
   PromptInputTextarea,
 } from "@/components/prompt-kit/prompt-input"
 import { Button } from "@/components/ui/button"
+import { LogoCarousel } from "@/components/ui/logo-carousel"
 import { cn } from "@/lib/utils"
 import {
   ArrowUp,
@@ -34,7 +36,6 @@ import {
   Users,
   Shield,
   Eye,
-  ExternalLink,
 } from "lucide-react"
 
 // Shining Text Animation Component
@@ -52,6 +53,41 @@ function ShiningText({ text }: { text: string }) {
     >
       {text}
     </motion.span>
+  )
+}
+
+function CountingNumber({ target }: { target: number }) {
+  const [count, setCount] = useState(target)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  useEffect(() => {
+    // Live counting - increment randomly every 2-5 seconds
+    const scheduleNextIncrement = () => {
+      const randomDelay = Math.random() * 3000 + 2000 // 2-5 seconds
+      timeoutRef.current = setTimeout(() => {
+        setCount(prevCount => {
+          // Add 1-3 verifications randomly
+          const increment = Math.floor(Math.random() * 3) + 1
+          return prevCount + increment
+        })
+        scheduleNextIncrement() // Schedule the next increment
+      }, randomDelay)
+    }
+
+    scheduleNextIncrement()
+
+    // Cleanup function
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [])
+
+  return (
+    <span className="font-mono">
+      {count.toLocaleString()}
+    </span>
   )
 }
 
@@ -681,6 +717,91 @@ export function ChatLandingWindow() {
               </div>
             </div>
 
+            {/* Partner/Technology Logos */}
+            <div className="mt-16 mb-8 pt-8">
+              <LogoCarousel
+                className="w-full"
+                speed={4}
+                logos={[
+                  {
+                    name: "AWS",
+                    src: "https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg",
+                    className: "h-8"
+                  },
+                  {
+                    name: "Google Cloud",
+                    src: "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg",
+                    className: "h-8"
+                  },
+                  {
+                    name: "Microsoft Azure",
+                    src: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg",
+                    className: "h-8"
+                  },
+                  {
+                    name: "OpenAI",
+                    src: "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg",
+                    className: "h-8"
+                  },
+                  {
+                    name: "Anthropic",
+                    src: "https://upload.wikimedia.org/wikipedia/commons/7/78/Anthropic_logo.svg",
+                    className: "h-8"
+                  },
+                  {
+                    name: "Stripe",
+                    src: "https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg",
+                    className: "h-6"
+                  },
+                  {
+                    name: "GitHub",
+                    src: "https://upload.wikimedia.org/wikipedia/commons/c/c2/GitHub_Invertocat_Logo.svg",
+                    className: "h-8"
+                  },
+                  {
+                    name: "Docker",
+                    src: "https://upload.wikimedia.org/wikipedia/commons/4/4e/Docker_%28container_engine%29_logo.svg",
+                    className: "h-6"
+                  },
+                  {
+                    name: "Kubernetes",
+                    src: "https://upload.wikimedia.org/wikipedia/commons/3/39/Kubernetes_logo_without_workmark.svg",
+                    className: "h-8"
+                  },
+                  {
+                    name: "MongoDB",
+                    src: "https://upload.wikimedia.org/wikipedia/commons/9/93/MongoDB_Logo.svg",
+                    className: "h-8"
+                  },
+                  {
+                    name: "PostgreSQL",
+                    src: "https://upload.wikimedia.org/wikipedia/commons/2/29/Postgresql_elephant.svg",
+                    className: "h-8"
+                  },
+                  {
+                    name: "Redis",
+                    src: "https://upload.wikimedia.org/wikipedia/commons/6/64/Logo-redis.svg",
+                    className: "h-6"
+                  },
+                  {
+                    name: "Terraform",
+                    src: "https://upload.wikimedia.org/wikipedia/commons/0/04/Terraform_Logo.svg",
+                    className: "h-8"
+                  },
+                  {
+                    name: "Cloudflare",
+                    src: "https://upload.wikimedia.org/wikipedia/commons/4/4b/Cloudflare_Logo.svg",
+                    className: "h-6"
+                  },
+                  {
+                    name: "Supabase",
+                    src: "https://upload.wikimedia.org/wikipedia/commons/b/b0/Supabase_Logo.svg",
+                    className: "h-8"
+                  }
+                ]}
+              />
+            </div>
+
             {/* Meet the Architects CTA */}
             <div className="flex justify-center mt-16">
               <a 
@@ -718,151 +839,55 @@ export function ChatLandingWindow() {
       </section>
 
       {/* Footer */}
-      <footer className="w-full max-w-6xl mx-auto px-4 py-16">
-        <div className="w-full">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+      <footer className="w-full border-t border-gray-200 dark:border-gray-700 py-8">
+        <div className="w-full max-w-6xl mx-auto px-4">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
             
-            {/* Our Technology */}
-            <div className="flex flex-col">
-              <span className="text-gray-500 dark:text-gray-400 font-semibold mb-4">Our Technology</span>
-              <ul className="space-y-3">
-                <li>
-                  <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
-                    Verification Engine
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
-                    Trust Scoring
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
-                    Identity Validation
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Platform */}
-            <div className="flex flex-col">
-              <span className="text-gray-500 dark:text-gray-400 font-semibold mb-4">Platform</span>
-              <ul className="space-y-3">
-                <li>
-                  <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
-                    Platform Overview
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
-                    API Access
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
-                    Pricing
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="flex items-center gap-1 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
-                    Documentation
-                    <ExternalLink size={14} />
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Company */}
-            <div className="flex flex-col">
-              <span className="text-gray-500 dark:text-gray-400 font-semibold mb-4">Company</span>
-              <ul className="space-y-3">
-                <li>
-                  <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
-                    About Us
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
-                    Careers
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
-                    Contact
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
-                    Press
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Legal */}
-            <div className="flex flex-col">
-              <span className="text-gray-500 dark:text-gray-400 font-semibold mb-4">Legal</span>
-              <ul className="space-y-3">
-                <li>
-                  <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
-                    Terms of Service
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
-                    Privacy Policy
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
-                    Cookie Policy
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-          </div>
-
-          {/* Bottom Section */}
-          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-6 pt-8 border-t border-gray-200 dark:border-gray-700">
-            
-            {/* Social Links */}
-            <div className="flex justify-center md:justify-start gap-4">
-              <a href="#" className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition duration-200" aria-label="X">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M11.8187 2H13.8544L9.407 7.08308L14.639 14H10.5424L7.33377 9.80492L3.66239 14H1.62547L6.38239 8.56308L1.36331 2H5.56393L8.46424 5.83446L11.8187 2ZM11.1042 12.7815H12.2322L4.951 3.15446H3.74054L11.1042 12.7815Z" fill="currentColor"/>
-                </svg>
-              </a>
-              <a href="#" className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition duration-200" aria-label="LinkedIn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M13.1 2H2.9C2.66131 2 2.43239 2.09482 2.2636 2.2636C2.09482 2.43239 2 2.66131 2 2.9V13.1C2 13.3387 2.09482 13.5676 2.2636 13.7364C2.43239 13.9052 2.66131 14 2.9 14H13.1C13.3387 14 13.5676 13.9052 13.7364 13.7364C13.9052 13.5676 14 13.3387 14 13.1V2.9C14 2.66131 13.9052 2.43239 13.7364 2.2636C13.5676 2.09482 13.3387 2 13.1 2ZM5.6 12.2H3.8V6.8H5.6V12.2ZM4.7 5.75C4.49371 5.7441 4.29373 5.67755 4.12505 5.55865C3.95637 5.43974 3.82647 5.27377 3.75158 5.08147C3.67669 4.88916 3.66012 4.67905 3.70396 4.47738C3.7478 4.27572 3.8501 4.09144 3.99807 3.94758C4.14604 3.80372 4.33312 3.70666 4.53594 3.66852C4.73876 3.63038 4.94832 3.65285 5.13844 3.73313C5.32856 3.8134 5.49081 3.94793 5.60491 4.11989C5.71902 4.29185 5.77992 4.49363 5.78 4.7C5.77526 4.98221 5.659 5.25107 5.45663 5.44782C5.25426 5.64457 4.98223 5.75321 4.7 5.75ZM12.2 12.2H10.4V9.356C10.4 8.504 10.04 8.198 9.572 8.198C9.43479 8.20714 9.30073 8.24329 9.17753 8.30439C9.05433 8.36548 8.94441 8.45032 8.85409 8.55402C8.76377 8.65771 8.69483 8.77824 8.65123 8.90866C8.60762 9.03908 8.59021 9.17683 8.6 9.314C8.59702 9.34192 8.59702 9.37008 8.6 9.398V12.2H6.8V6.8H8.54V7.58C8.71552 7.313 8.95666 7.09554 9.24031 6.94846C9.52397 6.80138 9.84065 6.7296 10.16 6.74C11.09 6.74 12.176 7.256 12.176 8.936L12.2 12.2Z" fill="currentColor"/>
-                </svg>
-              </a>
-              <a href="#" className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition duration-200" aria-label="GitHub">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M7.99998 1.30048C11.6833 1.30048 14.6666 4.28381 14.6666 7.96714C14.6663 9.36398 14.2279 10.7255 13.4132 11.8602C12.5985 12.9948 11.4484 13.8454 10.125 14.2921C9.79165 14.3588 9.66665 14.1505 9.66665 13.9755C9.66665 13.7505 9.67498 13.0338 9.67498 12.1421C9.67498 11.5171 9.46665 11.1171 9.22498 10.9088C10.7083 10.7421 12.2666 10.1755 12.2666 7.61714C12.2666 6.88381 12.0083 6.29214 11.5833 5.82548C11.65 5.65881 11.8833 4.97548 11.5166 4.05881C11.5166 4.05881 10.9583 3.87548 9.68331 4.74214C9.14998 4.59214 8.58331 4.51714 8.01665 4.51714C7.44998 4.51714 6.88331 4.59214 6.34998 4.74214C5.07498 3.88381 4.51665 4.05881 4.51665 4.05881C4.14998 4.97548 4.38331 5.65881 4.44998 5.82548C4.02498 6.29214 3.76665 6.89214 3.76665 7.61714C3.76665 10.1671 5.31665 10.7421 6.79998 10.9088C6.60831 11.0755 6.43331 11.3671 6.37498 11.8005C5.99165 11.9755 5.03331 12.2588 4.43331 11.2505C4.30831 11.0505 3.93331 10.5588 3.40831 10.5671C2.84998 10.5755 3.18331 10.8838 3.41665 11.0088C3.69998 11.1671 4.02498 11.7588 4.09998 11.9505C4.23331 12.3255 4.66665 13.0421 6.34165 12.7338C6.34165 13.2921 6.34998 13.8171 6.34998 13.9755C6.34998 14.1505 6.22498 14.3505 5.89165 14.2921C4.56385 13.8502 3.40893 13.0013 2.59072 11.866C1.77252 10.7307 1.33258 9.36657 1.33331 7.96714C1.33331 4.28381 4.31665 1.30048 7.99998 1.30048Z" fill="currentColor"/>
-                </svg>
-              </a>
-            </div>
-
-            {/* Copyright */}
-            <div className="text-center md:text-left">
-              <span className="text-sm text-gray-500 dark:text-gray-400">
-                Inverus © 2024–2025
-              </span>
-            </div>
-
-            {/* Language Selector */}
-            <div className="text-center md:text-right">
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="text-sm px-4 py-2 rounded-full border-gray-300 dark:border-gray-600"
+            {/* Left: inVerus Logo with Pulsing Shield */}
+            <div className="flex items-center justify-center md:justify-start">
+              <Link
+                href="/"
+                className="inline-flex items-center justify-center"
               >
-                <span className="flex items-center gap-2">
-                  English <span className="text-gray-500">United States</span>
-                </span>
-              </Button>
+                <motion.svg
+                  className="w-8 h-8"
+                  width="50"
+                  height="50"
+                  viewBox="0 0 50 50"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  animate={{ 
+                    opacity: [0.7, 1, 0.7],
+                    scale: [1, 1.05, 1]
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                >
+                  <rect width="50" height="50" rx="15" fill="#006DED"/>
+                  <path fillRule="evenodd" clipRule="evenodd" d="M23.7366 6.15368C23.9778 6.05228 24.2376 6 24.5 6C24.7624 6 25.0222 6.05228 25.2634 6.15368L37.6518 11.3612C38.3489 11.6542 38.9431 12.1415 39.3605 12.7626C39.7779 13.3836 40.0003 14.1112 40 14.855V27.888C39.9998 30.2322 39.3676 32.5348 38.1675 34.5623C36.9675 36.5898 35.2422 38.2703 33.1664 39.4334L25.461 43.7498C25.1683 43.9138 24.8371 44 24.5 44C24.1629 44 23.8317 43.9138 23.539 43.7498L15.8336 39.4334C13.7573 38.27 12.0316 36.5889 10.8315 34.5607C9.6314 32.5324 8.99955 30.2291 9 27.8842V14.855C9.00008 14.1115 9.22261 13.3844 9.64002 12.7637C10.0574 12.143 10.6514 11.656 11.3482 11.3631L23.7366 6.15368ZM31.6823 22.5437C32.0352 22.1854 32.2305 21.7055 32.2261 21.2073C32.2217 20.7092 32.0179 20.2327 31.6587 19.8804C31.2995 19.5282 30.8135 19.3284 30.3055 19.3241C29.7975 19.3197 29.3081 19.5112 28.9427 19.8573L22.5625 26.1135L20.0573 23.657C19.6919 23.3109 19.2025 23.1194 18.6945 23.1238C18.1865 23.1281 17.7005 23.3279 17.3413 23.6802C16.9821 24.0324 16.7783 24.5089 16.7739 25.007C16.7695 25.5052 16.9648 25.9851 17.3177 26.3434L21.1927 30.1431C21.556 30.4993 22.0487 30.6994 22.5625 30.6994C23.0763 30.6994 23.569 30.4993 23.9323 30.1431L31.6823 22.5437Z" fill="white"/>
+                </motion.svg>
+              </Link>
+            </div>
+
+            {/* Center: Counting Verifications */}
+            <div className="flex items-center justify-center text-center">
+              <div className="text-gray-600 dark:text-gray-400">
+                <CountingNumber target={2406348} /> Verifications Processed
+              </div>
+            </div>
+
+            {/* Right: Investors · Our Solemn Vow */}
+            <div className="flex items-center justify-center md:justify-end gap-2 text-gray-600 dark:text-gray-400">
+              <a href="#" className="hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
+                Investors
+              </a>
+              <span>·</span>
+              <a href="#" className="hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
+                Our Solemn Vow
+              </a>
             </div>
 
           </div>
