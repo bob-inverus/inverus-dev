@@ -182,30 +182,67 @@ export function ChatLandingWindow() {
   const [showScrollArrow, setShowScrollArrow] = useState(true)
   const [currentSection, setCurrentSection] = useState(1)
 
-  // Handle scroll visibility and current section detection
+  // Debug current section changes
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY
-      const windowHeight = window.innerHeight
-      
-      // Determine current section based on scroll position
-      if (scrollY < windowHeight * 0.8) {
-        setCurrentSection(1)
-        setShowScrollArrow(true)
-      } else if (scrollY < windowHeight * 1.8) {
-        setCurrentSection(2) 
-        setShowScrollArrow(true)
-             } else if (scrollY < windowHeight * 2.8) {
-        setCurrentSection(3)
-        setShowScrollArrow(true)
-      } else {
-        setCurrentSection(4)
-        setShowScrollArrow(false) // Hide arrow after the three main sections
-      }
+    console.log(`Current section changed to: ${currentSection}, Show arrow: ${showScrollArrow}`)
+  }, [currentSection, showScrollArrow])
+
+  // Handle section detection using Intersection Observer
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '-50% 0px -50% 0px', // Only trigger when section is in middle 50% of viewport
+      threshold: 0
     }
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const sectionId = entry.target.id
+          console.log(`Section in view: ${sectionId}`)
+          
+          switch (sectionId) {
+            case 'chat-demo-section':
+              setCurrentSection(1)
+              setShowScrollArrow(true)
+              break
+            case 'trust-protocol-section':
+              setCurrentSection(2)
+              setShowScrollArrow(true)
+              break
+            case 'architecture-section':
+              setCurrentSection(3)
+              setShowScrollArrow(true)
+              break
+            case 'cta-section':
+              setCurrentSection(4)
+              setShowScrollArrow(false)
+              break
+          }
+        }
+      })
+    }
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions)
+
+    // Observe all sections
+    const sections = [
+      'chat-demo-section',
+      'trust-protocol-section', 
+      'architecture-section',
+      'cta-section'
+    ]
+
+    sections.forEach(sectionId => {
+      const element = document.getElementById(sectionId)
+      if (element) {
+        observer.observe(element)
+      }
+    })
+
+    return () => {
+      observer.disconnect()
+    }
   }, [])
 
   // Get the target section ID based on current section
@@ -215,6 +252,30 @@ export function ChatLandingWindow() {
       case 2: return 'architecture-section' 
       case 3: return 'cta-section'
       default: return 'trust-protocol-section'
+    }
+  }
+
+  // Handle arrow click with debugging
+  const handleArrowClick = () => {
+    const targetId = getNextSectionId()
+    const scrollY = window.scrollY
+    
+    console.log(`=== ARROW CLICK DEBUG ===`)
+    console.log(`Current scroll position: ${scrollY}px`)
+    console.log(`Current section: ${currentSection}`)
+    console.log(`Targeting: ${targetId}`)
+    
+    const targetElement = document.getElementById(targetId)
+    if (targetElement) {
+      const targetPosition = targetElement.offsetTop
+      console.log(`Target element position: ${targetPosition}px`)
+      console.log('Scrolling to target...')
+      targetElement.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      })
+    } else {
+      console.error(`Target element not found: ${targetId}`)
     }
   }
 
@@ -588,38 +649,7 @@ export function ChatLandingWindow() {
         </div>
       </div>
 
-      {/* Fixed Scroll Down Arrow - Only visible on first viewport */}
-      <AnimatePresence>
-        {showScrollArrow && (
-          <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50">
-            <motion.button
-              onClick={() => {
-                document.getElementById(getNextSectionId())?.scrollIntoView({ 
-                  behavior: 'smooth',
-                  block: 'start'
-                })
-              }}
-              className="group flex items-center justify-center text-blue-500 hover:text-blue-600 transition-colors duration-300 cursor-pointer"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.5 }}
-              whileHover={{ y: -5 }}
-            >
-              <motion.div
-                animate={{ y: [0, 8, 0] }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              >
-                <ChevronDown size={28} className="text-blue-500 group-hover:text-blue-600" />
-              </motion.div>
-            </motion.button>
-          </div>
-        )}
-      </AnimatePresence>
+
       </section>
 
       {/* Section 2: Trust Protocol */}
@@ -633,7 +663,7 @@ export function ChatLandingWindow() {
               </h2>
               <div>
                 <p className="text-gray-600 dark:text-gray-400 text-balance text-lg">
-                  The Infrastructure for Truth.
+                  We don't just build apps. We build the architecture that makes a trusted digital world possible.
                 </p>
               </div>
             </div>
@@ -656,7 +686,9 @@ export function ChatLandingWindow() {
                     <div className="mt-4">
                       <div className="relative items-start">
                         <h4 className="text-xl md:text-2xl tracking-tighter leading-tight mb-2 text-gray-900 dark:text-gray-100">Trust Layer</h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">Verification engine—the core API/web service for human and content verification.</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          Instantly verify humans via API or our web application. The core engine to secure your platform, built to verify content and agents as the web evolves.
+                          </p>
                       </div>
                     </div>
                   </div>
@@ -677,7 +709,7 @@ export function ChatLandingWindow() {
                     <div className="mt-4">
                       <div className="relative items-start">
                         <h4 className="text-xl md:text-2xl tracking-tighter leading-tight mb-2 text-gray-900 dark:text-gray-100">Sovereignty Layer</h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">User-centric data sovereignty—the MyDataHub philosophy empowering individual control.</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Built on a core belief in digital sovereignty. Explore our philosophy of user-centric control.</p>
                       </div>
                     </div>
                   </div>
@@ -698,7 +730,7 @@ export function ChatLandingWindow() {
                     <div className="mt-4">
                       <div className="relative items-start">
                         <h4 className="text-xl md:text-2xl tracking-tighter leading-tight mb-2 text-gray-900 dark:text-gray-100">Agency Layer</h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">AI agents acting on behalf of users with their verified data—autonomous trust execution.</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Unleash powerful AI assistants that act on your behalf, using your own verified data.</p>
                       </div>
                     </div>
                   </div>
@@ -719,7 +751,7 @@ export function ChatLandingWindow() {
                     <div className="mt-4">
                       <div className="relative items-start">
                         <h4 className="text-xl md:text-2xl tracking-tighter leading-tight mb-2 text-gray-900 dark:text-gray-100">Exchange Layer</h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">Marketplace for trusted data exchange—enabling secure, verified data transactions.</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Unlock the value of verified data in a new marketplace for trusted, permission-based exchange.</p>
                       </div>
                     </div>
                   </div>
@@ -745,7 +777,7 @@ export function ChatLandingWindow() {
                   </h1>
                   <div className="mb-12">
                     <p className="text-gray-600 dark:text-gray-400 text-balance max-w-3xl text-lg">
-                      Our integrated verification system is architected for durability, security, and scale. Built on foundational principles that ensure reliability across every layer of the trust infrastructure.
+                    Our advantage isn't a single feature, but a deeply integrated system designed for enduring value.
                     </p>
                   </div>
                 </div>
@@ -764,7 +796,7 @@ export function ChatLandingWindow() {
                     </g>
                   </svg>
                   <div className="text-lg md:text-xl font-semibold text-gray-900 dark:text-gray-100 mt-2">Deep Patent Portfolio</div>
-                  <div className="text-gray-600 dark:text-gray-400 mt-1">We hold fundamental patents on our core technology, data structures, and verification algorithms, providing a defensible foundation for our trust infrastructure.</div>
+                  <div className="text-gray-600 dark:text-gray-400 mt-1">Fundamental patents cover our core protocol, data structures, and agent behavior, creating a defensible technological foundation.</div>
                 </div>
 
                 {/* Composable Protocol Stack */}
@@ -775,7 +807,7 @@ export function ChatLandingWindow() {
                     </g>
                   </svg>
                   <div className="text-lg md:text-xl font-semibold text-gray-900 dark:text-gray-100 mt-2">Composable Protocol Stack</div>
-                  <div className="text-gray-600 dark:text-gray-400 mt-1">Our layers work in synergy—data verified in one layer empowers the others, creating a compounding flywheel effect that scales verification across the entire system.</div>
+                  <div className="text-gray-600 dark:text-gray-400 mt-1">Fundamental patents cover our core protocol, data structures, and agent behavior, creating a defensible technological foundation.</div>
                 </div>
 
                 {/* Generational Team */}
@@ -786,7 +818,8 @@ export function ChatLandingWindow() {
                     </g>
                   </svg>
                   <div className="text-lg md:text-xl font-semibold text-gray-900 dark:text-gray-100 mt-2">Generational Team</div>
-                  <div className="text-gray-600 dark:text-gray-400 mt-1">Our team and advisors bring $10B+ in exits across infrastructure, AI, security, and global marketplaces—the proven expertise behind our mission to build trust at scale.</div>
+                  <div className="text-gray-600 dark:text-gray-400 mt-1">Our founding and advisory team has a track record of over $10B in exits across infrastructure, AI, security, and global marketplaces.
+                  </div>
                 </div>
 
               </div>
@@ -891,84 +924,170 @@ export function ChatLandingWindow() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section id="cta-section" className="w-full max-w-6xl mx-auto px-4 py-16">
-        <div className="w-full">
-          <div className="bg-gray-50 dark:bg-gray-900 py-16 grid grid-cols-12 rounded-lg">
-            <div className="px-4 md:px-0 md:col-span-10 md:col-start-2 col-span-12 flex flex-col text-center">
-              <h2 className="text-2xl md:text-3xl lg:text-4xl tracking-tighter leading-tight text-gray-900 dark:text-gray-100 mb-6">
-                This is more than a company. It's a new foundation.
-              </h2>
-              <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed">
-                We're building a future where trust is a native, programmable layer of the internet…
-              </p>
-              <div className="flex items-center justify-center">
-                <Button 
-                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive shadow-xs h-9 has-[>svg]:px-3 bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 px-8 py-3 rounded-full transition duration-200"
-                >
-                  Join The Mission
-                </Button>
+            {/* CTA Section + Footer Combined - Full Viewport */}
+      <section id="cta-section" className="flex flex-col justify-center items-center h-screen w-full px-4 py-8">
+        {/* CTA Content */}
+        <div className="w-full max-w-6xl mx-auto flex-1 flex items-center justify-center">
+          <div className="w-full">
+            <div className="bg-gray-50 dark:bg-gray-900 py-16 grid grid-cols-12 rounded-lg">
+              <div className="px-4 md:px-0 md:col-span-10 md:col-start-2 col-span-12 flex flex-col text-center">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl tracking-tighter leading-tight text-gray-900 dark:text-gray-100 mb-6">
+                  This is more than a company. It's a new foundation.
+                </h2>
+                <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed">
+                 We're building a future where trust is a native, programmable layer of the internet. This requires world-class partners, investors, and talent who share our vision for a post-truth digital world.
+                </p>
+                <div className="flex items-center justify-center">
+                  <Button 
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive shadow-xs h-9 has-[>svg]:px-3 bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 px-8 py-3 rounded-full transition duration-200"
+                  >
+                    Join The Mission
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Footer - Bottom of CTA Section */}
+        <footer className="w-full border-t border-gray-200 dark:border-gray-700 py-8 mt-auto">
+        <div className="w-full max-w-6xl mx-auto px-4">
+          <div className="relative">
+            
+            {/* Mobile Layout - Stacked */}
+            <div className="flex flex-col items-center gap-6 md:hidden">
+              {/* Logo */}
+              <div className="flex items-center justify-center">
+                <Link
+                  href="/"
+                  className="inline-flex items-center justify-center"
+                >
+                  <motion.svg
+                    className="w-8 h-8"
+                    width="50"
+                    height="50"
+                    viewBox="0 0 50 50"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    animate={{ 
+                      opacity: [0.7, 1, 0.7],
+                      scale: [1, 1.05, 1]
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    <rect width="50" height="50" rx="15" fill="#006DED"/>
+                    <path fillRule="evenodd" clipRule="evenodd" d="M23.7366 6.15368C23.9778 6.05228 24.2376 6 24.5 6C24.7624 6 25.0222 6.05228 25.2634 6.15368L37.6518 11.3612C38.3489 11.6542 38.9431 12.1415 39.3605 12.7626C39.7779 13.3836 40.0003 14.1112 40 14.855V27.888C39.9998 30.2322 39.3676 32.5348 38.1675 34.5623C36.9675 36.5898 35.2422 38.2703 33.1664 39.4334L25.461 43.7498C25.1683 43.9138 24.8371 44 24.5 44C24.1629 44 23.8317 43.9138 23.539 43.7498L15.8336 39.4334C13.7573 38.27 12.0316 36.5889 10.8315 34.5607C9.6314 32.5324 8.99955 30.2291 9 27.8842V14.855C9.00008 14.1115 9.22261 13.3844 9.64002 12.7637C10.0574 12.143 10.6514 11.656 11.3482 11.3631L23.7366 6.15368ZM31.6823 22.5437C32.0352 22.1854 32.2305 21.7055 32.2261 21.2073C32.2217 20.7092 32.0179 20.2327 31.6587 19.8804C31.2995 19.5282 30.8135 19.3284 30.3055 19.3241C29.7975 19.3197 29.3081 19.5112 28.9427 19.8573L22.5625 26.1135L20.0573 23.657C19.6919 23.3109 19.2025 23.1194 18.6945 23.1238C18.1865 23.1281 17.7005 23.3279 17.3413 23.6802C16.9821 24.0324 16.7783 24.5089 16.7739 25.007C16.7695 25.5052 16.9648 25.9851 17.3177 26.3434L21.1927 30.1431C21.556 30.4993 22.0487 30.6994 22.5625 30.6994C23.0763 30.6994 23.569 30.4993 23.9323 30.1431L31.6823 22.5437Z" fill="white"/>
+                  </motion.svg>
+                </Link>
+              </div>
+
+              {/* Verifications - Centered */}
+              <div className="flex items-center justify-center text-center">
+                <div className="text-green-600 dark:text-green-400">
+                  <CountingNumber target={2406348} /> Verifications Processed
+                </div>
+              </div>
+
+              {/* Links */}
+              <div className="flex items-center justify-center gap-2 text-gray-600 dark:text-gray-400">
+                <a href="#" className="hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
+                  Investors
+                </a>
+                <span>·</span>
+                <a href="#" className="hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
+                  Our Solemn Vow
+                </a>
+              </div>
+            </div>
+
+            {/* Desktop Layout - Absolute Positioning for Perfect Centering */}
+            <div className="hidden md:block">
+              {/* Left Logo */}
+              <div className="absolute left-0 top-0">
+                <Link
+                  href="/"
+                  className="inline-flex items-center justify-center"
+                >
+                  <motion.svg
+                    className="w-8 h-8"
+                    width="50"
+                    height="50"
+                    viewBox="0 0 50 50"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    animate={{ 
+                      opacity: [0.7, 1, 0.7],
+                      scale: [1, 1.05, 1]
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    <rect width="50" height="50" rx="15" fill="#006DED"/>
+                    <path fillRule="evenodd" clipRule="evenodd" d="M23.7366 6.15368C23.9778 6.05228 24.2376 6 24.5 6C24.7624 6 25.0222 6.05228 25.2634 6.15368L37.6518 11.3612C38.3489 11.6542 38.9431 12.1415 39.3605 12.7626C39.7779 13.3836 40.0003 14.1112 40 14.855V27.888C39.9998 30.2322 39.3676 32.5348 38.1675 34.5623C36.9675 36.5898 35.2422 38.2703 33.1664 39.4334L25.461 43.7498C25.1683 43.9138 24.8371 44 24.5 44C24.1629 44 23.8317 43.9138 23.539 43.7498L15.8336 39.4334C13.7573 38.27 12.0316 36.5889 10.8315 34.5607C9.6314 32.5324 8.99955 30.2291 9 27.8842V14.855C9.00008 14.1115 9.22261 13.3844 9.64002 12.7637C10.0574 12.143 10.6514 11.656 11.3482 11.3631L23.7366 6.15368ZM31.6823 22.5437C32.0352 22.1854 32.2305 21.7055 32.2261 21.2073C32.2217 20.7092 32.0179 20.2327 31.6587 19.8804C31.2995 19.5282 30.8135 19.3284 30.3055 19.3241C29.7975 19.3197 29.3081 19.5112 28.9427 19.8573L22.5625 26.1135L20.0573 23.657C19.6919 23.3109 19.2025 23.1194 18.6945 23.1238C18.1865 23.1281 17.7005 23.3279 17.3413 23.6802C16.9821 24.0324 16.7783 24.5089 16.7739 25.007C16.7695 25.5052 16.9648 25.9851 17.3177 26.3434L21.1927 30.1431C21.556 30.4993 22.0487 30.6994 22.5625 30.6994C23.0763 30.6994 23.569 30.4993 23.9323 30.1431L31.6823 22.5437Z" fill="white"/>
+                  </motion.svg>
+                </Link>
+              </div>
+
+              {/* Center Verifications - Perfectly Centered */}
+              <div className="flex items-center justify-center text-center">
+                <div className="text-green-600 dark:text-green-400">
+                  <CountingNumber target={2406348} /> Verifications Processed
+                </div>
+              </div>
+
+              {/* Right Links */}
+              <div className="absolute right-0 top-0">
+                <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                  <a href="#" className="hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
+                    Investors
+                  </a>
+                  <span>·</span>
+                  <a href="#" className="hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
+                    Our Solemn Vow
+                  </a>
+                </div>
+              </div>
+            </div>
+
+          </div>
+                  </div>
+        </footer>
       </section>
 
-      {/* Footer */}
-      <footer className="w-full border-t border-gray-200 dark:border-gray-700 py-8">
-        <div className="w-full max-w-6xl mx-auto px-4">
-          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
-            
-            {/* Left: inVerus Logo with Pulsing Shield */}
-            <div className="flex items-center justify-center md:justify-start">
-              <Link
-                href="/"
-                className="inline-flex items-center justify-center"
+      {/* Global Fixed Scroll Arrow - Works on all sections */}
+      <AnimatePresence>
+        {showScrollArrow && (
+          <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50">
+            <motion.button
+              onClick={handleArrowClick}
+              className="group flex items-center justify-center text-blue-500 hover:text-blue-600 transition-colors duration-300 cursor-pointer"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.5 }}
+              whileHover={{ y: -5 }}
+            >
+              <motion.div
+                animate={{ y: [0, 8, 0] }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
               >
-                <motion.svg
-                  className="w-8 h-8"
-                  width="50"
-                  height="50"
-                  viewBox="0 0 50 50"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  animate={{ 
-                    opacity: [0.7, 1, 0.7],
-                    scale: [1, 1.05, 1]
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                >
-                  <rect width="50" height="50" rx="15" fill="#006DED"/>
-                  <path fillRule="evenodd" clipRule="evenodd" d="M23.7366 6.15368C23.9778 6.05228 24.2376 6 24.5 6C24.7624 6 25.0222 6.05228 25.2634 6.15368L37.6518 11.3612C38.3489 11.6542 38.9431 12.1415 39.3605 12.7626C39.7779 13.3836 40.0003 14.1112 40 14.855V27.888C39.9998 30.2322 39.3676 32.5348 38.1675 34.5623C36.9675 36.5898 35.2422 38.2703 33.1664 39.4334L25.461 43.7498C25.1683 43.9138 24.8371 44 24.5 44C24.1629 44 23.8317 43.9138 23.539 43.7498L15.8336 39.4334C13.7573 38.27 12.0316 36.5889 10.8315 34.5607C9.6314 32.5324 8.99955 30.2291 9 27.8842V14.855C9.00008 14.1115 9.22261 13.3844 9.64002 12.7637C10.0574 12.143 10.6514 11.656 11.3482 11.3631L23.7366 6.15368ZM31.6823 22.5437C32.0352 22.1854 32.2305 21.7055 32.2261 21.2073C32.2217 20.7092 32.0179 20.2327 31.6587 19.8804C31.2995 19.5282 30.8135 19.3284 30.3055 19.3241C29.7975 19.3197 29.3081 19.5112 28.9427 19.8573L22.5625 26.1135L20.0573 23.657C19.6919 23.3109 19.2025 23.1194 18.6945 23.1238C18.1865 23.1281 17.7005 23.3279 17.3413 23.6802C16.9821 24.0324 16.7783 24.5089 16.7739 25.007C16.7695 25.5052 16.9648 25.9851 17.3177 26.3434L21.1927 30.1431C21.556 30.4993 22.0487 30.6994 22.5625 30.6994C23.0763 30.6994 23.569 30.4993 23.9323 30.1431L31.6823 22.5437Z" fill="white"/>
-                </motion.svg>
-              </Link>
-            </div>
-
-            {/* Center: Counting Verifications */}
-            <div className="flex items-center justify-center text-center">
-              <div className="text-gray-600 dark:text-gray-400">
-                <CountingNumber target={2406348} /> Verifications Processed
-              </div>
-            </div>
-
-            {/* Right: Investors · Our Solemn Vow */}
-            <div className="flex items-center justify-center md:justify-end gap-2 text-gray-600 dark:text-gray-400">
-              <a href="#" className="hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
-                Investors
-              </a>
-              <span>·</span>
-              <a href="#" className="hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
-                Our Solemn Vow
-              </a>
-            </div>
-
+                <ChevronDown size={28} className="text-blue-500 group-hover:text-blue-600" />
+              </motion.div>
+            </motion.button>
           </div>
-        </div>
-      </footer>
+        )}
+      </AnimatePresence>
     </div>
   )
 } 
