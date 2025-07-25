@@ -3,10 +3,8 @@
 import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "motion/react"
 import Link from "next/link"
-import {
-  ChatContainerContent,
-  ChatContainerRoot,
-} from "@/components/prompt-kit/chat-container"
+
+import { Loader } from "@/components/prompt-kit/loader"
 import {
   Message,
   MessageAction,
@@ -39,23 +37,7 @@ import {
   ChevronDown,
 } from "lucide-react"
 
-// Shining Text Animation Component
-function ShiningText({ text }: { text: string }) {
-  return (
-    <motion.span
-      className="bg-[linear-gradient(110deg,#666,35%,#fff,50%,#666,75%,#666)] bg-[length:200%_100%] bg-clip-text text-sm font-regular text-transparent"
-      initial={{ backgroundPosition: "200% 0" }}
-      animate={{ backgroundPosition: "-200% 0" }}
-      transition={{
-        repeat: Infinity,
-        duration: 2,
-        ease: "linear",
-      }}
-    >
-      {text}
-    </motion.span>
-  )
-}
+
 
 function CountingNumber({ target }: { target: number }) {
   const [count, setCount] = useState(target)
@@ -92,7 +74,7 @@ function CountingNumber({ target }: { target: number }) {
   )
 }
 
-// Circular Progress Chart Component
+// Circular Progress Chart Component with Animation
 interface CircularChartProps {
   score: number
   title: string
@@ -100,18 +82,56 @@ interface CircularChartProps {
 }
 
 function CircularChart({ score, title, size = 120 }: CircularChartProps) {
+  const [animatedScore, setAnimatedScore] = useState(0)
+  const [animatedOffset, setAnimatedOffset] = useState(0)
+  
   const radius = 45
   const strokeWidth = 6
   const normalizedRadius = radius - strokeWidth * 2
   const circumference = normalizedRadius * 2 * Math.PI
   const strokeDasharray = `${circumference} ${circumference}`
-  const strokeDashoffset = circumference - (score / 100) * circumference
 
-  const getStrokeColor = (score: number) => {
-    if (score >= 80) return '#000000' // Black for high scores
-    if (score >= 60) return '#666666' // Dark gray for medium scores  
-    return '#999999' // Light gray for lower scores
+  const getStrokeColor = (title: string) => {
+    if (title === 'Trust Score') return '#3b82f6' // Brand blue for Trust Score
+    if (title === 'Confidence Score') return '#6b7280' // Muted gray for Confidence Score
+    return '#6b7280' // Default muted gray
   }
+
+  useEffect(() => {
+    // Start animation after a brief delay
+    const startDelay = setTimeout(() => {
+      const duration = 2000 // 2 seconds
+      const steps = 60 // 60 steps for smooth animation
+      const stepDuration = duration / steps
+      const scoreIncrement = score / steps
+      const offsetStart = circumference
+      const offsetEnd = circumference - (score / 100) * circumference
+      const offsetDecrement = (offsetStart - offsetEnd) / steps
+
+      let currentStep = 0
+      
+      const animate = () => {
+        if (currentStep <= steps) {
+          const progress = currentStep / steps
+          // Easing function for smooth animation
+          const easeOutCubic = 1 - Math.pow(1 - progress, 3)
+          
+          const newScore = Math.round(score * easeOutCubic)
+          const newOffset = offsetStart - (offsetDecrement * steps * easeOutCubic)
+          
+          setAnimatedScore(newScore)
+          setAnimatedOffset(newOffset)
+          
+          currentStep++
+          setTimeout(animate, stepDuration)
+        }
+      }
+      
+      animate()
+    }, 300) // 300ms delay before starting
+
+    return () => clearTimeout(startDelay)
+  }, [score, circumference])
 
   return (
     <div className="flex flex-col items-center">
@@ -130,24 +150,27 @@ function CircularChart({ score, title, size = 120 }: CircularChartProps) {
             cx={size / 2}
             cy={size / 2}
           />
-          {/* Progress circle */}
+          {/* Animated Progress circle */}
           <circle
-            stroke={getStrokeColor(score)}
+            stroke={getStrokeColor(title)}
             fill="transparent"
             strokeWidth={strokeWidth}
             strokeDasharray={strokeDasharray}
-            style={{ strokeDashoffset }}
+            style={{ strokeDashoffset: animatedOffset }}
             strokeLinecap="round"
             r={normalizedRadius}
             cx={size / 2}
             cy={size / 2}
-            className="transition-all duration-1000 ease-in-out"
+            className="transition-none" // Remove CSS transition since we're manually animating
           />
         </svg>
-        {/* Score text in center */}
+        {/* Animated Score text in center */}
         <div className="absolute inset-0 flex items-center justify-center">
           <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-            {score}
+            {animatedScore}
+          </span>
+          <span className="text-sm font-medium text-gray-500 ml-0.5">
+            %
           </span>
         </div>
       </div>
@@ -155,9 +178,6 @@ function CircularChart({ score, title, size = 120 }: CircularChartProps) {
       <div className="mt-3 text-center">
         <div className="font-semibold text-gray-900 dark:text-gray-100">
           {title}
-        </div>
-        <div className="text-xs text-gray-500 mt-1">
-          out of 100
         </div>
       </div>
     </div>
@@ -181,11 +201,21 @@ export function ChatLandingWindow() {
   const [ctaShown, setCtaShown] = useState(false)
   const [showScrollArrow, setShowScrollArrow] = useState(true)
   const [currentSection, setCurrentSection] = useState(1)
+  const [currentPlaceholderIndex, setCurrentPlaceholderIndex] = useState(0)
 
   // Debug current section changes
   useEffect(() => {
     console.log(`Current section changed to: ${currentSection}, Show arrow: ${showScrollArrow}`)
   }, [currentSection, showScrollArrow])
+
+  // ChatGPT-style sliding placeholder animation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentPlaceholderIndex(prev => (prev + 1) % 6)
+    }, 3000)
+    
+    return () => clearInterval(interval)
+  }, [])
 
   // Handle section detection using Intersection Observer
   useEffect(() => {
@@ -304,54 +334,19 @@ export function ChatLandingWindow() {
     }
     setMessages(prev => [...prev, userMessage])
 
-    const loadingTexts = [
-      'Accessing Trust Layer...',
-      'Cross-referencing signals...',
-      'Calculating score...'
-    ]
-
-    // Create single loading message that will update
+    // Add simple loading message with dots animation
     const loadingId = Date.now() + 1
-    const initialLoadingMessage: ChatMessage = {
+    const loadingMessage: ChatMessage = {
       id: loadingId,
-      content: loadingTexts[0],
+      content: '',
       role: 'loading',
       isTyping: true
     }
     
-    setMessages(prev => [...prev, initialLoadingMessage])
+    setMessages(prev => [...prev, loadingMessage])
 
-    // Cycle through loading texts on the same line
-    for (let i = 0; i < loadingTexts.length; i++) {
-      // Show typing for current message
-      await new Promise(resolve => setTimeout(resolve, 1200))
-      
-      // Stop typing animation briefly
-      setMessages(prev => 
-        prev.map(msg => 
-          msg.id === loadingId ? { ...msg, isTyping: false } : msg
-        )
-      )
-      
-      // Short pause before transition (except for last message)
-      if (i < loadingTexts.length - 1) {
-        await new Promise(resolve => setTimeout(resolve, 300))
-        
-        // Smoothly update to next message
-        setMessages(prev => 
-          prev.map(msg => 
-            msg.id === loadingId ? { 
-              ...msg, 
-              content: loadingTexts[i + 1], 
-              isTyping: true 
-            } : msg
-          )
-        )
-      }
-    }
-
-    // Final pause before showing result
-    await new Promise(resolve => setTimeout(resolve, 600))
+    // Wait for 2-3 seconds to simulate processing
+    await new Promise(resolve => setTimeout(resolve, 2500))
 
     // Remove loading message and show result
     setMessages(prev => prev.filter(msg => msg.id !== loadingId))
@@ -360,7 +355,7 @@ export function ChatLandingWindow() {
     const resultMessage: ChatMessage = {
       id: Date.now() + 2,
       role: 'assistant',
-      content: `**${result.name}** verification complete`,
+      content: `**${result.name}**`,
       trustScore: result.trustScore,
       confidenceScore: result.confidenceScore,
       showCTA: !ctaShown
@@ -386,271 +381,342 @@ export function ChatLandingWindow() {
     <div className="w-full">
       {/* Section 1: Chat Demo Window */}
       <section id="chat-demo-section" className="flex flex-col items-center justify-center h-screen w-full px-4 py-8">
-        <div className="w-full max-w-[760px] h-[480px] backdrop-filter backdrop-blur-xl dark:bg-[#121212] bg-white dark:bg-opacity-80 bg-opacity-95 rounded-md relative overflow-hidden">
+        <div className="w-full max-w-[760px] min-h-[480px] max-h-[80vh] backdrop-filter backdrop-blur-xl rounded-md relative overflow-hidden">
 
-        {/* Main Chat Content */}
+                {/* Main Chat Content */}
         <div className="flex h-full flex-col overflow-hidden">
           
           {messages.length === 0 ? (
-            /* Empty state */
-            <div className="flex flex-1 items-center justify-center">
-              <div className="text-center">
+            /* Empty state - centered layout */
+            <div className="flex flex-1 items-center justify-center flex-col">
+              <div className="text-center mb-8">
                 {/* Header */}
                 <h1 className="text-2xl md:text-3xl lg:text-4xl tracking-tighter leading-tight mb-4">
                   <div>Know Who's Real.</div>
-                  <div>Know What's Real.</div>
                 </h1>
                 
                 {/* Subtitle */}
                 <p className="text-md md:text-lg font-base text-gray-400 mb-2">
                   The Trust Layer for the Internet.
                 </p>
-                
               </div>
+              
+              {/* Centered Input for Empty State */}
+              <div className="w-full max-w-2xl px-4">
+                <PromptInput
+                  isLoading={isLoading}
+                  value={prompt}
+                  onValueChange={setPrompt}
+                  onSubmit={handleSubmit}
+                  className="border-input bg-popover relative z-10 w-full rounded-3xl border p-0 pt-1 shadow-xs"
+                >
+                  <div className="flex flex-col">
+                    {/* ChatGPT-style animated placeholder - hide when typing */}
+                    {!prompt.trim() && (
+                      <div className="pointer-events-none absolute left-0 top-0 w-full select-none px-4 pt-4 text-gray-500 dark:text-gray-400">
+                        <div 
+                          className="transition-transform ease-in-out duration-500"
+                          style={{ transform: `translateY(-${currentPlaceholderIndex * 1.5}rem)` }}
+                        >
+                          {[
+                            "Ask InVerus to verify someone...",
+                            "Try \"Jasmine Kaur\" or \"Elon Musk\"",
+                            "Curious how someone shows up online?",
+                            "Run a sample Trust Score.",
+                            "What's their digital signal say?",
+                            "Don't guess. Check the signal."
+                          ].map((text, index) => (
+                            <div
+                              key={index}
+                              className={`overflow-hidden text-ellipsis whitespace-nowrap transition-opacity duration-500 h-6 ${
+                                index === currentPlaceholderIndex ? 'opacity-100' : 'opacity-0'
+                              }`}
+                            >
+                              {text}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <PromptInputTextarea
+                      placeholder=""
+                      className="min-h-[44px] pt-3 pl-4 text-base leading-[1.3] sm:text-base md:text-base bg-transparent resize-none"
+                    />
+
+                    <PromptInputActions className="mt-2 flex w-full items-center justify-end gap-2 px-3 pb-3">
+                      <div className="flex items-center gap-2">
+                        <Button
+                          size="icon"
+                          disabled={isLoading}
+                          onClick={handleSubmit}
+                          className={`size-9 rounded-full transition-colors duration-200 ${
+                            prompt.trim() 
+                              ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                              : 'bg-gray-200 hover:bg-gray-300 text-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-500'
+                          }`}
+                        >
+                          {!isLoading ? (
+                            <ArrowUp size={18} />
+                          ) : (
+                            <span className="size-3 rounded-xs bg-white" />
+                          )}
+                        </Button>
+                      </div>
+                    </PromptInputActions>
+                  </div>
+                                 </PromptInput>
+               </div>
             </div>
           ) : (
-            /* Chat messages */
-            <ChatContainerRoot className="relative flex-1 space-y-0 overflow-y-auto px-2">
-              <ChatContainerContent className="space-y-6 px-2 py-6">
-                {messages.map((message, index) => {
-                  const isAssistant = message.role === "assistant" || message.role === "loading"
-                  const isLastMessage = index === messages.length - 1
+            /* Chat with messages - input at bottom */
+            <>
+              {/* Chat messages */}
+              <div className="relative flex-1 space-y-0 px-2 overflow-y-auto">
+                <div className="space-y-6 px-2 py-6">{messages.map((message, index) => {
+                    const isAssistant = message.role === "assistant" || message.role === "loading"
+                    const isLastMessage = index === messages.length - 1
 
-                  return (
-                    <Message
-                      key={message.id}
-                      className={cn(
-                        "mx-auto flex w-full max-w-full flex-col gap-2 px-0",
-                        isAssistant ? "items-start" : "items-end"
-                      )}
-                    >
-                      {isAssistant ? (
-                        <div className="group flex w-full flex-col gap-0">
-                          {message.role === "loading" ? (
-                            /* Loading message */
-                            <div className="flex items-center gap-3">
-                              <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0" />
-                              <div className="flex items-center gap-2">
-                                <ShiningText text={message.content} />
-                                {message.isTyping && (
-                                  <div className="flex space-x-1">
-                                    <div className="w-1 h-4 bg-current animate-pulse"></div>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          ) : (
-                            /* Assistant result message */
-                            <div className="w-full">
-                              <div className="rounded-lg bg-gray-100 dark:bg-gray-800 p-6">
-                                <MessageContent
-                                  className="text-foreground prose w-full flex-1"
-                                  markdown
-                                >
-                                  {message.content}
-                                </MessageContent>
-                                
-                                {/* Trust Score Charts */}
-                                {message.trustScore && (
-                                  <div className="mt-6">
-                                    <div className="flex justify-center gap-8">
-                                      <CircularChart 
-                                        score={message.trustScore} 
-                                        title="Trust Score"
-                                        size={120}
-                                      />
-                                      <CircularChart 
-                                        score={message.confidenceScore || 0} 
-                                        title="Confidence Score"
-                                        size={120}
-                                      />
-                                    </div>
-                                    <div className="text-xs text-gray-500 mt-4 text-center">
-                                      (Sample data for demo purposes)
-                                    </div>
-                                  </div>
-                                )}
-
-                                {/* Conversion Funnel CTA - Only shown for first result */}
-                                {message.showCTA && (
-                                  <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-                                    <h3 className="text-lg font-semibold mb-4">Move Beyond the Demo</h3>
-                                    <div className="grid md:grid-cols-2 gap-4">
-                                      {/* Freemium Path */}
-                                      <div className="text-center md:text-left">
-                                        <h4 className="font-semibold mb-2">See the Truth, For Free</h4>
-                                        <p className="text-sm text-gray-600 mb-3">
-                                          Claim 5 free, real-time verifications. No credit card required.
-                                        </p>
-                                        <Button className="w-full md:w-auto">
-                                          Claim Your 5 Free Verifications
-                                        </Button>
-                                      </div>
-                                      
-                                      {/* Pro Path */}
-                                      <div className="text-center md:text-left">
-                                        <h4 className="font-semibold mb-2">Own the Engine</h4>
-                                        <p className="text-sm text-gray-600 mb-3">
-                                          For professionals and developers.
-                                        </p>
-                                        <Button variant="outline" className="w-full md:w-auto">
-                                          Go Pro & Get API Keys
-                                        </Button>
-                                      </div>
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                              
-                              {/* Message Actions */}
-                              <MessageActions
-                                className={cn(
-                                  "-ml-2.5 flex gap-0 opacity-0 transition-opacity duration-150 group-hover:opacity-100",
-                                  isLastMessage && "opacity-100"
-                                )}
-                              >
-                                <MessageAction tooltip="Copy" delayDuration={100}>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="rounded-full"
-                                  >
-                                    <Copy />
-                                  </Button>
-                                </MessageAction>
-                                <MessageAction tooltip="Upvote" delayDuration={100}>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="rounded-full"
-                                  >
-                                    <ThumbsUp />
-                                  </Button>
-                                </MessageAction>
-                                <MessageAction tooltip="Downvote" delayDuration={100}>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="rounded-full"
-                                  >
-                                    <ThumbsDown />
-                                  </Button>
-                                </MessageAction>
-                              </MessageActions>
-                            </div>
-                          )}
-                        </div>
-                      ) : (
-                        /* User message */
-                        <div className="group flex flex-col items-end gap-1">
-                          <MessageContent className="bg-muted text-primary max-w-[85%] rounded-3xl px-5 py-2.5 sm:max-w-[75%]">
-                            {message.content}
-                          </MessageContent>
-                          <MessageActions
-                            className={cn(
-                              "flex gap-0 opacity-0 transition-opacity duration-150 group-hover:opacity-100"
-                            )}
-                          >
-                            <MessageAction tooltip="Edit" delayDuration={100}>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="rounded-full"
-                              >
-                                <Pencil />
-                              </Button>
-                            </MessageAction>
-                            <MessageAction tooltip="Delete" delayDuration={100}>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="rounded-full"
-                              >
-                                <Trash />
-                              </Button>
-                            </MessageAction>
-                            <MessageAction tooltip="Copy" delayDuration={100}>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="rounded-full"
-                              >
-                                <Copy />
-                              </Button>
-                            </MessageAction>
-                          </MessageActions>
-                        </div>
-                      )}
-                    </Message>
-                  )
-                })}
-              </ChatContainerContent>
-            </ChatContainerRoot>
-          )}
-
-          {/* Prompt Input */}
-          <div className="shrink-0 px-3 pb-3">
-            <PromptInput
-              isLoading={isLoading}
-              value={prompt}
-              onValueChange={setPrompt}
-              onSubmit={handleSubmit}
-              className="border-input bg-popover relative z-10 w-full rounded-3xl border p-0 pt-1 shadow-xs"
-            >
-              <div className="flex flex-col">
-                <PromptInputTextarea
-                  placeholder="Ask Inverus to verify someone..."
-                  className="min-h-[44px] pt-3 pl-4 text-base leading-[1.3] sm:text-base md:text-base"
-                />
-
-                <PromptInputActions className="mt-2 flex w-full items-center justify-between gap-2 px-3 pb-3">
-                  <div className="flex items-center gap-2">
-                    <PromptInputAction tooltip="Verify Identity">
-                      <Button variant="outline" className="rounded-full text-xs">
-                        <Globe size={16} />
-                        Verify
-                      </Button>
-                    </PromptInputAction>
-
-                    <PromptInputAction tooltip="Trust Score">
-                      <Button variant="outline" className="rounded-full text-xs">
-                        Trust Score
-                      </Button>
-                    </PromptInputAction>
-
-                    <PromptInputAction tooltip="More actions">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="size-8 rounded-full"
+                    return (
+                      <Message
+                        key={message.id}
+                        className={cn(
+                          "mx-auto flex w-full max-w-full flex-col gap-2 px-0",
+                          isAssistant ? "items-start" : "items-end"
+                        )}
                       >
-                        <MoreHorizontal size={16} />
-                      </Button>
-                    </PromptInputAction>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      size="icon"
-                      disabled={!prompt.trim() || isLoading}
-                      onClick={handleSubmit}
-                      className="size-9 rounded-full"
-                    >
-                      {!isLoading ? (
-                        <ArrowUp size={18} />
-                      ) : (
-                        <span className="size-3 rounded-xs bg-white" />
-                      )}
-                    </Button>
-                  </div>
-                </PromptInputActions>
+                        {isAssistant ? (
+                          <div className="group flex w-full flex-col gap-0">
+                            {message.role === "loading" ? (
+                              /* Loading message - exact same as main chat */
+                              <div className="group min-h-scroll-anchor flex w-full max-w-3xl flex-col items-start gap-2 px-6 pb-2">
+                                <Loader />
+                              </div>
+                            ) : (
+                              /* Assistant result message */
+                              <div className="w-full">
+                                <div className="flex gap-3">
+                                  {/* Inverus Avatar */}
+                                  <div className="flex-shrink-0 mt-1">
+                                    <svg width="32" height="32" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" className="rounded-lg">
+                                      <rect width="50" height="50" rx="15" fill="#006DED"/>
+                                      <path fillRule="evenodd" clipRule="evenodd" d="M23.7366 6.15368C23.9778 6.05228 24.2376 6 24.5 6C24.7624 6 25.0222 6.05228 25.2634 6.15368L37.6518 11.3612C38.3489 11.6542 38.9431 12.1415 39.3605 12.7626C39.7779 13.3836 40.0003 14.1112 40 14.855V27.888C39.9998 30.2322 39.3676 32.5348 38.1675 34.5623C36.9675 36.5898 35.2422 38.2703 33.1664 39.4334L25.461 43.7498C25.1683 43.9138 24.8371 44 24.5 44C24.1629 44 23.8317 43.9138 23.539 43.7498L15.8336 39.4334C13.7573 38.27 12.0316 36.5889 10.8315 34.5607C9.6314 32.5324 8.99955 30.2291 9 27.8842V14.855C9.00008 14.1115 9.22261 13.3844 9.64002 12.7637C10.0574 12.143 10.6514 11.656 11.3482 11.3631L23.7366 6.15368ZM31.6823 22.5437C32.0352 22.1854 32.2305 21.7055 32.2261 21.2073C32.2217 20.7092 32.0179 20.2327 31.6587 19.8804C31.2995 19.5282 30.8135 19.3284 30.3055 19.3241C29.7975 19.3197 29.3081 19.5112 28.9427 19.8573L22.5625 26.1135L20.0573 23.657C19.6919 23.3109 19.2025 23.1194 18.6945 23.1238C18.1865 23.1281 17.7005 23.3279 17.3413 23.6802C16.9821 24.0324 16.7783 24.5089 16.7739 25.007C16.7695 25.5052 16.9648 25.9851 17.3177 26.3434L21.1927 30.1431C21.556 30.4993 22.0487 30.6994 22.5625 30.6994C23.0763 30.6994 23.569 30.4993 23.9323 30.1431L31.6823 22.5437Z" fill="white"/>
+                                    </svg>
+                                  </div>
+                                  
+                                  {/* Message Content */}
+                                  <div className="flex-1">
+                                    <MessageContent
+                                      className="text-foreground prose w-full flex-1 bg-transparent p-0"
+                                      markdown
+                                    >
+                                      {message.content}
+                                    </MessageContent>
+                                    
+                                    {/* Trust Score Charts */}
+                                    {message.trustScore && (
+                                      <div className="mt-6">
+                                        <div className="flex justify-center gap-8">
+                                          <CircularChart 
+                                            score={message.trustScore} 
+                                            title="Trust Score"
+                                            size={120}
+                                          />
+                                          <CircularChart 
+                                            score={message.confidenceScore || 0} 
+                                            title="Confidence Score"
+                                            size={120}
+                                          />
+                                        </div>
+                                        <div className="text-xs text-gray-500 mt-4 text-center">
+                                          (This is a sample signal.)
+                                        </div>
+                                      </div>
+                                    )}
+
+                                    {/* Results CTA Block - Only shown for first result */}
+                                    {message.showCTA && (
+                                      <div className="mt-6 pt-4">
+                                        <div className="text-center">
+                                          <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">
+                                            Your digital presence already speaks before you do.
+                                          </h3>
+                                          <p className="text-base text-gray-600 dark:text-gray-400 mb-6">
+                                            See Who's Real. Including You.
+                                          </p>
+                                          <a href="/auth">
+                                            <Button 
+                                              className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive shadow-xs h-9 bg-black dark:bg-white text-white dark:text-black hover:bg-gray-600 dark:hover:bg-gray-200 px-8 py-3 rounded-full transition duration-200"
+                                            >
+                                              Launch the Trust Layer
+                                            </Button>
+                                          </a>
+                                          <p className="text-sm text-gray-500 dark:text-gray-600 mt-4">
+                                            No noise. Just signal.
+                                          </p>
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                                
+                                {/* Message Actions */}
+                                <MessageActions
+                                  className={cn(
+                                    "-ml-2.5 flex gap-0 opacity-0 transition-opacity duration-150 group-hover:opacity-100",
+                                    isLastMessage && "opacity-100"
+                                  )}
+                                >
+                                  <MessageAction tooltip="Copy" delayDuration={100}>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="rounded-full"
+                                    >
+                                      <Copy />
+                                    </Button>
+                                  </MessageAction>
+                                  <MessageAction tooltip="Upvote" delayDuration={100}>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="rounded-full"
+                                    >
+                                      <ThumbsUp />
+                                    </Button>
+                                  </MessageAction>
+                                  <MessageAction tooltip="Downvote" delayDuration={100}>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="rounded-full"
+                                    >
+                                      <ThumbsDown />
+                                    </Button>
+                                  </MessageAction>
+                                </MessageActions>
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          /* User message */
+                          <div className="group flex flex-col items-end gap-1">
+                            <MessageContent className="bg-muted text-primary rounded-3xl px-5 py-2.5">
+                              {message.content}
+                            </MessageContent>
+                            <MessageActions
+                              className={cn(
+                                "flex gap-0 opacity-0 transition-opacity duration-150 group-hover:opacity-100"
+                              )}
+                            >
+                              <MessageAction tooltip="Edit" delayDuration={100}>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="rounded-full"
+                                >
+                                  <Pencil />
+                                </Button>
+                              </MessageAction>
+                              <MessageAction tooltip="Delete" delayDuration={100}>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="rounded-full"
+                                >
+                                  <Trash />
+                                </Button>
+                              </MessageAction>
+                              <MessageAction tooltip="Copy" delayDuration={100}>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="rounded-full"
+                                >
+                                  <Copy />
+                                </Button>
+                              </MessageAction>
+                            </MessageActions>
+                          </div>
+                        )}
+                      </Message>
+                    )
+                  })}
+                </div>
               </div>
-            </PromptInput>
-          </div>
+
+              {/* Bottom Input for Chat State */}
+              <div className="shrink-0 px-3 pb-3">
+                <PromptInput
+                  isLoading={isLoading}
+                  value={prompt}
+                  onValueChange={setPrompt}
+                  onSubmit={handleSubmit}
+                  className="border-input bg-popover relative z-10 w-full rounded-3xl border p-0 pt-1 shadow-xs"
+                >
+                  <div className="flex flex-col">
+                    {/* ChatGPT-style animated placeholder - hide when typing */}
+                    {!prompt.trim() && (
+                      <div className="pointer-events-none absolute left-0 top-0 w-full select-none px-4 pt-4 text-gray-500 dark:text-gray-400">
+                        <div 
+                          className="transition-transform ease-in-out duration-500"
+                          style={{ transform: `translateY(-${currentPlaceholderIndex * 1.5}rem)` }}
+                        >
+                          {[
+                            "Ask InVerus to verify someone...",
+                            "Try \"Jasmine Kaur\" or \"Elon Musk\"",
+                            "Curious how someone shows up online?",
+                            "Run a sample Trust Score.",
+                            "What's their digital signal say?",
+                            "Don't guess. Check the signal."
+                          ].map((text, index) => (
+                            <div
+                              key={index}
+                              className={`overflow-hidden text-ellipsis whitespace-nowrap transition-opacity duration-500 h-6 ${
+                                index === currentPlaceholderIndex ? 'opacity-100' : 'opacity-0'
+                              }`}
+                            >
+                              {text}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <PromptInputTextarea
+                      placeholder=""
+                      className="min-h-[44px] pt-3 pl-4 text-base leading-[1.3] sm:text-base md:text-base bg-transparent resize-none"
+                    />
+
+                    <PromptInputActions className="mt-2 flex w-full items-center justify-end gap-2 px-3 pb-3">
+                      <div className="flex items-center gap-2">
+                        <Button
+                          size="icon"
+                          disabled={isLoading}
+                          onClick={handleSubmit}
+                          className={`size-9 rounded-full transition-colors duration-200 ${
+                            prompt.trim() 
+                              ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                              : 'bg-gray-200 hover:bg-gray-300 text-gray-400 dark:bg-gray-700 dark:hover:bg-gray-200 dark:text-gray-500'
+                          }`}
+                        >
+                          {!isLoading ? (
+                            <ArrowUp size={18} />
+                          ) : (
+                            <span className="size-3 rounded-xs bg-white" />
+                          )}
+                        </Button>
+                      </div>
+                    </PromptInputActions>
+                  </div>
+                </PromptInput>
+              </div>
+            </>
+          )}
         </div>
       </div>
-
-
       </section>
+
 
       {/* Section 2: Trust Protocol */}
     <section id="trust-protocol-section" className="flex items-center justify-center h-screen w-full px-4 py-8">
@@ -1057,7 +1123,7 @@ export function ChatLandingWindow() {
             </div>
 
           </div>
-                  </div>
+        </div>
         </footer>
       </section>
 
