@@ -35,7 +35,9 @@ import {
   Shield,
   Eye,
   ChevronDown,
+  ChevronRight,
 } from "lucide-react"
+import { TeamSlide } from "@/app/components/team-slide"
 
 
 
@@ -202,6 +204,7 @@ export function ChatLandingWindow() {
   const [showScrollArrow, setShowScrollArrow] = useState(true)
   const [currentSection, setCurrentSection] = useState(1)
   const [currentPlaceholderIndex, setCurrentPlaceholderIndex] = useState(0)
+  const [isTeamSlideOpen, setIsTeamSlideOpen] = useState(false)
 
   // Debug current section changes
   useEffect(() => {
@@ -885,7 +888,7 @@ export function ChatLandingWindow() {
                 </div>
 
                 {/* Generational Team */}
-                <div className="flex flex-col">
+                <div className="flex flex-col relative">
                   <svg className="md:w-12 md:h-12 h-8 w-8" width="48" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g transform="translate(-10.5, 0)">
                       <path d="M44.0002 46.6666V44.7633C44.0002 43.59 44.5202 42.4766 45.4135 41.7133C49.8502 37.9233 52.6669 32.29 52.6669 26C52.6669 14.4766 43.2369 5.15664 31.6735 5.33664C20.6969 5.50664 11.6702 14.3933 11.3435 25.37C11.1469 31.9166 14.0002 37.7966 18.5835 41.7133C19.4769 42.4766 20.0002 43.5866 20.0002 44.7633V46.6666M32.0002 27.3834V36.0001M32.0002 27.3834L25.3335 21.3334M32.0002 27.3834L38.6668 21.3334M24.0002 53.3334H40.0002V54.6668C40.0002 56.8759 38.2093 58.6668 36.0002 58.6668H28.0002C25.791 58.6668 24.0002 56.8759 24.0002 54.6668V53.3334ZM20.0002 45.3334H44.0002V52.3334C44.0002 52.8857 43.5524 53.3334 43.0002 53.3334H21.0002C20.4479 53.3334 20.0002 52.8857 20.0002 52.3334V45.3334Z" stroke="currentColor" strokeWidth="2"/>
@@ -894,6 +897,25 @@ export function ChatLandingWindow() {
                   <div className="text-lg md:text-xl font-semibold text-gray-900 dark:text-gray-100 mt-2">Generational Team</div>
                   <div className="text-gray-600 dark:text-gray-400 mt-1">Our founding and advisory team has a track record of over $10B in exits across infrastructure, AI, security, and global marketplaces.
                   </div>
+                  
+                  {/* Team Navigation Arrow */}
+                  <motion.button
+                    onClick={() => setIsTeamSlideOpen(true)}
+                    className="absolute -top-2 -right-2 group flex items-center justify-center text-blue-500 hover:text-blue-600 transition-colors duration-300 cursor-pointer"
+                    aria-label="View team"
+                    whileHover={{ x: 5 }}
+                  >
+                    <motion.div
+                      animate={{ x: [0, 8, 0] }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    >
+                      <ChevronRight size={28} className="text-blue-500 group-hover:text-blue-600 rotate-0" />
+                    </motion.div>
+                  </motion.button>
                 </div>
 
               </div>
@@ -1155,6 +1177,22 @@ export function ChatLandingWindow() {
           </div>
         )}
       </AnimatePresence>
+
+      {/* Team Slide */}
+      <TeamSlide
+        isOpen={isTeamSlideOpen}
+        onClose={() => {
+          setIsTeamSlideOpen(false)
+          // Scroll back to architecture section
+          setTimeout(() => {
+            document.getElementById('architecture-section')?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center'
+            })
+          }, 500)
+        }}
+      />
+
     </div>
   )
 } 
