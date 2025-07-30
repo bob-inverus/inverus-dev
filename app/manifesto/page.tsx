@@ -2,14 +2,8 @@
 
 import { motion } from "motion/react"
 import Link from "next/link"
-import { FloatingChatInput } from "@/app/components/floating-chat-input"
 
 export default function ManifestoPage() {
-  const handleChatSubmit = (message: string) => {
-    // Redirect to main chat with the message
-    window.location.href = `/?message=${encodeURIComponent(message)}`
-  }
-
   return (
     <div className="w-full">
       {/* Full Screen Manifesto Section */}
@@ -174,13 +168,8 @@ export default function ManifestoPage() {
           </div>
                  </div>
 
-       </section>
+                </section>
 
-       {/* Floating Chat Input */}
-       <FloatingChatInput 
-         placeholder="Ask about the manifesto..." 
-         onSubmit={handleChatSubmit}
-       />
-     </div>
+       </div>
    )
  } 

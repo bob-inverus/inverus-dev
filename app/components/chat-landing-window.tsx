@@ -36,7 +36,6 @@ import {
   Eye,
   ChevronDown,
 } from "lucide-react"
-import { FloatingChatInput } from "@/app/components/floating-chat-input"
 
 
 
@@ -203,29 +202,16 @@ export function ChatLandingWindow() {
   const [showScrollArrow, setShowScrollArrow] = useState(true)
   const [currentSection, setCurrentSection] = useState(1)
   const [currentPlaceholderIndex, setCurrentPlaceholderIndex] = useState(0)
-  const [isTransitioning, setIsTransitioning] = useState(false)
 
   // Debug current section changes
   useEffect(() => {
     console.log(`Current section changed to: ${currentSection}, Show arrow: ${showScrollArrow}`)
   }, [currentSection, showScrollArrow])
 
-  // ChatGPT-style sliding placeholder animation with smooth cycling
+  // ChatGPT-style sliding placeholder animation with smooth infinite cycling
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentPlaceholderIndex(prev => {
-        const next = prev + 1
-        // Handle cycling from last to first with smooth transition
-        if (next >= 6) {
-          setIsTransitioning(true)
-          setTimeout(() => {
-            setCurrentPlaceholderIndex(0)
-            setTimeout(() => setIsTransitioning(false), 50)
-          }, 300)
-          return prev
-        }
-        return next
-      })
+      setCurrentPlaceholderIndex(prev => (prev + 1) % 6)
     }, 3000)
     
     return () => clearInterval(interval)
@@ -383,15 +369,7 @@ export function ChatLandingWindow() {
     }
   }
 
-  const handleFloatingChatSubmit = (message: string) => {
-    // Run the demo with the floating input message
-    runDemo(message)
-    // Scroll to the chat demo section
-    document.getElementById('chat-demo-section')?.scrollIntoView({ 
-      behavior: 'smooth',
-      block: 'start'
-    })
-  }
+
 
   const handleSubmit = () => {
     if (!prompt.trim() || isLoading) return
@@ -437,7 +415,7 @@ export function ChatLandingWindow() {
                   <div className="flex flex-col">
                     {/* ChatGPT-style animated placeholder - hide when typing */}
                     {!prompt.trim() && (
-                      <div className={`pointer-events-none absolute left-0 top-0 w-full select-none px-4 pt-4 text-gray-500 dark:text-gray-400 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+                      <div className="pointer-events-none absolute left-0 top-0 w-full select-none px-4 pt-4 text-gray-500 dark:text-gray-400">
                         <div 
                           className="transition-transform duration-700"
                           style={{ 
@@ -684,7 +662,7 @@ export function ChatLandingWindow() {
                   <div className="flex flex-col">
                     {/* ChatGPT-style animated placeholder - hide when typing */}
                     {!prompt.trim() && (
-                      <div className={`pointer-events-none absolute left-0 top-0 w-full select-none px-4 pt-4 text-gray-500 dark:text-gray-400 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+                      <div className="pointer-events-none absolute left-0 top-0 w-full select-none px-4 pt-4 text-gray-500 dark:text-gray-400">
                         <div 
                           className="transition-transform duration-700"
                           style={{ 
@@ -1177,12 +1155,6 @@ export function ChatLandingWindow() {
           </div>
         )}
       </AnimatePresence>
-
-      {/* Floating Chat Input */}
-      <FloatingChatInput 
-        placeholder="Try: 'Verify this person...'" 
-        onSubmit={handleFloatingChatSubmit}
-      />
     </div>
   )
 } 
