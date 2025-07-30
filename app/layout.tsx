@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Geist, Geist_Mono, IBM_Plex_Mono } from "next/font/google"
 import "./globals.css"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { Toaster } from "@/components/ui/sonner"
@@ -26,6 +26,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 })
 
+const ibmPlexMono = IBM_Plex_Mono({
+  variable: "--font-ibm-plex-mono",
+  subsets: ["latin"],
+  weight: ["400", "700"],
+})
+
 export const metadata: Metadata = {
   title: "inVerus",
   description:
@@ -50,7 +56,7 @@ export default async function RootLayout({
         />
       ) : null}
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${ibmPlexMono.variable} antialiased`}
       >
         <TanstackQueryProvider>
           <LayoutClient />

@@ -36,6 +36,7 @@ import {
   Eye,
   ChevronDown,
 } from "lucide-react"
+import { FloatingChatInput } from "@/app/components/floating-chat-input"
 
 
 
@@ -202,16 +203,29 @@ export function ChatLandingWindow() {
   const [showScrollArrow, setShowScrollArrow] = useState(true)
   const [currentSection, setCurrentSection] = useState(1)
   const [currentPlaceholderIndex, setCurrentPlaceholderIndex] = useState(0)
+  const [isTransitioning, setIsTransitioning] = useState(false)
 
   // Debug current section changes
   useEffect(() => {
     console.log(`Current section changed to: ${currentSection}, Show arrow: ${showScrollArrow}`)
   }, [currentSection, showScrollArrow])
 
-  // ChatGPT-style sliding placeholder animation
+  // ChatGPT-style sliding placeholder animation with smooth cycling
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentPlaceholderIndex(prev => (prev + 1) % 6)
+      setCurrentPlaceholderIndex(prev => {
+        const next = prev + 1
+        // Handle cycling from last to first with smooth transition
+        if (next >= 6) {
+          setIsTransitioning(true)
+          setTimeout(() => {
+            setCurrentPlaceholderIndex(0)
+            setTimeout(() => setIsTransitioning(false), 50)
+          }, 300)
+          return prev
+        }
+        return next
+      })
     }, 3000)
     
     return () => clearInterval(interval)
@@ -369,6 +383,16 @@ export function ChatLandingWindow() {
     }
   }
 
+  const handleFloatingChatSubmit = (message: string) => {
+    // Run the demo with the floating input message
+    runDemo(message)
+    // Scroll to the chat demo section
+    document.getElementById('chat-demo-section')?.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'start'
+    })
+  }
+
   const handleSubmit = () => {
     if (!prompt.trim() || isLoading) return
     
@@ -413,10 +437,13 @@ export function ChatLandingWindow() {
                   <div className="flex flex-col">
                     {/* ChatGPT-style animated placeholder - hide when typing */}
                     {!prompt.trim() && (
-                      <div className="pointer-events-none absolute left-0 top-0 w-full select-none px-4 pt-4 text-gray-500 dark:text-gray-400">
+                      <div className={`pointer-events-none absolute left-0 top-0 w-full select-none px-4 pt-4 text-gray-500 dark:text-gray-400 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
                         <div 
-                          className="transition-transform ease-in-out duration-500"
-                          style={{ transform: `translateY(-${currentPlaceholderIndex * 1.5}rem)` }}
+                          className="transition-transform duration-700"
+                          style={{ 
+                            transform: `translateY(-${currentPlaceholderIndex * 1.5}rem)`,
+                            transitionTimingFunction: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                          }}
                         >
                           {[
                             "Ask InVerus to verify someone...",
@@ -657,10 +684,13 @@ export function ChatLandingWindow() {
                   <div className="flex flex-col">
                     {/* ChatGPT-style animated placeholder - hide when typing */}
                     {!prompt.trim() && (
-                      <div className="pointer-events-none absolute left-0 top-0 w-full select-none px-4 pt-4 text-gray-500 dark:text-gray-400">
+                      <div className={`pointer-events-none absolute left-0 top-0 w-full select-none px-4 pt-4 text-gray-500 dark:text-gray-400 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
                         <div 
-                          className="transition-transform ease-in-out duration-500"
-                          style={{ transform: `translateY(-${currentPlaceholderIndex * 1.5}rem)` }}
+                          className="transition-transform duration-700"
+                          style={{ 
+                            transform: `translateY(-${currentPlaceholderIndex * 1.5}rem)`,
+                            transitionTimingFunction: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                          }}
                         >
                           {[
                             "Ask InVerus to verify someone...",
@@ -719,7 +749,7 @@ export function ChatLandingWindow() {
 
 
       {/* Section 2: Trust Protocol */}
-    <section id="trust-protocol-section" className="flex items-center justify-center h-screen w-full px-4 py-8">
+    <section id="trust-protocol-section" className="flex flex-col items-center justify-center h-screen w-full px-4 py-8">
       <div className="w-full max-w-6xl mx-auto">
         <div className="grid w-full grid-cols-1 items-stretch gap-8">
           <div className="grid w-full grid-cols-1 max-w-4xl mx-auto">
@@ -831,7 +861,7 @@ export function ChatLandingWindow() {
       </section>
 
       {/* Section 3: Architecture of Trust */}
-      <section id="architecture-section" className="flex items-center justify-center h-screen w-full px-4 py-8">
+      <section id="architecture-section" className="flex flex-col items-center justify-center h-screen w-full px-4 py-8">
         <div className="w-full max-w-6xl mx-auto">
         <div className="w-full">
           <div className="relative w-full">
@@ -975,40 +1005,33 @@ export function ChatLandingWindow() {
                 ]}
               />
             </div>
-
-            {/* Meet the Architects CTA */}
-            <div className="flex justify-center mt-10">
-              <a 
-                href="/mission"
-                className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive shadow-xs h-9 has-[>svg]:px-3 bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 px-8 py-3 rounded-full transition duration-200"
-              >
-                Meet the Architects
-              </a>
-            </div>
           </div>
         </div>
         </div>
       </section>
 
             {/* CTA Section + Footer Combined - Full Viewport */}
-      <section id="cta-section" className="flex flex-col justify-center items-center h-screen w-full px-4 py-8">
+      <section id="cta-section" className="flex flex-col items-center justify-center h-screen w-full px-4 py-8">
         {/* CTA Content */}
         <div className="w-full max-w-6xl mx-auto flex-1 flex items-center justify-center">
           <div className="w-full">
             <div className="bg-gray-50 dark:bg-gray-900 py-16 grid grid-cols-12 rounded-lg">
               <div className="px-4 md:px-0 md:col-span-10 md:col-start-2 col-span-12 flex flex-col text-center">
                 <h2 className="text-2xl md:text-3xl lg:text-4xl tracking-tighter leading-tight text-gray-900 dark:text-gray-100 mb-6">
-                  This is more than a company. It's a new foundation.
+                  The Internet Needs a New Trust Layer. You Can Use It Right Now.
                 </h2>
-                <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed">
-                 We're building a future where trust is a native, programmable layer of the internet. This requires world-class partners, investors, and talent who share our vision for a post-truth digital world.
+                <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-6 max-w-3xl mx-auto leading-relaxed">
+                  Not a pitch. Not a prototype. It's infrastructure. And it's live.
                 </p>
-                <div className="flex items-center justify-center">
+                <div className="flex flex-col items-center justify-center">
                   <Button 
                     className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive shadow-xs h-9 has-[>svg]:px-3 bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 px-8 py-3 rounded-full transition duration-200"
                   >
-                    Join The Mission
+                    Launch the Trust Layer
                   </Button>
+                  <p className="text-sm text-gray-500 dark:text-gray-600 mt-4">
+                    Start verifying in seconds. No noise. No gimmicks.
+                  </p>
                 </div>
               </div>
             </div>
@@ -1064,8 +1087,8 @@ export function ChatLandingWindow() {
                   Investors
                 </a>
                 <span>·</span>
-                <a href="#" className="hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
-                  Our Solemn Vow
+                <a href="/manifesto" className="hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
+                  The Manifesto
                 </a>
               </div>
             </div>
@@ -1115,8 +1138,8 @@ export function ChatLandingWindow() {
                     Investors
                   </a>
                   <span>·</span>
-                  <a href="#" className="hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
-                    Our Solemn Vow
+                  <a href="/manifesto" className="hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
+                    The Manifesto
                   </a>
                 </div>
               </div>
@@ -1154,6 +1177,12 @@ export function ChatLandingWindow() {
           </div>
         )}
       </AnimatePresence>
+
+      {/* Floating Chat Input */}
+      <FloatingChatInput 
+        placeholder="Try: 'Verify this person...'" 
+        onSubmit={handleFloatingChatSubmit}
+      />
     </div>
   )
 } 
