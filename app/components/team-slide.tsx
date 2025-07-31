@@ -85,19 +85,24 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                 >
                   <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
                     <img 
-                      src="https://placehold.co/400x400?text=Andrew" 
+                      src="/team/andrew_odoherty.png" 
                       alt="Andrew O'Doherty" 
                       className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" 
                     />
                     {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                      <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Andrew O'Doherty</p>
-                      <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">Architect of Signal & Structure</p>
-                      <div className="flex gap-2 mb-3">
-                        <img src="https://placehold.co/32x16?text=Custody" alt="Custody Platform" className="h-4 opacity-70 filter grayscale" />
-                        <img src="https://placehold.co/32x16?text=Global" alt="Global Finance" className="h-4 opacity-70 filter grayscale" />
+                    <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4">
+                      {/* Company Logos - Top */}
+                      <div className="flex justify-center items-center gap-6 mb-4 flex-1">
+                        <img src="/companies/citi.svg" alt="Citi" className="h-24 w-auto opacity-80 invert dark:invert-0" />
+                        <img src="/companies/pwc.svg" alt="PWC" className="h-24 w-auto opacity-80 invert dark:invert-0" />
                       </div>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Built global custody platforms to move trillions without friction. Now rebuilding trust across human networks.</p>
+                      
+                      {/* Team Member Info - Bottom */}
+                      <div className="mt-auto">
+                        <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Andrew O'Doherty</p>
+                        <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">Architect of Signal & Structure</p>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Built global custody platforms to move trillions without friction. Now rebuilding trust across human networks.</p>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -112,19 +117,24 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                 >
                   <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
                     <img 
-                      src="https://placehold.co/400x400?text=Jim" 
+                      src="/team/jim-anderson.jpg" 
                       alt="Jim Anderson" 
                       className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" 
                     />
                     {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                      <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Jim Anderson</p>
-                      <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">Infrastructure Whisperer</p>
-                      <div className="flex gap-2 mb-3">
-                        <img src="https://placehold.co/40x16?text=Spotify" alt="Spotify" className="h-4 opacity-70 filter grayscale" />
-                        <img src="https://placehold.co/40x16?text=About" alt="About.com" className="h-4 opacity-70 filter grayscale" />
+                    <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4">
+                      {/* Company Logos - Top */}
+                      <div className="flex justify-center items-center gap-6 mb-4 flex-1">
+                        <img src="/companies/spotify.svg" alt="Spotify" className="h-24 w-auto opacity-80 invert dark:invert-0" />
+                        <img src="/companies/about.svg" alt="About.com" className="h-24 w-auto opacity-80 invert dark:invert-0" />
                       </div>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Co-wrote the architecture of Spotify & About.com. Now surfacing truth by design.</p>
+                      
+                      {/* Team Member Info - Bottom */}
+                      <div className="mt-auto">
+                        <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Jim Anderson</p>
+                        <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">Infrastructure Whisperer</p>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Co-wrote the architecture of Spotify & About.com. Now surfacing truth by design.</p>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -133,19 +143,24 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                 <div className="group relative">
                   <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
                     <img 
-                      src="https://placehold.co/400x400?text=Steven" 
+                      src="/team/steven-chrust.jpg" 
                       alt="Steven Chrust" 
                       className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" 
                     />
                     {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                      <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Steven Chrust</p>
-                      <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">Fracture Forger</p>
-                      <div className="flex gap-2 mb-3">
-                        <img src="https://placehold.co/32x16?text=ARPA" alt="ARPANET" className="h-4 opacity-70 filter grayscale" />
-                        <img src="https://placehold.co/32x16?text=Web1" alt="Early Web" className="h-4 opacity-70 filter grayscale" />
+                    <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4">
+                      {/* Company Logos - Top */}
+                      <div className="flex justify-center items-center gap-6 mb-4 flex-1">
+                        <img src="/companies/centricap.svg" alt="Centricap" className="h-24 w-auto opacity-80 invert dark:invert-0" />
+                        <img src="/companies/winstar.svg" alt="Winstar" className="h-24 w-auto opacity-80 invert dark:invert-0" />
                       </div>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Helped wire the first internet. Now ensuring the second one avoids the same cracks.</p>
+                      
+                      {/* Team Member Info - Bottom */}
+                      <div className="mt-auto">
+                        <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Steven Chrust</p>
+                        <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">Fracture Forger</p>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Helped wire the first internet. Now ensuring the second one avoids the same cracks.</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -154,19 +169,24 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                 <div className="group relative">
                   <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
                     <img 
-                      src="https://placehold.co/400x400?text=Stephen" 
+                      src="/team/stephen-rossetter.jpg" 
                       alt="Stephen Rossetter" 
                       className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" 
                     />
                     {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                      <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Stephen Rossetter</p>
-                      <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">Chief Financial Officer</p>
-                      <div className="flex gap-2 mb-3">
-                        <img src="https://placehold.co/32x16?text=Capital" alt="Capital Markets" className="h-4 opacity-70 filter grayscale" />
-                        <img src="https://placehold.co/32x16?text=Flow" alt="Capital Flow" className="h-4 opacity-70 filter grayscale" />
+                    <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4">
+                      {/* Company Logos - Top */}
+                      <div className="flex justify-center items-center gap-6 mb-4 flex-1">
+                        <img src="/companies/ey.svg" alt="EY" className="h-24 w-auto opacity-80 invert dark:invert-0" />
+                        <img src="/companies/centricap.svg" alt="Centricap" className="h-24 w-auto opacity-80 invert dark:invert-0" />
                       </div>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Engineered billion-dollar capital flows. Now fortifying digital trust economies.</p>
+                      
+                      {/* Team Member Info - Bottom */}
+                      <div className="mt-auto">
+                        <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Stephen Rossetter</p>
+                        <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">Chief Financial Officer</p>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Engineered billion-dollar capital flows. Now fortifying digital trust economies.</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -175,19 +195,24 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                 <div className="group relative">
                   <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
                     <img 
-                      src="https://placehold.co/400x400?text=Jeffrey" 
+                      src="/team/jeffrey-brodlieb.jpg" 
                       alt="Jeffrey Brodlieb" 
                       className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" 
                     />
                     {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                      <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Jeffrey Brodlieb</p>
-                      <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">Business Strategy</p>
-                      <div className="flex gap-2 mb-3">
-                        <img src="https://placehold.co/32x16?text=GE" alt="General Electric" className="h-4 opacity-70 filter grayscale" />
-                        <img src="https://placehold.co/32x16?text=Capital" alt="GE Capital" className="h-4 opacity-70 filter grayscale" />
+                    <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4">
+                      {/* Company Logos - Top */}
+                      <div className="flex justify-center items-center gap-6 mb-4 flex-1">
+                        <img src="/companies/bcg.svg" alt="BCG" className="h-24 w-auto opacity-80 invert dark:invert-0" />
+                        <img src="/companies/ge.svg" alt="GE" className="h-24 w-auto opacity-80 invert dark:invert-0" />
                       </div>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Crafted strategic transactions at GE Capital. Now architecting growth through trust.</p>
+                      
+                      {/* Team Member Info - Bottom */}
+                      <div className="mt-auto">
+                        <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Jeffrey Brodlieb</p>
+                        <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">Business Strategy</p>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Crafted strategic transactions at GE Capital. Now architecting growth through trust.</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -196,19 +221,24 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                 <div className="group relative">
                   <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
                     <img 
-                      src="https://placehold.co/400x400?text=Alan" 
+                      src="/team/alan-kessman.jpg" 
                       alt="Alan Kessman" 
                       className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" 
                     />
                     {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                      <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Alan Kessman</p>
-                      <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">Steward of Systems</p>
-                      <div className="flex gap-2 mb-3">
-                        <img src="https://placehold.co/32x16?text=Tech" alt="Tech Firms" className="h-4 opacity-70 filter grayscale" />
-                        <img src="https://placehold.co/32x16?text=IPO" alt="Public Offerings" className="h-4 opacity-70 filter grayscale" />
+                    <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4">
+                      {/* Company Logos - Top */}
+                      <div className="flex justify-center items-center gap-6 mb-4 flex-1">
+                        <img src="/companies/unimed.svg" alt="Unimed" className="h-24 w-auto opacity-80 invert dark:invert-0" />
+                        <img src="/companies/vion.svg" alt="Vion" className="h-24 w-auto opacity-80 invert dark:invert-0" />
                       </div>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Took tech firms public, guided wartime to peacetime. Now guarding the long game of truth.</p>
+                      
+                      {/* Team Member Info - Bottom */}
+                      <div className="mt-auto">
+                        <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Alan Kessman</p>
+                        <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">Steward of Systems</p>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Took tech firms public, guided wartime to peacetime. Now guarding the long game of truth.</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -217,19 +247,24 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                 <div className="group relative">
                   <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
                     <img 
-                      src="https://placehold.co/400x400?text=Larry" 
+                      src="/team/lawrence_leibowitz.png" 
                       alt="Larry Leibowitz" 
                       className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" 
                     />
                     {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                      <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Larry Leibowitz</p>
-                      <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">Market Mechanic</p>
-                      <div className="flex gap-2 mb-3">
-                        <img src="https://placehold.co/40x16?text=NYSE" alt="New York Stock Exchange" className="h-4 opacity-70 filter grayscale" />
-                        <img src="https://placehold.co/32x16?text=COO" alt="Chief Operating Officer" className="h-4 opacity-70 filter grayscale" />
+                    <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4">
+                      {/* Company Logos - Top */}
+                      <div className="flex justify-center items-center gap-6 mb-4 flex-1">
+                        <img src="/companies/nyse.svg" alt="NYSE" className="h-24 w-auto opacity-80 invert dark:invert-0" />
+                        <img src="/companies/ubs.svg" alt="UBS" className="h-24 w-auto opacity-80 invert dark:invert-0" />
                       </div>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Former COO of NYSE. Spent a career engineering confidence into markets. Now guiding the architecture of digital trust.</p>
+                      
+                      {/* Team Member Info - Bottom */}
+                      <div className="mt-auto">
+                        <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Larry Leibowitz</p>
+                        <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">Market Mechanic</p>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Former COO of NYSE. Spent a career engineering confidence into markets. Now guiding the architecture of digital trust.</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -238,19 +273,24 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                 <div className="group relative">
                   <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
                     <img 
-                      src="https://placehold.co/400x400?text=David" 
+                      src="/team/david_bell.png" 
                       alt="David Bell" 
                       className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" 
                     />
                     {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                      <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">David Bell</p>
-                      <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">Brand Signal Theorist</p>
-                      <div className="flex gap-2 mb-3">
-                        <img src="https://placehold.co/32x16?text=Brand" alt="Brand Agency" className="h-4 opacity-70 filter grayscale" />
-                        <img src="https://placehold.co/32x16?text=Iconic" alt="Iconic Brands" className="h-4 opacity-70 filter grayscale" />
+                    <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4">
+                      {/* Company Logos - Top */}
+                      <div className="flex justify-center items-center gap-6 mb-4 flex-1">
+                        <img src="/companies/google.svg" alt="Google" className="h-24 w-auto opacity-80 invert dark:invert-0" />
+                        <img src="/companies/ipg.svg" alt="IPG" className="h-24 w-auto opacity-80 invert dark:invert-0" />
                       </div>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Shaped iconic brands for decades. Now working to make truth itself feel iconic again.</p>
+                      
+                      {/* Team Member Info - Bottom */}
+                      <div className="mt-auto">
+                        <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">David Bell</p>
+                        <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">Brand Signal Theorist</p>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Shaped iconic brands for decades. Now working to make truth itself feel iconic again.</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -259,40 +299,24 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                 <div className="group relative">
                   <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
                     <img 
-                      src="https://placehold.co/400x400?text=Keith" 
+                      src="/team/keith_turco.png" 
                       alt="Keith Turco" 
                       className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" 
                     />
                     {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                      <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Keith Turco</p>
-                      <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">GTM Alchemist</p>
-                      <div className="flex gap-2 mb-3">
-                        <img src="https://placehold.co/32x16?text=GTM" alt="Go-to-Market" className="h-4 opacity-70 filter grayscale" />
-                        <img src="https://placehold.co/32x16?text=Revenue" alt="Revenue Growth" className="h-4 opacity-70 filter grayscale" />
+                    <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4">
+                      {/* Company Logos - Top */}
+                      <div className="flex justify-center items-center gap-6 mb-4 flex-1">
+                        <img src="/companies/madison-logic.svg" alt="Madison Logic" className="h-24 w-auto opacity-80 invert dark:invert-0" />
+                        <img src="/companies/broadcom.svg" alt="Broadcom" className="h-24 w-auto opacity-80 invert dark:invert-0" />
                       </div>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Scaled revenue engines others couldn't. Now catalyzing trust as a category.</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Alan Kessman (duplicate from HTML) */}
-                <div className="group relative">
-                  <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
-                    <img 
-                      src="https://placehold.co/400x400?text=Alan" 
-                      alt="Alan Kessman" 
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" 
-                    />
-                    {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                      <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Alan Kessman</p>
-                      <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">Steward of Systems</p>
-                      <div className="flex gap-2 mb-3">
-                        <img src="https://placehold.co/32x16?text=Tech" alt="Tech Firms" className="h-4 opacity-70 filter grayscale" />
-                        <img src="https://placehold.co/32x16?text=IPO" alt="Public Offerings" className="h-4 opacity-70 filter grayscale" />
+                      
+                      {/* Team Member Info - Bottom */}
+                      <div className="mt-auto">
+                        <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Keith Turco</p>
+                        <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">GTM Alchemist</p>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Scaled revenue engines others couldn't. Now catalyzing trust as a category.</p>
                       </div>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Took tech firms public, guided wartime to peacetime. Now guarding the long game of truth.</p>
                     </div>
                   </div>
                 </div>
@@ -301,19 +325,24 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                 <div className="group relative">
                   <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
                     <img 
-                      src="https://placehold.co/400x400?text=Tom" 
+                      src="/team/tom_saleh.jpg" 
                       alt="Tom Saleh" 
                       className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" 
                     />
                     {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                      <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Tom Saleh</p>
-                      <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">Cycle-Honed Instinct</p>
-                      <div className="flex gap-2 mb-3">
-                        <img src="https://placehold.co/32x16?text=Markets" alt="Market Analysis" className="h-4 opacity-70 filter grayscale" />
-                        <img src="https://placehold.co/32x16?text=Invest" alt="Investment" className="h-4 opacity-70 filter grayscale" />
+                    <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4">
+                      {/* Company Logos - Top */}
+                      <div className="flex justify-center items-center gap-6 mb-4 flex-1">
+                        <img src="/companies/fasb.svg" alt="FASB" className="h-24 w-auto opacity-80 invert dark:invert-0" />
+                        <img src="/companies/nyse.svg" alt="NYSE" className="h-24 w-auto opacity-80 invert dark:invert-0" />
                       </div>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Read markets before algorithms did. Now investing in architectures that clarify the world.</p>
+                      
+                      {/* Team Member Info - Bottom */}
+                      <div className="mt-auto">
+                        <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Tom Saleh</p>
+                        <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">Cycle-Honed Instinct</p>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Read markets before algorithms did. Now investing in architectures that clarify the world.</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -323,26 +352,31 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                   <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden flex items-center justify-center">
                     <div className="text-6xl text-gray-400 dark:text-gray-600">?</div>
                     {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                      <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">You?</p>
-                      <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">Signal Catalyst</p>
-                      <div className="flex gap-2 mb-3">
-                        <img src="https://placehold.co/32x16?text=Future" alt="Future Tech" className="h-4 opacity-70 filter grayscale" />
-                        <img src="https://placehold.co/32x16?text=Signal" alt="Signal" className="h-4 opacity-70 filter grayscale" />
+                    <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4">
+                      {/* Future Company Gradients - Top */}
+                      <div className="flex justify-center items-center gap-6 mb-4 flex-1">
+                        <div className="h-24 w-32 bg-gradient-to-r from-blue-500 to-purple-500 rounded opacity-80"></div>
+                        <div className="h-24 w-32 bg-gradient-to-r from-purple-500 to-pink-500 rounded opacity-80"></div>
                       </div>
-                      <details className="text-sm text-gray-700 dark:text-gray-300">
-                        <summary className="cursor-pointer underline">Join the ensemble →</summary>
-                        <div className="mt-2 leading-relaxed">
-                          If you built a bot that crashed the school network just for fun…<br />
-                          If you'd rather <strong>create the future</strong>, not copy the past…<br />
-                          If you've ever looked at the internet and thought, "I can fix this…"<br />
-                          Then we're looking for you.<br />
-                          <strong>We don't want your resume.</strong><br />
-                          This is about your <strong>signal</strong>.<br />
-                          If it resonates, it will find us.
-                          <a href="mailto:build@inverus.tech" className="mt-4 inline-block bg-blue-600 hover:bg-blue-500 transition-colors text-white font-semibold py-2 px-6 rounded-full shadow-lg shadow-blue-600/20 text-base">Send your signal</a>
-                        </div>
-                      </details>
+                      
+                      {/* Recruiting Info - Bottom */}
+                      <div className="mt-auto">
+                        <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">You?</p>
+                        <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">Signal Catalyst</p>
+                        <details className="text-sm text-gray-700 dark:text-gray-300">
+                          <summary className="cursor-pointer underline">Join the ensemble →</summary>
+                          <div className="mt-2 leading-relaxed">
+                            If you built a bot that crashed the school network just for fun…<br />
+                            If you'd rather <strong>create the future</strong>, not copy the past…<br />
+                            If you've ever looked at the internet and thought, "I can fix this…"<br />
+                            Then we're looking for you.<br />
+                            <strong>We don't want your resume.</strong><br />
+                            This is about your <strong>signal</strong>.<br />
+                            If it resonates, it will find us.
+                            <a href="mailto:build@inverus.tech" className="mt-4 inline-block bg-blue-600 hover:bg-blue-500 transition-colors text-white font-semibold py-2 px-6 rounded-full shadow-lg shadow-blue-600/20 text-base">Send your signal</a>
+                          </div>
+                        </details>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -846,6 +846,26 @@ export function ChatLandingWindow() {
         <div className="w-full max-w-6xl mx-auto">
         <div className="w-full">
           <div className="relative w-full">
+            
+            {/* Team Navigation Arrow - Right side centered within section */}
+            <motion.button
+              onClick={() => setIsTeamSlideOpen(true)}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 group flex items-center justify-center text-blue-500 hover:text-blue-600 transition-colors duration-300 cursor-pointer z-10"
+              aria-label="View team"
+              whileHover={{ x: 5 }}
+            >
+              <motion.div
+                animate={{ x: [0, 8, 0] }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              >
+                <ChevronRight size={28} className="text-blue-500 group-hover:text-blue-600" />
+              </motion.div>
+            </motion.button>
+
             <div className="grid w-full grid-cols-12">
               <div className="col-span-12 md:col-span-10 md:col-start-2 lg:col-span-8 lg:col-start-3">
                 <div className="relative flex flex-col items-center text-center">
@@ -898,24 +918,7 @@ export function ChatLandingWindow() {
                   <div className="text-gray-600 dark:text-gray-400 mt-1">Our founding and advisory team has a track record of over $10B in exits across infrastructure, AI, security, and global marketplaces.
                   </div>
                   
-                  {/* Team Navigation Arrow */}
-                  <motion.button
-                    onClick={() => setIsTeamSlideOpen(true)}
-                    className="absolute -top-2 -right-2 group flex items-center justify-center text-blue-500 hover:text-blue-600 transition-colors duration-300 cursor-pointer"
-                    aria-label="View team"
-                    whileHover={{ x: 5 }}
-                  >
-                    <motion.div
-                      animate={{ x: [0, 8, 0] }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                      }}
-                    >
-                      <ChevronRight size={28} className="text-blue-500 group-hover:text-blue-600 rotate-0" />
-                    </motion.div>
-                  </motion.button>
+
                 </div>
 
               </div>
@@ -1177,6 +1180,8 @@ export function ChatLandingWindow() {
           </div>
         )}
       </AnimatePresence>
+
+
 
       {/* Team Slide */}
       <TeamSlide
