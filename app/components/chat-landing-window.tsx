@@ -752,15 +752,15 @@ export function ChatLandingWindow() {
               {/* Trust Layer Card */}
               <div className="border border-gray-200 dark:border-gray-700 p-6 mb-4 md:mb-0 group relative w-full rounded-md last:mb-0">
                 <div className="h-full w-full">
-                  <div className="flex h-full w-full flex-col justify-between">
-                    <div className="relative flex min-h-6 w-full justify-between">
+                  <div className="flex h-full w-full flex-col">
+                    <div className="relative flex min-h-6 w-full justify-start mb-2">
                       <div className="w-9 h-9">
                         <div className="relative h-full w-full rounded-md flex items-center justify-center">
                           <Shield size={24} className="text-gray-700 dark:text-gray-300" />
                         </div>
                       </div>
                     </div>
-                    <div className="mt-4">
+                    <div>
                       <div className="relative items-start">
                         <h4 className="text-xl md:text-2xl tracking-tighter leading-tight mb-2 text-gray-900 dark:text-gray-100">Trust Layer</h4>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -775,15 +775,15 @@ export function ChatLandingWindow() {
               {/* Sovereignty Layer Card */}
               <div className="border border-gray-200 dark:border-gray-700 p-6 mb-4 md:mb-0 group relative w-full rounded-md last:mb-0">
                 <div className="h-full w-full">
-                  <div className="flex h-full w-full flex-col justify-between">
-                    <div className="relative flex min-h-6 w-full justify-between">
+                  <div className="flex h-full w-full flex-col">
+                    <div className="relative flex min-h-6 w-full justify-start mb-2">
                       <div className="w-9 h-9">
                         <div className="relative h-full w-full rounded-md flex items-center justify-center">
                           <Users size={24} className="text-gray-700 dark:text-gray-300" />
                         </div>
                       </div>
                     </div>
-                    <div className="mt-4">
+                    <div>
                       <div className="relative items-start">
                         <h4 className="text-xl md:text-2xl tracking-tighter leading-tight mb-2 text-gray-900 dark:text-gray-100">Sovereignty Layer</h4>
                         <p className="text-sm text-gray-600 dark:text-gray-400">Built on a core belief in digital sovereignty. Explore our philosophy of user-centric control.</p>
@@ -796,15 +796,15 @@ export function ChatLandingWindow() {
               {/* Agency Layer Card */}
               <div className="border border-gray-200 dark:border-gray-700 p-6 mb-4 md:mb-0 group relative w-full rounded-md last:mb-0">
                 <div className="h-full w-full">
-                  <div className="flex h-full w-full flex-col justify-between">
-                    <div className="relative flex min-h-6 w-full justify-between">
+                  <div className="flex h-full w-full flex-col">
+                    <div className="relative flex min-h-6 w-full justify-start mb-2">
                       <div className="w-9 h-9">
                         <div className="relative h-full w-full rounded-md flex items-center justify-center">
                           <Eye size={24} className="text-gray-700 dark:text-gray-300" />
                         </div>
                       </div>
                     </div>
-                    <div className="mt-4">
+                    <div>
                       <div className="relative items-start">
                         <h4 className="text-xl md:text-2xl tracking-tighter leading-tight mb-2 text-gray-900 dark:text-gray-100">Agency Layer</h4>
                         <p className="text-sm text-gray-600 dark:text-gray-400">Unleash powerful AI assistants that act on your behalf, using your own verified data.</p>
@@ -817,15 +817,15 @@ export function ChatLandingWindow() {
               {/* Exchange Layer Card */}
               <div className="border border-gray-200 dark:border-gray-700 p-6 mb-4 md:mb-0 group relative w-full rounded-md last:mb-0">
                 <div className="h-full w-full">
-                  <div className="flex h-full w-full flex-col justify-between">
-                    <div className="relative flex min-h-6 w-full justify-between">
+                  <div className="flex h-full w-full flex-col">
+                    <div className="relative flex min-h-6 w-full justify-start mb-2">
                       <div className="w-9 h-9">
                         <div className="relative h-full w-full rounded-md flex items-center justify-center">
                           <Globe size={24} className="text-gray-700 dark:text-gray-300" />
                         </div>
                       </div>
                     </div>
-                    <div className="mt-4">
+                    <div>
                       <div className="relative items-start">
                         <h4 className="text-xl md:text-2xl tracking-tighter leading-tight mb-2 text-gray-900 dark:text-gray-100">Exchange Layer</h4>
                         <p className="text-sm text-gray-600 dark:text-gray-400">Unlock the value of verified data in a new marketplace for trusted, permission-based exchange.</p>
@@ -873,7 +873,7 @@ export function ChatLandingWindow() {
                     An Architecture of Trust
                   </h1>
                   <div className="mb-12">
-                    <p className="text-gray-600 dark:text-gray-400 text-balance max-w-3xl text-lg">
+                    <p className="text-gray-600 dark:text-gray-400 max-w-3xl text-lg">
                     Our advantage isn't a single feature, but a deeply integrated system designed for enduring value.
                     </p>
                   </div>
@@ -883,7 +883,7 @@ export function ChatLandingWindow() {
 
             {/* Trust Architecture Points */}
             <div className="grid w-full grid-cols-12 max-w-6xl mx-auto">
-              <div className="gap-4 md:gap-6 col-span-12 grid w-full grid-cols-1 items-stretch md:grid-cols-3 md:col-span-10 md:col-start-2">
+              <div className="gap-8 md:gap-12 col-span-12 grid w-full grid-cols-1 items-stretch md:grid-cols-3 md:col-span-10 md:col-start-2">
                 
                 {/* Deep Patent Portfolio */}
                 <div className="flex flex-col">
@@ -1086,7 +1086,7 @@ export function ChatLandingWindow() {
 
               {/* Links */}
               <div className="flex items-center justify-center gap-2 text-gray-600 dark:text-gray-400">
-                <a href="#" className="hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
+                <a href="mailto:andrew@inverus.tech" className="hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
                   Investors
                 </a>
                 <span>·</span>
@@ -1137,7 +1137,7 @@ export function ChatLandingWindow() {
               {/* Right Links */}
               <div className="absolute right-0 top-0">
                 <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                  <a href="#" className="hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
+                  <a href="mailto:andrew@inverus.tech" className="hover:text-gray-900 dark:hover:text-gray-100 transition duration-200">
                     Investors
                   </a>
                   <span>·</span>

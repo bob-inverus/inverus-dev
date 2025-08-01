@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "motion/react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react"
 
 interface TeamSlideProps {
   isOpen: boolean
@@ -77,11 +77,12 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                 
                 {/* Andrew O'Doherty */}
                 <motion.div 
-                  className="group relative"
+                  className="group relative cursor-pointer"
                   variants={{
                     hidden: { opacity: 0, y: 20 },
                     visible: { opacity: 1, y: 0 }
                   }}
+                  onClick={() => window.open('https://www.linkedin.com/in/andrew-odoherty/', '_blank')}
                 >
                   <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
                     <img 
@@ -99,7 +100,10 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                       
                       {/* Team Member Info - Bottom */}
                       <div className="mt-auto">
-                        <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Andrew O'Doherty</p>
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold">Andrew O'Doherty</p>
+                          <ExternalLink size={16} className="text-blue-600 dark:text-blue-400" />
+                        </div>
                         <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">Architect of Signal & Structure</p>
                         <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Built global custody platforms to move trillions without friction. Now rebuilding trust across human networks.</p>
                       </div>
@@ -109,11 +113,12 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
 
                 {/* Jim Anderson */}
                 <motion.div 
-                  className="group relative"
+                  className="group relative cursor-pointer"
                   variants={{
                     hidden: { opacity: 0, y: 20 },
                     visible: { opacity: 1, y: 0 }
                   }}
+                  onClick={() => window.open('https://www.linkedin.com/in/jimjamesanderson/', '_blank')}
                 >
                   <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
                     <img 
@@ -131,7 +136,10 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                       
                       {/* Team Member Info - Bottom */}
                       <div className="mt-auto">
-                        <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Jim Anderson</p>
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold">Jim Anderson</p>
+                          <ExternalLink size={16} className="text-blue-600 dark:text-blue-400" />
+                        </div>
                         <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">Infrastructure Whisperer</p>
                         <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Co-wrote the architecture of Spotify & About.com. Now surfacing truth by design.</p>
                       </div>
@@ -140,7 +148,7 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                 </motion.div>
 
                 {/* Steven Chrust */}
-                <div className="group relative">
+                <div className="group relative cursor-pointer" onClick={() => window.open('https://www.linkedin.com/in/steven-chrust/', '_blank')}>
                   <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
                     <img 
                       src="/team/steven-chrust.jpg" 
@@ -157,7 +165,10 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                       
                       {/* Team Member Info - Bottom */}
                       <div className="mt-auto">
-                        <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Steven Chrust</p>
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold">Steven Chrust</p>
+                          <ExternalLink size={16} className="text-blue-600 dark:text-blue-400" />
+                        </div>
                         <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">Fracture Forger</p>
                         <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Helped wire the first internet. Now ensuring the second one avoids the same cracks.</p>
                       </div>
@@ -166,7 +177,7 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                 </div>
 
                 {/* Stephen Rossetter */}
-                <div className="group relative">
+                <div className="group relative cursor-pointer" onClick={() => window.open('https://www.linkedin.com/in/stephen-rossetter/', '_blank')}>
                   <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
                     <img 
                       src="/team/stephen-rossetter.jpg" 
@@ -183,7 +194,10 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                       
                       {/* Team Member Info - Bottom */}
                       <div className="mt-auto">
-                        <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Stephen Rossetter</p>
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold">Stephen Rossetter</p>
+                          <ExternalLink size={16} className="text-blue-600 dark:text-blue-400" />
+                        </div>
                         <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">Chief Financial Officer</p>
                         <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Engineered billion-dollar capital flows. Now fortifying digital trust economies.</p>
                       </div>
@@ -192,7 +206,7 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                 </div>
 
                 {/* Jeffrey Brodlieb */}
-                <div className="group relative">
+                <div className="group relative cursor-pointer" onClick={() => window.open('https://www.linkedin.com/in/jeffrey-brodlieb/', '_blank')}>
                   <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
                     <img 
                       src="/team/jeffrey-brodlieb.jpg" 
@@ -209,7 +223,10 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                       
                       {/* Team Member Info - Bottom */}
                       <div className="mt-auto">
-                        <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Jeffrey Brodlieb</p>
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold">Jeffrey Brodlieb</p>
+                          <ExternalLink size={16} className="text-blue-600 dark:text-blue-400" />
+                        </div>
                         <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">Business Strategy</p>
                         <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Crafted strategic transactions at GE Capital. Now architecting growth through trust.</p>
                       </div>
@@ -218,7 +235,7 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                 </div>
 
                 {/* Alan Kessman */}
-                <div className="group relative">
+                <div className="group relative cursor-pointer" onClick={() => window.open('https://www.linkedin.com/in/alan-kessman/', '_blank')}>
                   <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
                     <img 
                       src="/team/alan-kessman.jpg" 
@@ -235,7 +252,10 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                       
                       {/* Team Member Info - Bottom */}
                       <div className="mt-auto">
-                        <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Alan Kessman</p>
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold">Alan Kessman</p>
+                          <ExternalLink size={16} className="text-blue-600 dark:text-blue-400" />
+                        </div>
                         <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">Steward of Systems</p>
                         <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Took tech firms public, guided wartime to peacetime. Now guarding the long game of truth.</p>
                       </div>
@@ -244,7 +264,7 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                 </div>
 
                 {/* Larry Leibowitz */}
-                <div className="group relative">
+                <div className="group relative cursor-pointer" onClick={() => window.open('https://www.linkedin.com/in/larry-leibowitz/', '_blank')}>
                   <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
                     <img 
                       src="/team/lawrence_leibowitz.png" 
@@ -261,7 +281,10 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                       
                       {/* Team Member Info - Bottom */}
                       <div className="mt-auto">
-                        <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Larry Leibowitz</p>
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold">Larry Leibowitz</p>
+                          <ExternalLink size={16} className="text-blue-600 dark:text-blue-400" />
+                        </div>
                         <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">Market Mechanic</p>
                         <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Former COO of NYSE. Spent a career engineering confidence into markets. Now guiding the architecture of digital trust.</p>
                       </div>
@@ -270,7 +293,7 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                 </div>
 
                 {/* David Bell */}
-                <div className="group relative">
+                <div className="group relative cursor-pointer" onClick={() => window.open('https://www.linkedin.com/in/david-bell/', '_blank')}>
                   <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
                     <img 
                       src="/team/david_bell.png" 
@@ -287,7 +310,10 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                       
                       {/* Team Member Info - Bottom */}
                       <div className="mt-auto">
-                        <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">David Bell</p>
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold">David Bell</p>
+                          <ExternalLink size={16} className="text-blue-600 dark:text-blue-400" />
+                        </div>
                         <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">Brand Signal Theorist</p>
                         <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Shaped iconic brands for decades. Now working to make truth itself feel iconic again.</p>
                       </div>
@@ -296,7 +322,7 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                 </div>
 
                 {/* Keith Turco */}
-                <div className="group relative">
+                <div className="group relative cursor-pointer" onClick={() => window.open('https://www.linkedin.com/in/keith-turco/', '_blank')}>
                   <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
                     <img 
                       src="/team/keith_turco.png" 
@@ -313,7 +339,10 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                       
                       {/* Team Member Info - Bottom */}
                       <div className="mt-auto">
-                        <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Keith Turco</p>
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold">Keith Turco</p>
+                          <ExternalLink size={16} className="text-blue-600 dark:text-blue-400" />
+                        </div>
                         <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">GTM Alchemist</p>
                         <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Scaled revenue engines others couldn't. Now catalyzing trust as a category.</p>
                       </div>
@@ -322,7 +351,7 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                 </div>
 
                 {/* Tom Saleh */}
-                <div className="group relative">
+                <div className="group relative cursor-pointer" onClick={() => window.open('https://www.linkedin.com/in/tom-saleh/', '_blank')}>
                   <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
                     <img 
                       src="/team/tom_saleh.jpg" 
@@ -339,7 +368,10 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                       
                       {/* Team Member Info - Bottom */}
                       <div className="mt-auto">
-                        <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Tom Saleh</p>
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold">Tom Saleh</p>
+                          <ExternalLink size={16} className="text-blue-600 dark:text-blue-400" />
+                        </div>
                         <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">Cycle-Honed Instinct</p>
                         <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Read markets before algorithms did. Now investing in architectures that clarify the world.</p>
                       </div>
@@ -349,33 +381,28 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
 
                 {/* You? - Recruiting Card */}
                 <div className="group relative">
-                  <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden flex items-center justify-center">
-                    <div className="text-6xl text-gray-400 dark:text-gray-600">?</div>
+                  <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden flex flex-col items-center justify-center relative">
+                    <div className="text-6xl text-gray-400 dark:text-gray-600 mb-4">?</div>
+                    {/* Always visible "You?" text */}
+                    <div className="text-center">
+                      <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold">You?</p>
+                    </div>
                     {/* Hover Overlay */}
                     <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4">
-                      {/* Future Company Gradients - Top */}
-                      <div className="flex justify-center items-center gap-6 mb-4 flex-1">
-                        <div className="h-24 w-32 bg-gradient-to-r from-blue-500 to-purple-500 rounded opacity-80"></div>
-                        <div className="h-24 w-32 bg-gradient-to-r from-purple-500 to-pink-500 rounded opacity-80"></div>
-                      </div>
-                      
                       {/* Recruiting Info - Bottom */}
                       <div className="mt-auto">
                         <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">You?</p>
                         <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">Signal Catalyst</p>
-                        <details className="text-sm text-gray-700 dark:text-gray-300">
-                          <summary className="cursor-pointer underline">Join the ensemble →</summary>
-                          <div className="mt-2 leading-relaxed">
-                            If you built a bot that crashed the school network just for fun…<br />
-                            If you'd rather <strong>create the future</strong>, not copy the past…<br />
-                            If you've ever looked at the internet and thought, "I can fix this…"<br />
-                            Then we're looking for you.<br />
-                            <strong>We don't want your resume.</strong><br />
-                            This is about your <strong>signal</strong>.<br />
-                            If it resonates, it will find us.
-                            <a href="mailto:build@inverus.tech" className="mt-4 inline-block bg-blue-600 hover:bg-blue-500 transition-colors text-white font-semibold py-2 px-6 rounded-full shadow-lg shadow-blue-600/20 text-base">Send your signal</a>
-                          </div>
-                        </details>
+                        <div className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                          If you built a bot that crashed the school network just for fun…<br />
+                          If you'd rather <strong>create the future</strong>, not copy the past…<br />
+                          If you've ever looked at the internet and thought, "I can fix this…"<br />
+                          Then we're looking for you.<br />
+                          <strong>We don't want your resume.</strong><br />
+                          This is about your <strong>signal</strong>.<br />
+                          If it resonates, it will find us.
+                          <a href="mailto:build@inverus.tech" className="mt-4 inline-block bg-blue-600 hover:bg-blue-500 transition-colors text-white font-semibold py-2 px-6 rounded-full shadow-lg shadow-blue-600/20 text-base">Send your signal</a>
+                        </div>
                       </div>
                     </div>
                   </div>
