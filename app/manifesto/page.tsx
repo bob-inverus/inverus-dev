@@ -2,8 +2,39 @@
 
 import { motion } from "motion/react"
 import Link from "next/link"
+import { useState, useEffect } from "react"
 
 export default function ManifestoPage() {
+  const [isAtBottom, setIsAtBottom] = useState(false)
+  const [isScrolling, setIsScrolling] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+      const windowHeight = window.innerHeight
+      const documentHeight = document.documentElement.scrollHeight
+      
+      // Check if at bottom (within 50px threshold)
+      const isBottom = scrollTop + windowHeight >= documentHeight - 50
+      setIsAtBottom(isBottom)
+      
+      // Set scrolling state
+      setIsScrolling(scrollTop > 100)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const getBackButtonClass = () => {
+    if (isAtBottom) {
+      return "inline-flex items-center text-blue-500 hover:text-blue-600 transition-colors text-sm"
+    } else if (isScrolling) {
+      return "inline-flex items-center text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 transition-colors text-sm"
+    } else {
+      return "inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors text-sm"
+    }
+  }
   return (
     <div className="w-full">
       {/* Full Screen Manifesto Section */}
@@ -14,14 +45,14 @@ export default function ManifestoPage() {
             <div className="mb-12">
               <Link 
                 href="/" 
-                className="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors text-sm"
+                className={getBackButtonClass()}
               >
                 ← Back to Home
               </Link>
             </div>
             
-            {/* Manifesto Title - Centered with IBM Plex Mono */}
-            <div className="text-center">
+            {/* Manifesto Title - Left aligned with IBM Plex Mono */}
+            <div className="text-left">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter leading-tight text-gray-900 dark:text-gray-100 mb-16 font-[family-name:var(--font-ibm-plex-mono)]">
                 The Trust Manifesto
               </h1>

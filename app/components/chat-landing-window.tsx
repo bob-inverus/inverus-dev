@@ -753,20 +753,18 @@ export function ChatLandingWindow() {
               <div className="border border-gray-200 dark:border-gray-700 p-6 mb-4 md:mb-0 group relative w-full rounded-md last:mb-0">
                 <div className="h-full w-full">
                   <div className="flex h-full w-full flex-col">
-                    <div className="relative flex min-h-6 w-full justify-start mb-2">
+                    <div className="flex items-center gap-3 mb-3">
                       <div className="w-9 h-9">
                         <div className="relative h-full w-full rounded-md flex items-center justify-center">
                           <Shield size={24} className="text-gray-700 dark:text-gray-300" />
                         </div>
                       </div>
+                      <h4 className="text-xl md:text-2xl tracking-tighter leading-tight text-gray-900 dark:text-gray-100">Trust Layer</h4>
                     </div>
                     <div>
-                      <div className="relative items-start">
-                        <h4 className="text-xl md:text-2xl tracking-tighter leading-tight mb-2 text-gray-900 dark:text-gray-100">Trust Layer</h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          Instantly verify humans via API or our web application. The core engine to secure your platform, built to verify content and agents as the web evolves.
-                          </p>
-                      </div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Instantly verify humans via API or our web application. The core engine to secure your platform, built to verify content and agents as the web evolves.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -776,18 +774,16 @@ export function ChatLandingWindow() {
               <div className="border border-gray-200 dark:border-gray-700 p-6 mb-4 md:mb-0 group relative w-full rounded-md last:mb-0">
                 <div className="h-full w-full">
                   <div className="flex h-full w-full flex-col">
-                    <div className="relative flex min-h-6 w-full justify-start mb-2">
+                    <div className="flex items-center gap-3 mb-3">
                       <div className="w-9 h-9">
                         <div className="relative h-full w-full rounded-md flex items-center justify-center">
                           <Users size={24} className="text-gray-700 dark:text-gray-300" />
                         </div>
                       </div>
+                      <h4 className="text-xl md:text-2xl tracking-tighter leading-tight text-gray-900 dark:text-gray-100">Sovereignty Layer</h4>
                     </div>
                     <div>
-                      <div className="relative items-start">
-                        <h4 className="text-xl md:text-2xl tracking-tighter leading-tight mb-2 text-gray-900 dark:text-gray-100">Sovereignty Layer</h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">Built on a core belief in digital sovereignty. Explore our philosophy of user-centric control.</p>
-                      </div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Built on a core belief in digital sovereignty. Explore our philosophy of user-centric control.</p>
                     </div>
                   </div>
                 </div>
@@ -797,18 +793,16 @@ export function ChatLandingWindow() {
               <div className="border border-gray-200 dark:border-gray-700 p-6 mb-4 md:mb-0 group relative w-full rounded-md last:mb-0">
                 <div className="h-full w-full">
                   <div className="flex h-full w-full flex-col">
-                    <div className="relative flex min-h-6 w-full justify-start mb-2">
+                    <div className="flex items-center gap-3 mb-3">
                       <div className="w-9 h-9">
                         <div className="relative h-full w-full rounded-md flex items-center justify-center">
                           <Eye size={24} className="text-gray-700 dark:text-gray-300" />
                         </div>
                       </div>
+                      <h4 className="text-xl md:text-2xl tracking-tighter leading-tight text-gray-900 dark:text-gray-100">Agency Layer</h4>
                     </div>
                     <div>
-                      <div className="relative items-start">
-                        <h4 className="text-xl md:text-2xl tracking-tighter leading-tight mb-2 text-gray-900 dark:text-gray-100">Agency Layer</h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">Unleash powerful AI assistants that act on your behalf, using your own verified data.</p>
-                      </div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Unleash powerful AI assistants that act on your behalf, using your own verified data.</p>
                     </div>
                   </div>
                 </div>
@@ -818,18 +812,16 @@ export function ChatLandingWindow() {
               <div className="border border-gray-200 dark:border-gray-700 p-6 mb-4 md:mb-0 group relative w-full rounded-md last:mb-0">
                 <div className="h-full w-full">
                   <div className="flex h-full w-full flex-col">
-                    <div className="relative flex min-h-6 w-full justify-start mb-2">
+                    <div className="flex items-center gap-3 mb-3">
                       <div className="w-9 h-9">
                         <div className="relative h-full w-full rounded-md flex items-center justify-center">
                           <Globe size={24} className="text-gray-700 dark:text-gray-300" />
                         </div>
                       </div>
+                      <h4 className="text-xl md:text-2xl tracking-tighter leading-tight text-gray-900 dark:text-gray-100">Exchange Layer</h4>
                     </div>
                     <div>
-                      <div className="relative items-start">
-                        <h4 className="text-xl md:text-2xl tracking-tighter leading-tight mb-2 text-gray-900 dark:text-gray-100">Exchange Layer</h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">Unlock the value of verified data in a new marketplace for trusted, permission-based exchange.</p>
-                      </div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Unlock the value of verified data in a new marketplace for trusted, permission-based exchange.</p>
                     </div>
                   </div>
                 </div>
@@ -874,7 +866,7 @@ export function ChatLandingWindow() {
                   </h1>
                   <div className="mb-12">
                     <p className="text-gray-600 dark:text-gray-400 max-w-3xl text-lg">
-                    Our advantage isn't a single feature, but a deeply integrated system designed for enduring value.
+                    Our advantage isn't a single feature, but a deeply integrated system designed for enduring&nbsp;value.
                     </p>
                   </div>
                 </div>
