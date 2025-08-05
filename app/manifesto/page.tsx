@@ -62,17 +62,17 @@ export default function ManifestoPage() {
 
               <p>
                 Now it connects billions of signals — with almost no way to know —<br />
-                <span className="ml-6">What's real? Who's real? Can I trust this?</span>
+                <span className="ml-6"><strong>What's real? Who's real? Can I trust this?</strong></span>
               </p>
 
-              <p className="font-bold">Ask yourself:</p>
               <p>
-                <span className="ml-6">When was the last time you knew — without doubt — who was on the other side?</span>
+                Ask yourself:<br />
+                <span className="ml-6">When was the last time <strong>you knew — without doubt —</strong> who was on the other side?</span>
               </p>
 
               <p>
                 This isn't a surface glitch.<br />
-                <span className="ml-6">It's a civilizational fracture.</span>
+                <span className="ml-6">It's a <strong>civilizational fracture.</strong></span>
               </p>
 
               <p>
@@ -82,71 +82,70 @@ export default function ManifestoPage() {
                 <span className="ml-6">Between truth and transaction.</span>
               </p>
 
-              <p>
-                Trust didn't vanish.<br />
-                <span className="ml-6">It atomized.</span><br />
+              <p>Trust didn't vanish.<br />
+                <span className="ml-6"><strong>It atomized.</strong></span><br />
                 And in its place came performance, proxies, and plausible deniability.
               </p>
 
-              <p className="font-bold">
+              <p>
                 Not a feature.<br />
                 Not a filter.<br />
-                A foundation.
+                A <strong>foundation.</strong>
               </p>
 
               <p>
-                A principle embedded in protocol,<br />
-                <span className="ml-6">a trust engine at the root of coordination,</span><br />
-                <span className="ml-6">a signal beneath the noise —</span><br />
+                A <strong>principle embedded in protocol</strong>,<br />
+                <span className="ml-6">a <strong>trust engine</strong> at the root of coordination,</span><br />
+                <span className="ml-6">a <strong>signal beneath the noise —</strong></span><br />
                 designed not to dominate, but to verify.
               </p>
 
-              <p className="font-bold">
+              <p>
                 A new basis for a real internet —<br />
-                owned by no one, available to everyone.
+                <strong>owned by no one, available to everyone.</strong>
               </p>
 
               <p>
                 Built from first principles:<br />
-                <span className="ml-6">Observable. Immutable. Shared.</span><br />
-                <span className="ml-6">Mathematical, not reputational.</span><br />
-                <span className="ml-6">Credibly neutral. Coordination-first. Trustless by design.</span>
+                <span className="ml-6"><strong>Observable. Immutable. Shared.</strong></span><br />
+                <span className="ml-6"><strong>Mathematical,</strong> not reputational.</span><br />
+                <span className="ml-6"><strong>Credibly neutral.</strong> Coordination-first. <strong>Trustless by design.</strong></span>
               </p>
 
               <p>
-                Where identities are not just claimed — but confirmed.<br />
-                Where confidence is not a feeling — but a provable state.<br />
+                Where identities are not just claimed — but <strong>confirmed.</strong><br />
+                Where confidence is not a feeling — but a <strong>provable state.</strong><br />
                 Where saying "I'm real" isn't enough —<br />
-                <span className="ml-6">because now, the system can say it back.</span>
+                <span className="ml-6">because now, <strong>the system can say it back.</strong></span>
               </p>
 
               <p>
                 In an age where machines talk,<br />
                 <span className="ml-6">bots transact,</span><br />
                 <span className="ml-6">and synthetic media wears a thousand faces,</span><br />
-                we must verify not just the what — but the who.<br />
-                Not just content — but context.<br />
-                Not just signal — but source.
+                we must verify not just the <strong>what —</strong> but the <strong>who.</strong><br />
+                Not just content — but <strong>context.</strong><br />
+                Not just signal — but <strong>source.</strong>
               </p>
 
-              <p className="font-bold">
+              <p>
                 This isn't a someday.<br />
-                It's inevitable.
+                It's <strong>inevitable.</strong>
               </p>
 
               <p>
                 Because the signal was always there —<br />
-                <span className="ml-6">waiting for a system that could listen.</span>
+                <span className="ml-6"><strong>waiting for a system that could listen.</strong></span>
               </p>
 
               <p>
                 And beyond the shadows of noise,<br />
-                <span className="ml-6">truth becomes legible.</span>
+                <span className="ml-6"><strong>truth becomes legible.</strong></span>
               </p>
 
-              <p className="font-bold">
+              <p>
                 The internet doesn't need more platforms.<br />
-                It needs a root layer of trust.
+                It needs a <strong>root layer of trust.</strong>
               </p>
 
               <p>
@@ -160,47 +159,47 @@ export default function ManifestoPage() {
                 <span className="ml-6">One built to verify.</span>
               </p>
 
-              <p className="font-bold">
+              <p>
                 Only now...<br />
-                can we tell them apart.
+                <strong>can we tell them apart.</strong>
               </p>
 
               <p>
                 This is not just a better version of what came before.<br />
-                <span className="ml-6">It's a new possibility space — for systems, societies, and souls.</span>
+                <span className="ml-6">It's a new <strong>possibility space —</strong> for systems, societies, and souls.</span>
               </p>
 
               <p>
                 It's not a company.<br />
                 It's not a pitch.<br />
-                <span className="font-bold">It's a foundation.</span>
+                It's a <strong>foundation.</strong>
               </p>
 
               <p>
-                A principle encoded in protocol,<br />
-                <span className="ml-6">a system built to remember,</span><br />
-                <span className="ml-6">a covenant made legible.</span>
+                A <strong>principle encoded in protocol</strong>,<br />
+                <span className="ml-6">a <strong>system built to remember</strong>,</span><br />
+                <span className="ml-6">a <strong>covenant made legible.</strong></span>
               </p>
 
               <p>
                 This isn't a movement of belief.<br />
-                <span className="ml-6">It's a movement of proof.</span>
+                <span className="ml-6">It's a movement of <strong>proof.</strong></span>
               </p>
 
               <p>
                 Trust is not a promise.<br />
-                <span className="ml-6">It's a system condition —</span><br />
+                <span className="ml-6">It's a <strong>system condition —</strong></span><br />
                 <span className="ml-6">engineered, observable, and built to scale.</span>
               </p>
 
-              <p className="font-bold">
+              <p>
                 What comes next begins here.<br />
                 With signal.<br />
                 With sovereignty.<br />
                 With trust — made legible.
               </p>
 
-              <p className="font-bold">
+              <p>
                 This isn't a conclusion.<br />
                 It's a beginning.
               </p>
@@ -220,9 +219,9 @@ export default function ManifestoPage() {
                 <span className="ml-6">We chose to build one worthy of belief.</span>
               </p>
 
-              <p className="font-bold">
-                For every transaction. For every truth.<br />
-                For everyone.
+              <p>
+                <strong>For every transaction. For every truth.</strong><br />
+                <strong>For everyone.</strong>
               </p>
 
             </div>
