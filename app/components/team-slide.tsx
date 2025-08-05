@@ -159,10 +159,7 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                 >
                   <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden flex items-center justify-center relative hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors duration-300">
                     <div className="flex items-center gap-4">
-                      <div className="text-6xl text-gray-400 dark:text-gray-600">?</div>
-                      <div className="text-center">
-                        <p className="text-gray-900 dark:text-gray-100 text-2xl font-semibold">YOU</p>
-                      </div>
+                      <div className="text-6xl text-gray-400 dark:text-gray-600">YOU?</div>
                     </div>
                     {/* Hover Overlay */}
                     <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4">
