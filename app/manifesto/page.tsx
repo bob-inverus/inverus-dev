@@ -2,65 +2,50 @@
 
 import { motion } from "motion/react"
 import Link from "next/link"
-import { useState, useEffect } from "react"
+import { ChevronLeft } from "lucide-react"
 
 export default function ManifestoPage() {
-  const [isAtBottom, setIsAtBottom] = useState(false)
-  const [isScrolling, setIsScrolling] = useState(false)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop
-      const windowHeight = window.innerHeight
-      const documentHeight = document.documentElement.scrollHeight
-      
-      // Check if at bottom (within 50px threshold)
-      const isBottom = scrollTop + windowHeight >= documentHeight - 50
-      setIsAtBottom(isBottom)
-      
-      // Set scrolling state
-      setIsScrolling(scrollTop > 100)
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  const getBackButtonClass = () => {
-    if (isAtBottom) {
-      return "inline-flex items-center text-blue-500 hover:text-blue-600 transition-colors text-sm"
-    } else if (isScrolling) {
-      return "inline-flex items-center text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 transition-colors text-sm"
-    } else {
-      return "inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors text-sm"
-    }
-  }
   return (
     <div className="w-full">
+      {/* Back Arrow - Fixed position */}
+      <motion.div
+        className="fixed left-8 top-1/2 transform -translate-y-1/2 z-10"
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.2 }}
+      >
+        <Link href="/">
+          <motion.button
+            className="group flex items-center justify-center text-blue-500 hover:text-blue-600 transition-colors duration-300 cursor-pointer"
+            whileHover={{ x: -5 }}
+          >
+            <motion.div
+              animate={{ x: [0, -8, 0] }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
+              <ChevronLeft size={32} className="text-blue-500 group-hover:text-blue-600" />
+            </motion.div>
+          </motion.button>
+        </Link>
+      </motion.div>
+
       {/* Full Screen Manifesto Section */}
       <section className="flex flex-col items-center justify-center min-h-screen w-full px-4 py-8">
-        <div className="w-full max-w-6xl mx-auto">
+        <div className="w-full max-w-4xl mx-auto">
+          
+          {/* Manifesto Title - Aligned with content */}
           <div className="mb-16">
-            {/* Back to Home Link - Left aligned */}
-            <div className="mb-12">
-              <Link 
-                href="/" 
-                className={getBackButtonClass()}
-              >
-                ← Back to Home
-              </Link>
-            </div>
-            
-            {/* Manifesto Title - Left aligned with IBM Plex Mono */}
-            <div className="text-left mb-16">
-              <p className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter leading-tight text-gray-900 dark:text-gray-100 font-[family-name:var(--font-ibm-plex-mono)]">
-                The Trust Manifesto
-              </p>
-            </div>
+            <p className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter leading-tight text-gray-900 dark:text-gray-100 font-[family-name:var(--font-ibm-plex-mono)]">
+              The Trust Manifesto
+            </p>
           </div>
 
           {/* Manifesto Content */}
-          <div className="max-w-4xl mx-auto">
+          <div>
             <div className="space-y-8 text-base md:text-lg leading-relaxed font-[family-name:var(--font-ibm-plex-mono)] text-gray-800 dark:text-gray-200">
               
               <p>
@@ -242,10 +227,8 @@ export default function ManifestoPage() {
 
             </div>
           </div>
-                 </div>
-
-                </section>
-
-       </div>
-   )
- } 
+        </div>
+      </section>
+    </div>
+  )
+} 
