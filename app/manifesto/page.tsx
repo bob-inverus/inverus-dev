@@ -221,7 +221,7 @@ export default function ManifestoPage() {
 
               <p>
                 <strong>For every transaction. For every truth.</strong><br />
-                <strong>For everyone.</strong>
+                <span className="ml-6"><strong>For everyone.</strong></span>
               </p>
 
             </div>
