@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "motion/react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { teamMembers, recruitingCard, teamQuote } from "@/lib/team"
 
 interface TeamSlideProps {
   isOpen: boolean
@@ -103,365 +104,50 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                 }}
               >
 
-                {/* Andrew O'Doherty */}
-                <motion.div
-                  className="group relative cursor-pointer"
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 }
-                  }}
-                  onClick={() => handleMobileClick('andrew', 'https://www.linkedin.com/in/andrew-odoherty/')}
-                >
-                  <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
-                    <img
-                      src="/team/andrew_odoherty.png"
-                      alt="Andrew O'Doherty"
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
-                    />
-                    {/* Hover Overlay */}
-                    <div className={`absolute inset-0 bg-white/95 dark:bg-gray-900/95 ${clickedMobile === 'andrew' ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4`}>
-                      {/* Company Logos - Top */}
-                      <div className="flex justify-center items-center gap-6 mb-4 flex-1">
-                        <img src="/companies/citi.svg" alt="Citi" className="h-24 w-auto opacity-80 invert dark:invert-0" />
-                        <img src="/companies/pwc.svg" alt="PWC" className="h-24 w-auto opacity-80 invert dark:invert-0" />
-                      </div>
-
-                      {/* Team Member Info - Bottom */}
-                      <div className="mt-auto">
-                        <div className="flex items-center gap-2 mb-1">
-                          <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold">Andrew</p>
-                          <LinkedInIcon size={16} />
+                {/* Team Members */}
+                {teamMembers.map((member) => (
+                  <motion.div
+                    key={member.id}
+                    className="group relative cursor-pointer"
+                    variants={{
+                      hidden: { opacity: 0, y: 20 },
+                      visible: { opacity: 1, y: 0 }
+                    }}
+                    onClick={() => handleMobileClick(member.id, member.linkedinUrl)}
+                  >
+                    <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
+                      <img
+                        src={member.image}
+                        alt={member.name}
+                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
+                      />
+                      {/* Hover Overlay */}
+                      <div className={`absolute inset-0 bg-white/95 dark:bg-gray-900/95 ${clickedMobile === member.id ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4`}>
+                        {/* Company Logos - Top */}
+                        <div className="flex justify-center items-center gap-6 mb-4 flex-1">
+                          {member.companies.map((company, index) => (
+                            <img 
+                              key={index}
+                              src={company.logo} 
+                              alt={company.name} 
+                              className="h-24 w-auto opacity-80 invert dark:invert-0" 
+                            />
+                          ))}
                         </div>
-                        <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">THE OPERATOR</p>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">From Wall Street to Web3: channels capital-markets discipline into building a verifiable layer for the internet that clears humans, content, and agents at millisecond speed.</p>
+
+                        {/* Team Member Info - Bottom */}
+                        <div className="mt-auto">
+                          <div className="flex items-center gap-2 mb-1">
+                            <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold">{member.name}</p>
+                            <LinkedInIcon size={16} />
+                          </div>
+                          <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">{member.title}</p>
+                          <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">{member.description}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </motion.div>
-
-                {/* Jim Anderson */}
-                <motion.div
-                  className="group relative cursor-pointer"
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 }
-                  }}
-                  onClick={() => handleMobileClick('jim', 'https://www.linkedin.com/in/jimjamesanderson/')}
-                >
-                  <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
-                    <img
-                      src="/team/jim-anderson.jpg"
-                      alt="Jim Anderson"
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
-                    />
-                    {/* Hover Overlay */}
-                    <div className={`absolute inset-0 bg-white/95 dark:bg-gray-900/95 ${clickedMobile === 'jim' ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4`}>
-                      {/* Company Logos - Top */}
-                      <div className="flex justify-center items-center gap-6 mb-4 flex-1">
-                        <img src="/companies/spotify.svg" alt="Spotify" className="h-24 w-auto opacity-80 invert dark:invert-0" />
-                        <img src="/companies/about.svg" alt="About.com" className="h-24 w-auto opacity-80 invert dark:invert-0" />
-                      </div>
-
-                      {/* Team Member Info - Bottom */}
-                      <div className="mt-auto">
-                        <div className="flex items-center gap-2 mb-1">
-                          <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold">Jim</p>
-                          <LinkedInIcon size={16} />
-                        </div>
-                        <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">THE ARCHITECT</p>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">From Prodigy to co-founding About.com to Spotify's mass rollout, his blueprints reach billions. A go-to advisor for homeland-security tech; his next build lets every digital actor prove it's real.</p>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-
-                {/* Steven Chrust */}
-                <motion.div
-                  className="group relative cursor-pointer"
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 }
-                  }}
-                  onClick={() => handleMobileClick('steven', 'https://www.linkedin.com/in/steven-chrust/')}
-                >
-                  <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
-                    <img
-                      src="/team/steven-chrust.jpg"
-                      alt="Steven Chrust"
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
-                    />
-                    {/* Hover Overlay */}
-                    <div className={`absolute inset-0 bg-white/95 dark:bg-gray-900/95 ${clickedMobile === 'steven' ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4`}>
-                      {/* Company Logos - Top */}
-                      <div className="flex justify-center items-center gap-6 mb-4 flex-1">
-                        <img src="/companies/centricap.svg" alt="Centricap" className="h-24 w-auto opacity-80 invert dark:invert-0" />
-                        <img src="/companies/winstar.svg" alt="Winstar" className="h-24 w-auto opacity-80 invert dark:invert-0" />
-                      </div>
-
-                      {/* Team Member Info - Bottom */}
-                      <div className="mt-auto">
-                        <div className="flex items-center gap-2 mb-1">
-                          <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold">Steven</p>
-                          <LinkedInIcon size={16} />
-                        </div>
-                        <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">THE GOVERNOR</p>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">From Sanford C. Bernstein's research desk to co-founding WinStar's multi-billion IPO, now steering private-equity capital and governance so the Trust Protocol launches with institutional polish.</p>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-
-                {/* Stephen Rossetter */}
-                <motion.div
-                  className="group relative cursor-pointer"
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 }
-                  }}
-                  onClick={() => handleMobileClick('stephen', 'https://www.linkedin.com/in/stephen-rossetter/')}
-                >
-                  <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
-                    <img
-                      src="/team/stephen-rossetter.jpg"
-                      alt="Stephen Rossetter"
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
-                    />
-                    {/* Hover Overlay */}
-                    <div className={`absolute inset-0 bg-white/95 dark:bg-gray-900/95 ${clickedMobile === 'stephen' ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4`}>
-                      {/* Company Logos - Top */}
-                      <div className="flex justify-center items-center gap-6 mb-4 flex-1">
-                        <img src="/companies/ey.svg" alt="EY" className="h-24 w-auto opacity-80 invert dark:invert-0" />
-                        <img src="/companies/centricap.svg" alt="Centricap" className="h-24 w-auto opacity-80 invert dark:invert-0" />
-                      </div>
-
-                      {/* Team Member Info - Bottom */}
-                      <div className="mt-auto">
-                        <div className="flex items-center gap-2 mb-1">
-                          <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold">Stephen</p>
-                          <LinkedInIcon size={16} />
-                        </div>
-                        <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">THE CUSTODIAN</p>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">EY auditor — venture-fund CFO — PE co-founder. Four decades of capital hygiene and board seats now keep balance sheets mission-proof for internet-scale infrastructure.</p>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-
-                {/* Jeffrey Brodlieb */}
-                <motion.div
-                  className="group relative cursor-pointer"
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 }
-                  }}
-                  onClick={() => handleMobileClick('jeffrey', 'https://www.linkedin.com/in/jeffrey-brodlieb/')}
-                >
-                  <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
-                    <img
-                      src="/team/jeffrey-brodlieb.jpg"
-                      alt="Jeffrey Brodlieb"
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
-                    />
-                    {/* Hover Overlay */}
-                    <div className={`absolute inset-0 bg-white/95 dark:bg-gray-900/95 ${clickedMobile === 'jeffrey' ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4`}>
-                      {/* Company Logos - Top */}
-                      <div className="flex justify-center items-center gap-6 mb-4 flex-1">
-                        <img src="/companies/bcg.svg" alt="BCG" className="h-24 w-auto opacity-80 invert dark:invert-0" />
-                        <img src="/companies/ge.svg" alt="GE" className="h-24 w-auto opacity-80 invert dark:invert-0" />
-                      </div>
-
-                      {/* Team Member Info - Bottom */}
-                      <div className="mt-auto">
-                        <div className="flex items-center gap-2 mb-1">
-                          <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold">Jeffrey</p>
-                          <LinkedInIcon size={16} />
-                        </div>
-                        <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">THE STRATEGIST</p>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Private-equity partner and HBS MBA who led GE Capital turnarounds. Launched PREVIEW TV into the nation's fastest-growing subscription network, then advised Fortune 100s at BCG—four decades of strategy distilled.</p>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-
-                {/* David Bell */}
-                <motion.div
-                  className="group relative cursor-pointer"
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 }
-                  }}
-                  onClick={() => handleMobileClick('david', 'https://www.linkedin.com/in/david-bell/')}
-                >
-                  <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
-                    <img
-                      src="/team/david_bell.png"
-                      alt="David Bell"
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
-                    />
-                    {/* Hover Overlay */}
-                    <div className={`absolute inset-0 bg-white/95 dark:bg-gray-900/95 ${clickedMobile === 'david' ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4`}>
-                      {/* Company Logos - Top */}
-                      <div className="flex justify-center items-center gap-6 mb-4 flex-1">
-                        <img src="/companies/google.svg" alt="Google" className="h-24 w-auto opacity-80 invert dark:invert-0" />
-                        <img src="/companies/ipg.svg" alt="IPG" className="h-24 w-auto opacity-80 invert dark:invert-0" />
-                      </div>
-
-                      {/* Team Member Info - Bottom */}
-                      <div className="mt-auto">
-                        <div className="flex items-center gap-2 mb-1">
-                          <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold">David</p>
-                          <LinkedInIcon size={16} />
-                        </div>
-                        <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">ADVISOR – Brand & Narrative</p>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Advertising Hall-of-Famer, ex-IPG Chairman. Led two NYSE-listed holding companies, advised AOL & Google in breakout years, and turned Bozell into a top-ten global agency.</p>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-
-                {/* Lawrence Leibowitz */}
-                <motion.div
-                  className="group relative cursor-pointer"
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 }
-                  }}
-                  onClick={() => handleMobileClick('lawrence', 'https://www.linkedin.com/in/larry-leibowitz/')}
-                >
-                  <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
-                    <img
-                      src="/team/lawrence_leibowitz.png"
-                      alt="Lawrence Leibowitz"
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
-                    />
-                    {/* Hover Overlay */}
-                    <div className={`absolute inset-0 bg-white/95 dark:bg-gray-900/95 ${clickedMobile === 'lawrence' ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4`}>
-                      {/* Company Logos - Top */}
-                      <div className="flex justify-center items-center gap-6 mb-4 flex-1">
-                        <img src="/companies/nyse.svg" alt="NYSE" className="h-24 w-auto opacity-80 invert dark:invert-0" />
-                        <img src="/companies/ubs.svg" alt="UBS" className="h-24 w-auto opacity-80 invert dark:invert-0" />
-                      </div>
-
-                      {/* Team Member Info - Bottom */}
-                      <div className="mt-auto">
-                        <div className="flex items-center gap-2 mb-1">
-                          <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold">Lawrence</p>
-                          <LinkedInIcon size={16} />
-                        </div>
-                        <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">ADVISOR – Market Structure & Governance</p>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Former COO of NYSE, led through its $10bn ICE acquisition. Understands how governance, liquidity, and confidence intertwine. Now applies that muscle to make credibility an asset class.</p>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-
-                {/* Tom Saleh */}
-                <motion.div
-                  className="group relative cursor-pointer"
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 }
-                  }}
-                  onClick={() => handleMobileClick('tom', 'https://www.linkedin.com/in/tom-saleh/')}
-                >
-                  <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
-                    <img
-                      src="/team/tom_saleh.jpg"
-                      alt="Tom Saleh"
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
-                    />
-                    {/* Hover Overlay */}
-                    <div className={`absolute inset-0 bg-white/95 dark:bg-gray-900/95 ${clickedMobile === 'tom' ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4`}>
-                      {/* Company Logos - Top */}
-                      <div className="flex justify-center items-center gap-6 mb-4 flex-1">
-                        <img src="/companies/fasb.svg" alt="FASB" className="h-24 w-auto opacity-80 invert dark:invert-0" />
-                        <img src="/companies/nyse.svg" alt="NYSE" className="h-24 w-auto opacity-80 invert dark:invert-0" />
-                      </div>
-
-                      {/* Team Member Info - Bottom */}
-                      <div className="mt-auto">
-                        <div className="flex items-center gap-2 mb-1">
-                          <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold">Tom</p>
-                          <LinkedInIcon size={16} />
-                        </div>
-                        <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">ADVISOR – Infrastructure & Compliance</p>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Built the first automated futures exchange, overhauled FASB's XBRL "intelligent-data" project, and pioneered policy-driven VM security a decade before "zero trust." Seven companies founded, six exits—three decades turning complexity into compliance.</p>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-
-                {/* Keith Turco */}
-                <motion.div
-                  className="group relative cursor-pointer"
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 }
-                  }}
-                  onClick={() => handleMobileClick('keith', 'https://www.linkedin.com/in/keith-turco/')}
-                >
-                  <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
-                    <img
-                      src="/team/keith_turco.png"
-                      alt="Keith Turco"
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
-                    />
-                    {/* Hover Overlay */}
-                    <div className={`absolute inset-0 bg-white/95 dark:bg-gray-900/95 ${clickedMobile === 'keith' ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4`}>
-                      {/* Company Logos - Top */}
-                      <div className="flex justify-center items-center gap-6 mb-4 flex-1">
-                        <img src="/companies/madison-logic.svg" alt="Madison Logic" className="h-24 w-auto opacity-80 invert dark:invert-0" />
-                        <img src="/companies/broadcom.svg" alt="Broadcom" className="h-24 w-auto opacity-80 invert dark:invert-0" />
-                      </div>
-
-                      {/* Team Member Info - Bottom */}
-                      <div className="mt-auto">
-                        <div className="flex items-center gap-2 mb-1">
-                          <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold">Keith</p>
-                          <LinkedInIcon size={16} />
-                        </div>
-                        <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">ADVISOR – GTM & Enterprise Growth</p>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">25-year growth architect: scaled CA Tech, Ogilvy, and Merge. Crafts B2B flywheels so new categories feel inevitable. Built and exited agencies, ran $100m P&Ls, served on AAF & ANA boards.</p>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-
-                {/* Alan Kessman */}
-                <motion.div
-                  className="group relative cursor-pointer"
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 }
-                  }}
-                  onClick={() => handleMobileClick('alan', 'https://www.linkedin.com/in/alan-kessman/')}
-                >
-                  <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
-                    <img
-                      src="/team/alan-kessman.jpg"
-                      alt="Alan Kessman"
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
-                    />
-                    {/* Hover Overlay */}
-                    <div className={`absolute inset-0 bg-white/95 dark:bg-gray-900/95 ${clickedMobile === 'alan' ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4`}>
-                      {/* Company Logos - Top */}
-                      <div className="flex justify-center items-center gap-6 mb-4 flex-1">
-                        <img src="/companies/unimed.svg" alt="Unimed" className="h-24 w-auto opacity-80 invert dark:invert-0" />
-                        <img src="/companies/vion.svg" alt="Vion" className="h-24 w-auto opacity-80 invert dark:invert-0" />
-                      </div>
-
-                      {/* Team Member Info - Bottom */}
-                      <div className="mt-auto">
-                        <div className="flex items-center gap-2 mb-1">
-                          <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold">Alan</p>
-                          <LinkedInIcon size={16} />
-                        </div>
-                        <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">ADVISOR – Scale & Capital Markets</p>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">Serial CEO & turnaround specialist. Sixteen boardrooms, countless crises. Led $500m businesses through turnaround, growth, and exit—including the PE sale of Universal Marine Medical.</p>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
+                  </motion.div>
+                ))}
 
                 {/* You? - Recruiting Card */}
                 <motion.div
@@ -471,27 +157,34 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                     visible: { opacity: 1, y: 0 }
                   }}
                 >
-                  <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden flex flex-col items-center justify-center relative">
-                    <div className="text-6xl text-gray-400 dark:text-gray-600 mb-4">?</div>
-                    {/* Always visible "You?" text */}
-                    <div className="text-center">
-                      <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold">You?</p>
+                  <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden flex items-center justify-center relative">
+                    <div className="flex items-center gap-4">
+                      <div className="text-6xl text-gray-400 dark:text-gray-600">?</div>
+                      <div className="text-center">
+                        <p className="text-gray-900 dark:text-gray-100 text-2xl font-semibold">YOU</p>
+                      </div>
                     </div>
                     {/* Hover Overlay */}
                     <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4">
                       {/* Recruiting Info - Bottom */}
                       <div className="mt-auto">
                         <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">You?</p>
-                        <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">Signal Catalyst</p>
+                        <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">{recruitingCard.title}</p>
                         <div className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                          If you built a bot that crashed the school network just for fun…<br />
-                          If you'd rather <strong>create the future</strong>, not copy the past…<br />
-                          If you've ever looked at the internet and thought, "I can fix this…"<br />
-                          Then we're looking for you.<br />
-                          <strong>We don't want your resume.</strong><br />
-                          This is about your <strong>signal</strong>.<br />
-                          If it resonates, it will find us.
-                          <a href="mailto:andrew@inverus.tech" className="mt-4 inline-block bg-blue-600 hover:bg-blue-500 transition-colors text-white font-semibold py-2 px-6 rounded-full shadow-lg shadow-blue-600/20 text-base">Send your Signal</a>
+                          {recruitingCard.description.split('\n').map((line, index) => (
+                            <span key={index}>
+                              {line.includes('create the future') ? <strong>{line}</strong> : line}
+                              {line.includes('We don\'t want your resume.') ? <><br /><strong>{line}</strong></> : ''}
+                              {line.includes('This is about your signal.') ? <><br />This is about your <strong>signal</strong>.</> : ''}
+                              {index < recruitingCard.description.split('\n').length - 1 && <br />}
+                            </span>
+                          ))}
+                          <a 
+                            href={`mailto:${recruitingCard.ctaEmail}`} 
+                            className="mt-4 inline-block bg-blue-600 hover:bg-blue-500 transition-colors text-white font-semibold py-2 px-6 rounded-full shadow-lg shadow-blue-600/20 text-base"
+                          >
+                            {recruitingCard.ctaText}
+                          </a>
                         </div>
                       </div>
                     </div>
@@ -508,7 +201,7 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                 transition={{ delay: 1.5, duration: 0.5 }}
               >
                 <p className="text-xl italic text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-                  "A generational ensemble… forged across cycles, systems, and disciplines… aligned by one mission: to rebuild trust at the protocol layer of the internet."
+                  "{teamQuote}"
                 </p>
               </motion.div>
 

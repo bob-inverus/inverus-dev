@@ -52,148 +52,193 @@ export default function ManifestoPage() {
             </div>
             
             {/* Manifesto Title - Left aligned with IBM Plex Mono */}
-            <div className="text-left">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter leading-tight text-gray-900 dark:text-gray-100 mb-16 font-[family-name:var(--font-ibm-plex-mono)]">
+            <div className="text-left mb-16">
+              <p className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter leading-tight text-gray-900 dark:text-gray-100 font-[family-name:var(--font-ibm-plex-mono)]">
                 The Trust Manifesto
-              </h1>
+              </p>
             </div>
           </div>
 
           {/* Manifesto Content */}
           <div className="max-w-4xl mx-auto">
-            <div className="space-y-12 text-base md:text-lg leading-relaxed font-[family-name:var(--font-ibm-plex-mono)]">
+            <div className="space-y-8 text-base md:text-lg leading-relaxed font-[family-name:var(--font-ibm-plex-mono)] text-gray-800 dark:text-gray-200">
               
-                             {/* Section 1 */}
-               <div className="text-gray-800 dark:text-gray-200">
-                 <p className="mb-2">We believed the internet would <strong>connect</strong> us.</p>
-                 <p className="ml-6 mb-2">It did.</p>
-                 <p className="ml-6 mb-6">But not in the way we imagined.</p>
-                 <p className="mb-2">It connected <strong>noise to scale</strong>.</p>
-                 <p className="ml-6 mb-2"><strong>Anonymity to power</strong>.</p>
-                 <p className="ml-6 mb-6"><strong>Fraud to opportunity</strong>.</p>
-                 <p className="mb-2">Now it connects billions of signals — with almost no way to know —</p>
-                 <p className="ml-6 mb-2"><strong>What's real? Who's real? Can I trust this?</strong></p>
-                 <p className="mb-2">Ask yourself:</p>
-                 <p className="ml-6 mb-8">When was the last time you knew — <strong>without doubt</strong> — who was on the other side?</p>
-               </div>
+              <p>
+                We believed the internet would connect us.<br />
+                <span className="ml-6">It did.</span><br />
+                <span className="ml-6">But not in the way we imagined.</span>
+              </p>
 
-                             {/* Section 2 */}
-               <div className="text-gray-800 dark:text-gray-200">
-                 <p className="mb-2">This isn't a surface glitch.</p>
-                 <p className="ml-6 mb-6">It's a <strong>civilizational fracture</strong>.</p>
-                 <p className="mb-2">In that fracture, we built <strong>walls</strong>:</p>
-                 <p className="ml-6 mb-2">Between people.</p>
-                 <p className="ml-6 mb-2">Between systems.</p>
-                 <p className="ml-6 mb-6">Between truth and transaction.</p>
-                 <p className="mb-2">Trust didn't vanish.</p>
-                 <p className="ml-6 mb-2">It <strong>atomized</strong>.</p>
-                 <p className="ml-6 mb-8">And in its place came <strong>performance, proxies, and plausible deniability</strong>.</p>
-               </div>
+              <p>
+                It connected noise to scale.<br />
+                <span className="ml-6">Anonymity to power.</span><br />
+                <span className="ml-6">Fraud to opportunity.</span>
+              </p>
 
-                             {/* Section 3 */}
-               <div className="text-gray-800 dark:text-gray-200">
-                 <p className="mb-2">Not a feature.</p>
-                 <p className="ml-6 mb-2">Not a filter.</p>
-                 <p className="ml-6 mb-6"><strong>A foundation</strong>.</p>
-                 <p className="mb-2">A principle embedded in protocol,</p>
-                 <p className="ml-6 mb-2">a <strong>trust engine</strong> at the root of coordination,</p>
-                 <p className="ml-6 mb-2">a <strong>signal beneath the noise</strong> —</p>
-                 <p className="ml-6 mb-6">designed not to dominate, but to <strong>verify</strong>.</p>
-                 <p className="mb-2">A new basis for a <strong>real internet</strong> —</p>
-                 <p className="ml-6 mb-8"><strong>owned by no one, available to everyone</strong>.</p>
-               </div>
- 
-               {/* Section 4 */}
-               <div className="text-gray-800 dark:text-gray-200">
-                 <p className="mb-2">Built from <strong>first principles</strong>:</p>
-                 <p className="ml-6 mb-2"><strong>Observable. Immutable. Shared</strong>.</p>
-                 <p className="ml-6 mb-2"><strong>Mathematical, not reputational</strong>.</p>
-                 <p className="ml-6 mb-8"><strong>Credibly neutral. Coordination-first. Trustless by design</strong>.</p>
-               </div>
+              <p>
+                Now it connects billions of signals — with almost no way to know —<br />
+                <span className="ml-6">What's real? Who's real? Can I trust this?</span>
+              </p>
 
-                             {/* Section 5 */}
-               <div className="text-gray-800 dark:text-gray-200">
-                 <p className="mb-2">Where identities are not just <strong>claimed</strong> — but <strong>confirmed</strong>.</p>
-                 <p className="ml-6 mb-2">Where confidence is not a feeling — but a <strong>provable state</strong>.</p>
-                 <p className="ml-6 mb-2">Where saying "I'm real" isn't enough —</p>
-                 <p className="ml-6 mb-8">because now, <strong>the system can say it back</strong>.</p>
-               </div>
- 
-               {/* Section 6 */}
-               <div className="text-gray-800 dark:text-gray-200">
-                 <p className="mb-2">In an age where <strong>machines talk</strong>,</p>
-                 <p className="ml-6 mb-2"><strong>bots transact</strong>,</p>
-                 <p className="ml-6 mb-2">and <strong>synthetic media wears a thousand faces</strong>,</p>
-                 <p className="ml-6 mb-2">we must verify not just the <strong>what</strong> — but the <strong>who</strong>.</p>
-                 <p className="ml-6 mb-2">Not just <strong>content</strong> — but <strong>context</strong>.</p>
-                 <p className="ml-6 mb-8">Not just <strong>signal</strong> — but <strong>source</strong>.</p>
-               </div>
+              <p className="font-bold">Ask yourself:</p>
+              <p>
+                <span className="ml-6">When was the last time you knew — without doubt — who was on the other side?</span>
+              </p>
 
-                             {/* Section 7 */}
-               <div className="text-gray-800 dark:text-gray-200">
-                 <p className="mb-2">This isn't a someday.</p>
-                 <p className="ml-6 mb-6">It's <strong>inevitable</strong>.</p>
-                 <p className="mb-2">Because the <strong>signal</strong> was always there —</p>
-                 <p className="ml-6 mb-6">waiting for a system that could <strong>listen</strong>.</p>
-                 <p className="mb-2">And beyond the shadows of noise,</p>
-                 <p className="ml-6 mb-8"><strong>truth becomes legible</strong>.</p>
-               </div>
- 
-               {/* Section 8 */}
-               <div className="text-gray-800 dark:text-gray-200">
-                 <p className="mb-2">The internet doesn't need more platforms.</p>
-                 <p className="ml-6 mb-6">It needs a <strong>root layer of trust</strong>.</p>
-                 <p className="mb-2">Some chose <strong>noise</strong>.</p>
-                 <p className="ml-6 mb-6">Others chose <strong>signal</strong>.</p>
-                 <p className="mb-2">There were always <strong>two internets</strong>:</p>
-                 <p className="ml-6 mb-2">One built to <strong>amplify</strong>.</p>
-                 <p className="ml-6 mb-6">One built to <strong>verify</strong>.</p>
-                 <p className="mb-2">Only now...</p>
-                 <p className="ml-6 mb-8">can we tell them apart.</p>
-               </div>
+              <p>
+                This isn't a surface glitch.<br />
+                <span className="ml-6">It's a civilizational fracture.</span>
+              </p>
 
-                             {/* Section 9 */}
-               <div className="text-gray-800 dark:text-gray-200">
-                 <p className="mb-2">This is not just a better version of what came before.</p>
-                 <p className="ml-6 mb-8">It's a <strong>new possibility space</strong> — for systems, societies, and souls.</p>
-               </div>
- 
-               {/* Section 10 */}
-               <div className="text-gray-800 dark:text-gray-200">
-                 <p className="mb-2">It's not a company.</p>
-                 <p className="ml-6 mb-2">It's not a pitch.</p>
-                 <p className="ml-6 mb-6">It's a <strong>foundation</strong>.</p>
-                 <p className="mb-2">A <strong>principle encoded in protocol</strong>,</p>
-                 <p className="ml-6 mb-2">a <strong>system built to remember</strong>,</p>
-                 <p className="ml-6 mb-8">a <strong>covenant made legible</strong>.</p>
-               </div>
- 
-               {/* Section 11 */}
-               <div className="text-gray-800 dark:text-gray-200">
-                 <p className="mb-2">This isn't a movement of belief.</p>
-                 <p className="ml-6 mb-6">It's a <strong>movement of proof</strong>.</p>
-                 <p className="mb-2">Trust is not a promise.</p>
-                 <p className="ml-6 mb-2">It's a <strong>system condition</strong> —</p>
-                 <p className="ml-6 mb-6"><strong>engineered, observable, and built to scale</strong>.</p>
-                 <p className="mb-2">What comes next begins here.</p>
-                 <p className="ml-6 mb-2">With <strong>signal</strong>.</p>
-                 <p className="ml-6 mb-2">With <strong>sovereignty</strong>.</p>
-                 <p className="ml-6 mb-8">With <strong>trust — made legible</strong>.</p>
-               </div>
+              <p>
+                In that fracture, we built walls:<br />
+                <span className="ml-6">Between people.</span><br />
+                <span className="ml-6">Between systems.</span><br />
+                <span className="ml-6">Between truth and transaction.</span>
+              </p>
 
-                             {/* Section 12 - Final */}
-               <div className="text-gray-800 dark:text-gray-200">
-                 <p className="mb-2">This isn't a conclusion.</p>
-                 <p className="ml-6 mb-6">It's a <strong>beginning</strong>.</p>
-                 <p className="mb-2">And when <strong>trust becomes structure</strong>,</p>
-                 <p className="ml-6 mb-6"><strong>freedom follows</strong>.</p>
-                 <p className="mb-2">When <strong>proof replaces permission</strong>,</p>
-                 <p className="ml-6 mb-6"><strong>people rise</strong>.</p>
-                 <p className="mb-2">The system was broken.</p>
-                 <p className="ml-6 mb-6">We chose to build one <strong>worthy of belief</strong>.</p>
-                 <p className="mb-2">For every transaction. For every truth.</p>
-                 <p className="ml-6 mb-6"><strong>For everyone</strong>.</p>
-               </div>
+              <p>
+                Trust didn't vanish.<br />
+                <span className="ml-6">It atomized.</span><br />
+                And in its place came performance, proxies, and plausible deniability.
+              </p>
+
+              <p className="font-bold">
+                Not a feature.<br />
+                Not a filter.<br />
+                A foundation.
+              </p>
+
+              <p>
+                A principle embedded in protocol,<br />
+                <span className="ml-6">a trust engine at the root of coordination,</span><br />
+                <span className="ml-6">a signal beneath the noise —</span><br />
+                designed not to dominate, but to verify.
+              </p>
+
+              <p className="font-bold">
+                A new basis for a real internet —<br />
+                owned by no one, available to everyone.
+              </p>
+
+              <p>
+                Built from first principles:<br />
+                <span className="ml-6">Observable. Immutable. Shared.</span><br />
+                <span className="ml-6">Mathematical, not reputational.</span><br />
+                <span className="ml-6">Credibly neutral. Coordination-first. Trustless by design.</span>
+              </p>
+
+              <p>
+                Where identities are not just claimed — but confirmed.<br />
+                Where confidence is not a feeling — but a provable state.<br />
+                Where saying "I'm real" isn't enough —<br />
+                <span className="ml-6">because now, the system can say it back.</span>
+              </p>
+
+              <p>
+                In an age where machines talk,<br />
+                <span className="ml-6">bots transact,</span><br />
+                <span className="ml-6">and synthetic media wears a thousand faces,</span><br />
+                we must verify not just the what — but the who.<br />
+                Not just content — but context.<br />
+                Not just signal — but source.
+              </p>
+
+              <p className="font-bold">
+                This isn't a someday.<br />
+                It's inevitable.
+              </p>
+
+              <p>
+                Because the signal was always there —<br />
+                <span className="ml-6">waiting for a system that could listen.</span>
+              </p>
+
+              <p>
+                And beyond the shadows of noise,<br />
+                <span className="ml-6">truth becomes legible.</span>
+              </p>
+
+              <p className="font-bold">
+                The internet doesn't need more platforms.<br />
+                It needs a root layer of trust.
+              </p>
+
+              <p>
+                Some chose noise.<br />
+                Others chose signal.
+              </p>
+
+              <p>
+                There were always two internets:<br />
+                <span className="ml-6">One built to amplify.</span><br />
+                <span className="ml-6">One built to verify.</span>
+              </p>
+
+              <p className="font-bold">
+                Only now...<br />
+                can we tell them apart.
+              </p>
+
+              <p>
+                This is not just a better version of what came before.<br />
+                <span className="ml-6">It's a new possibility space — for systems, societies, and souls.</span>
+              </p>
+
+              <p>
+                It's not a company.<br />
+                It's not a pitch.<br />
+                <span className="font-bold">It's a foundation.</span>
+              </p>
+
+              <p>
+                A principle encoded in protocol,<br />
+                <span className="ml-6">a system built to remember,</span><br />
+                <span className="ml-6">a covenant made legible.</span>
+              </p>
+
+              <p>
+                This isn't a movement of belief.<br />
+                <span className="ml-6">It's a movement of proof.</span>
+              </p>
+
+              <p>
+                Trust is not a promise.<br />
+                <span className="ml-6">It's a system condition —</span><br />
+                <span className="ml-6">engineered, observable, and built to scale.</span>
+              </p>
+
+              <p className="font-bold">
+                What comes next begins here.<br />
+                With signal.<br />
+                With sovereignty.<br />
+                With trust — made legible.
+              </p>
+
+              <p className="font-bold">
+                This isn't a conclusion.<br />
+                It's a beginning.
+              </p>
+
+              <p>
+                And when trust becomes structure,<br />
+                <span className="ml-6">freedom follows.</span>
+              </p>
+
+              <p>
+                When proof replaces permission,<br />
+                <span className="ml-6">people rise.</span>
+              </p>
+
+              <p>
+                The system was broken.<br />
+                <span className="ml-6">We chose to build one worthy of belief.</span>
+              </p>
+
+              <p className="font-bold">
+                For every transaction. For every truth.<br />
+                For everyone.
+              </p>
 
             </div>
           </div>
