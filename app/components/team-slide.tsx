@@ -151,13 +151,13 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
 
                 {/* You? - Recruiting Card */}
                 <motion.div
-                  className="group relative"
+                  className="group relative cursor-pointer"
                   variants={{
                     hidden: { opacity: 0, y: 20 },
                     visible: { opacity: 1, y: 0 }
                   }}
                 >
-                  <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden flex items-center justify-center relative">
+                  <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden flex items-center justify-center relative hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors duration-300">
                     <div className="flex items-center gap-4">
                       <div className="text-6xl text-gray-400 dark:text-gray-600">?</div>
                       <div className="text-center">
@@ -170,18 +170,14 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                       <div className="mt-auto">
                         <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">You?</p>
                         <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">{recruitingCard.title}</p>
-                        <div className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                          {recruitingCard.description.split('\n').map((line, index) => (
-                            <span key={index}>
-                              {line.includes('create the future') ? <strong>{line}</strong> : line}
-                              {line.includes('We don\'t want your resume.') ? <><br /><strong>{line}</strong></> : ''}
-                              {line.includes('This is about your signal.') ? <><br />This is about your <strong>signal</strong>.</> : ''}
-                              {index < recruitingCard.description.split('\n').length - 1 && <br />}
-                            </span>
-                          ))}
+                        <div className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed text-center">
+                          <p className="mb-4">
+                            Ready to <strong>build the future</strong> of trust?<br />
+                            We're looking for builders, not resumes.
+                          </p>
                           <a 
-                            href={`mailto:${recruitingCard.ctaEmail}`} 
-                            className="mt-4 inline-block bg-blue-600 hover:bg-blue-500 transition-colors text-white font-semibold py-2 px-6 rounded-full shadow-lg shadow-blue-600/20 text-base"
+                            href={`mailto:${recruitingCard.ctaEmail}?subject=I want to join the inVerus team&body=Hi Andrew,%0D%0A%0D%0AI'm interested in joining the inVerus team.%0D%0A%0D%0A`} 
+                            className="inline-block bg-blue-600 hover:bg-blue-500 transition-colors text-white font-semibold py-3 px-8 rounded-full shadow-lg shadow-blue-600/20 text-base"
                           >
                             {recruitingCard.ctaText}
                           </a>

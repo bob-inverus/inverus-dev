@@ -152,7 +152,7 @@ Then we're looking for you.
 We don't want your resume.
 This is about your signal.
 If it resonates, it will find us.`,
-  ctaText: 'Send your Signal',
+  ctaText: 'Join Our Team',
   ctaEmail: 'andrew@inverus.tech'
 }
 
