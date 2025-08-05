@@ -21,21 +21,21 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
   const [clickedMobile, setClickedMobile] = useState<string | null>(null)
 
   const handleMobileClick = (personId: string, linkedinUrl: string) => {
-    // Check if mobile (simplified check)
-    const isMobile = window.innerWidth < 768
+    // Check if mobile device (width < 768px or touch device)
+    const isMobile = window.innerWidth < 768 || ('ontouchstart' in window)
     
     if (isMobile) {
       if (clickedMobile === personId) {
-        // Second click on mobile - go to LinkedIn
-        window.open(linkedinUrl, '_blank')
+        // Second click on mobile - open LinkedIn in new tab
+        window.open(linkedinUrl, '_blank', 'noopener,noreferrer')
         setClickedMobile(null)
       } else {
-        // First click on mobile - show bio
+        // First click on mobile - reveal name and bio
         setClickedMobile(personId)
       }
     } else {
-      // Desktop - go directly to LinkedIn
-      window.open(linkedinUrl, '_blank')
+      // Desktop - open LinkedIn directly in new tab (background)
+      window.open(linkedinUrl, '_blank', 'noopener,noreferrer')
     }
   }
 
@@ -108,20 +108,24 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                 {teamMembers.map((member) => (
                   <motion.div
                     key={member.id}
-                    className="group relative cursor-pointer"
+                    className="group relative cursor-pointer transform transition-transform duration-200 hover:scale-105 active:scale-95"
                     variants={{
                       hidden: { opacity: 0, y: 20 },
                       visible: { opacity: 1, y: 0 }
                     }}
                     onClick={() => handleMobileClick(member.id, member.linkedinUrl)}
                   >
-                    <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
+                    <div className={`w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden ${clickedMobile === member.id ? 'ring-2 ring-blue-500' : ''}`}>
                       <img
                         src={member.image}
                         alt={member.name}
-                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
+                        className={`w-full h-full object-cover transition-all duration-300 ${
+                          clickedMobile === member.id 
+                            ? 'grayscale-0' 
+                            : 'grayscale group-hover:grayscale-0'
+                        }`}
                       />
-                      {/* Hover Overlay */}
+                      {/* Hover/Click Overlay - Desktop: hover, Mobile: click to reveal */}
                       <div className={`absolute inset-0 bg-white/95 dark:bg-gray-900/95 ${clickedMobile === member.id ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4`}>
                         {/* Company Logos - Top */}
                         <div className="flex justify-center items-center gap-6 mb-4 flex-1">
@@ -142,7 +146,14 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                             <LinkedInIcon size={16} />
                           </div>
                           <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">{member.title}</p>
-                          <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug">{member.description}</p>
+                          <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug mb-2">{member.description}</p>
+                          
+                          {/* Mobile: Show tap-to-LinkedIn hint when overlay is visible */}
+                          {clickedMobile === member.id && (
+                            <p className="text-xs text-blue-500 dark:text-blue-400 opacity-75 md:hidden">
+                              Tap again to view LinkedIn profile
+                            </p>
+                          )}
                         </div>
                       </div>
                     </div>
