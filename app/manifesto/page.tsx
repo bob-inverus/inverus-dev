@@ -84,25 +84,25 @@ export default function ManifestoPage() {
 
               <p>Trust didn't vanish.<br />
                 <span className="ml-6"><strong>It atomized.</strong></span><br />
-                And in its place came performance, proxies, and plausible deniability.
+                <span className="ml-6">And in its place came performance, proxies, and plausible deniability.</span>
               </p>
 
               <p>
                 Not a feature.<br />
-                Not a filter.<br />
-                A <strong>foundation.</strong>
+                <span className="ml-6">Not a filter.</span><br />
+                <span className="ml-6">A <strong>foundation.</strong></span>
               </p>
 
               <p>
                 A <strong>principle embedded in protocol</strong>,<br />
                 <span className="ml-6">a <strong>trust engine</strong> at the root of coordination,</span><br />
                 <span className="ml-6">a <strong>signal beneath the noise —</strong></span><br />
-                designed not to dominate, but to verify.
+                <span className="ml-6">designed not to dominate, but to verify.</span>
               </p>
 
               <p>
                 A new basis for a real internet —<br />
-                <strong>owned by no one, available to everyone.</strong>
+                <span className="ml-6"><strong>owned by no one, available to everyone.</strong></span>
               </p>
 
               <p>
@@ -114,8 +114,8 @@ export default function ManifestoPage() {
 
               <p>
                 Where identities are not just claimed — but <strong>confirmed.</strong><br />
-                Where confidence is not a feeling — but a <strong>provable state.</strong><br />
-                Where saying "I'm real" isn't enough —<br />
+                <span className="ml-6">Where confidence is not a feeling — but a <strong>provable state.</strong></span><br />
+                <span className="ml-6">Where saying "I'm real" isn't enough —</span><br />
                 <span className="ml-6">because now, <strong>the system can say it back.</strong></span>
               </p>
 
@@ -123,14 +123,14 @@ export default function ManifestoPage() {
                 In an age where machines talk,<br />
                 <span className="ml-6">bots transact,</span><br />
                 <span className="ml-6">and synthetic media wears a thousand faces,</span><br />
-                we must verify not just the <strong>what —</strong> but the <strong>who.</strong><br />
-                Not just content — but <strong>context.</strong><br />
-                Not just signal — but <strong>source.</strong>
+                <span className="ml-6">we must verify not just the <strong>what —</strong> but the <strong>who.</strong></span><br />
+                <span className="ml-6">Not just content — but <strong>context.</strong></span><br />
+                <span className="ml-6">Not just signal — but <strong>source.</strong></span>
               </p>
 
               <p>
                 This isn't a someday.<br />
-                It's <strong>inevitable.</strong>
+                <span className="ml-6">It's <strong>inevitable.</strong></span>
               </p>
 
               <p>
@@ -145,12 +145,12 @@ export default function ManifestoPage() {
 
               <p>
                 The internet doesn't need more platforms.<br />
-                It needs a <strong>root layer of trust.</strong>
+                <span className="ml-6">It needs a <strong>root layer of trust.</strong></span>
               </p>
 
               <p>
                 Some chose noise.<br />
-                Others chose signal.
+                <span className="ml-6">Others chose signal.</span>
               </p>
 
               <p>
@@ -161,7 +161,7 @@ export default function ManifestoPage() {
 
               <p>
                 Only now...<br />
-                <strong>can we tell them apart.</strong>
+                <span className="ml-6"><strong>can we tell them apart.</strong></span>
               </p>
 
               <p>
@@ -171,8 +171,8 @@ export default function ManifestoPage() {
 
               <p>
                 It's not a company.<br />
-                It's not a pitch.<br />
-                It's a <strong>foundation.</strong>
+                <span className="ml-6">It's not a pitch.<br /></span>
+                <span className="ml-6">It's a <strong>foundation.</strong></span>
               </p>
 
               <p>
@@ -194,14 +194,14 @@ export default function ManifestoPage() {
 
               <p>
                 What comes next begins here.<br />
-                With signal.<br />
-                With sovereignty.<br />
-                With trust — made legible.
+                <span className="ml-6"><strong>With signal.</strong></span><br />
+                <span className="ml-6"><strong>With sovereignty.</strong></span><br />
+                <span className="ml-6"><strong>With trust </strong> — made legible.</span>
               </p>
 
               <p>
                 This isn't a conclusion.<br />
-                It's a beginning.
+                <span className="ml-6">It's a beginning.</span>
               </p>
 
               <p>
