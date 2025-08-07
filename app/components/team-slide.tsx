@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "motion/react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { teamMembers, recruitingCard, teamQuote } from "@/lib/team"
@@ -19,6 +19,20 @@ const LinkedInIcon = ({ size = 16 }: { size?: number }) => (
 
 export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
   const [clickedMobile, setClickedMobile] = useState<string | null>(null)
+  const [touchStartTime, setTouchStartTime] = useState<number>(0)
+
+  // Close mobile overlay when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement
+      if (clickedMobile && !target.closest('.team-member-card')) {
+        setClickedMobile(null)
+      }
+    }
+
+    document.addEventListener('click', handleClickOutside)
+    return () => document.removeEventListener('click', handleClickOutside)
+  }, [clickedMobile])
 
   const handleMobileClick = (personId: string, linkedinUrl: string) => {
     // Check if mobile device (width < 768px or touch device)
@@ -35,6 +49,32 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
       }
     } else {
       // Desktop - open LinkedIn directly in new tab (background)
+      window.open(linkedinUrl, '_blank', 'noopener,noreferrer')
+    }
+  }
+
+  const handleTouchStart = () => {
+    setTouchStartTime(Date.now())
+  }
+
+  const handleTouchEnd = (personId: string, linkedinUrl: string) => {
+    const touchDuration = Date.now() - touchStartTime
+    const isLongTap = touchDuration > 500 // 500ms for long tap
+    
+    // Check if mobile device
+    const isMobile = window.innerWidth < 768 || ('ontouchstart' in window)
+    
+    if (isMobile) {
+      if (clickedMobile === personId) {
+        // Second tap - open LinkedIn
+        window.open(linkedinUrl, '_blank', 'noopener,noreferrer')
+        setClickedMobile(null)
+      } else {
+        // First tap or long tap - reveal bio
+        setClickedMobile(personId)
+      }
+    } else {
+      // Desktop - open LinkedIn directly
       window.open(linkedinUrl, '_blank', 'noopener,noreferrer')
     }
   }
@@ -80,7 +120,7 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
 
           {/* Team Content */}
           <motion.div
-            className="min-h-screen w-full px-4 py-16"
+            className="min-h-screen w-full px-2 md:px-4 py-16"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.5 }}
@@ -89,7 +129,7 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
 
               {/* Team Grid */}
               <motion.div
-                className="grid gap-8 md:gap-10 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr"
+                className="grid gap-4 md:gap-8 lg:gap-10 grid-cols-2 lg:grid-cols-3 auto-rows-fr"
                 initial="hidden"
                 animate="visible"
                 variants={{
@@ -108,14 +148,16 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                 {teamMembers.map((member) => (
                   <motion.div
                     key={member.id}
-                    className="group relative cursor-pointer transform transition-transform duration-200 hover:scale-105 active:scale-95"
+                    className="team-member-card group relative cursor-pointer transform transition-all duration-200 hover:scale-105 active:scale-95 rounded-lg"
                     variants={{
                       hidden: { opacity: 0, y: 20 },
                       visible: { opacity: 1, y: 0 }
                     }}
                     onClick={() => handleMobileClick(member.id, member.linkedinUrl)}
+                    onTouchStart={handleTouchStart}
+                    onTouchEnd={() => handleTouchEnd(member.id, member.linkedinUrl)}
                   >
-                    <div className={`w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden ${clickedMobile === member.id ? 'ring-2 ring-blue-500' : ''}`}>
+                    <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
                       <img
                         src={member.image}
                         alt={member.name}
@@ -126,27 +168,27 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                         }`}
                       />
                       {/* Hover/Click Overlay - Desktop: hover, Mobile: click to reveal */}
-                      <div className={`absolute inset-0 bg-white/95 dark:bg-gray-900/95 ${clickedMobile === member.id ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-4`}>
+                      <div className={`absolute inset-0 bg-white/95 dark:bg-gray-900/95 ${clickedMobile === member.id ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-2 md:p-4`}>
                         {/* Company Logos - Top */}
-                        <div className="flex justify-center items-center gap-6 mb-4 flex-1">
+                        <div className="flex justify-center items-center gap-2 md:gap-6 mb-2 md:mb-4 flex-1">
                           {member.companies.map((company, index) => (
                             <img 
                               key={index}
                               src={company.logo} 
                               alt={company.name} 
-                              className="h-24 w-auto opacity-80 invert dark:invert-0" 
+                              className="h-12 md:h-24 w-auto opacity-80 invert dark:invert-0" 
                             />
                           ))}
                         </div>
 
                         {/* Team Member Info - Bottom */}
                         <div className="mt-auto">
-                          <div className="flex items-center gap-2 mb-1">
-                            <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold">{member.name}</p>
-                            <LinkedInIcon size={16} />
+                          <div className="flex items-center gap-1 md:gap-2 mb-1">
+                            <p className="text-gray-900 dark:text-gray-100 text-sm md:text-lg font-semibold">{member.name}</p>
+                            <LinkedInIcon size={12} />
                           </div>
-                          <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-2">{member.title}</p>
-                          <p className="text-sm text-gray-700 dark:text-gray-300 leading-snug mb-2">{member.description}</p>
+                          <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1 md:mb-2">{member.title}</p>
+                          <p className="text-xs md:text-sm text-gray-700 dark:text-gray-300 leading-snug mb-1 md:mb-2 overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>{member.description}</p>
                           
                           {/* Mobile: Show tap-to-LinkedIn hint when overlay is visible */}
                           {clickedMobile === member.id && (
