@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import React from "react"
+import Link from "next/link"
 import { motion, AnimatePresence } from "motion/react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { teamMembers, recruitingCard, teamQuote } from "@/lib/team"
@@ -18,65 +19,9 @@ const LinkedInIcon = ({ size = 16 }: { size?: number }) => (
 )
 
 export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
-  const [clickedMobile, setClickedMobile] = useState<string | null>(null)
-  const [touchStartTime, setTouchStartTime] = useState<number>(0)
-
-  // Close mobile overlay when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement
-      if (clickedMobile && !target.closest('.team-member-card')) {
-        setClickedMobile(null)
-      }
-    }
-
-    document.addEventListener('click', handleClickOutside)
-    return () => document.removeEventListener('click', handleClickOutside)
-  }, [clickedMobile])
-
-  const handleMobileClick = (personId: string, linkedinUrl: string) => {
-    // Check if mobile device (width < 768px or touch device)
-    const isMobile = window.innerWidth < 768 || ('ontouchstart' in window)
-    
-    if (isMobile) {
-      if (clickedMobile === personId) {
-        // Second click on mobile - open LinkedIn in new tab
-        window.open(linkedinUrl, '_blank', 'noopener,noreferrer')
-        setClickedMobile(null)
-      } else {
-        // First click on mobile - reveal name and bio
-        setClickedMobile(personId)
-      }
-    } else {
-      // Desktop - open LinkedIn directly in new tab (background)
-      window.open(linkedinUrl, '_blank', 'noopener,noreferrer')
-    }
-  }
-
-  const handleTouchStart = () => {
-    setTouchStartTime(Date.now())
-  }
-
-  const handleTouchEnd = (personId: string, linkedinUrl: string) => {
-    const touchDuration = Date.now() - touchStartTime
-    const isLongTap = touchDuration > 500 // 500ms for long tap
-    
-    // Check if mobile device
-    const isMobile = window.innerWidth < 768 || ('ontouchstart' in window)
-    
-    if (isMobile) {
-      if (clickedMobile === personId) {
-        // Second tap - open LinkedIn
-        window.open(linkedinUrl, '_blank', 'noopener,noreferrer')
-        setClickedMobile(null)
-      } else {
-        // First tap or long tap - reveal bio
-        setClickedMobile(personId)
-      }
-    } else {
-      // Desktop - open LinkedIn directly
-      window.open(linkedinUrl, '_blank', 'noopener,noreferrer')
-    }
+  const handleCardClick = (personId: string, linkedinUrl: string) => {
+    // Direct LinkedIn opening for all devices
+    window.open(linkedinUrl, '_blank', 'noopener,noreferrer')
   }
 
   return (
@@ -129,7 +74,7 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
 
               {/* Team Grid */}
               <motion.div
-                className="grid gap-4 md:gap-8 lg:gap-10 grid-cols-2 lg:grid-cols-3 auto-rows-fr"
+                className="grid gap-4 md:gap-8 lg:gap-10 grid-cols-1 lg:grid-cols-3 auto-rows-fr"
                 initial="hidden"
                 animate="visible"
                 variants={{
@@ -153,22 +98,16 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                       hidden: { opacity: 0, y: 20 },
                       visible: { opacity: 1, y: 0 }
                     }}
-                    onClick={() => handleMobileClick(member.id, member.linkedinUrl)}
-                    onTouchStart={handleTouchStart}
-                    onTouchEnd={() => handleTouchEnd(member.id, member.linkedinUrl)}
+                    onClick={() => handleCardClick(member.id, member.linkedinUrl)}
                   >
                     <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
                       <img
                         src={member.image}
                         alt={member.name}
-                        className={`w-full h-full object-cover transition-all duration-300 ${
-                          clickedMobile === member.id 
-                            ? 'grayscale-0' 
-                            : 'grayscale group-hover:grayscale-0'
-                        }`}
+                        className="w-full h-full object-cover transition-all duration-300 grayscale group-hover:grayscale-0"
                       />
                       {/* Hover/Click Overlay - Desktop: hover, Mobile: click to reveal */}
-                      <div className={`absolute inset-0 bg-white/95 dark:bg-gray-900/95 ${clickedMobile === member.id ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-2 md:p-4`}>
+                      <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-2 md:p-4">
                         {/* Company Logos - Top */}
                         <div className="flex justify-center items-center gap-2 md:gap-6 mb-2 md:mb-4 flex-1">
                           {member.companies.map((company, index) => (
@@ -190,12 +129,7 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                           <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1 md:mb-2">{member.title}</p>
                           <p className="text-xs md:text-sm text-gray-700 dark:text-gray-300 leading-snug mb-1 md:mb-2 overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>{member.description}</p>
                           
-                          {/* Mobile: Show tap-to-LinkedIn hint when overlay is visible */}
-                          {clickedMobile === member.id && (
-                            <p className="text-xs text-blue-500 dark:text-blue-400 opacity-75 md:hidden">
-                              Tap again to view LinkedIn profile
-                            </p>
-                          )}
+
                         </div>
                       </div>
                     </div>
@@ -241,14 +175,45 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
 
               {/* Interstitial Quote */}
               <motion.div
-                className="py-16 text-center"
+                className="pt-16 pb-8 text-center"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.5, duration: 0.5 }}
+                transition={{ delay: 1.2, duration: 0.5 }}
               >
                 <p className="text-xl italic text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
                   "{teamQuote}"
                 </p>
+              </motion.div>
+
+              {/* Pulsing Blue Shield Logo - Very Bottom */}
+              <motion.div
+                className="flex justify-center pb-16"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 1.5, duration: 0.5 }}
+              >
+                <Link href="/" className="inline-flex items-center justify-center">
+                  <motion.svg 
+                    className="w-8 h-8"
+                    width="50" 
+                    height="50" 
+                    viewBox="0 0 50 50" 
+                    fill="none" 
+                    xmlns="http://www.w3.org/2000/svg"
+                    animate={{ 
+                      opacity: [0.7, 1, 0.7],
+                      scale: [1, 1.05, 1]
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    <rect width="50" height="50" rx="15" fill="#006DED"/>
+                    <path fillRule="evenodd" clipRule="evenodd" d="M23.7366 6.15368C23.9778 6.05228 24.2376 6 24.5 6C24.7624 6 25.0222 6.05228 25.2634 6.15368L37.6518 11.3612C38.3489 11.6542 38.9431 12.1415 39.3605 12.7626C39.7779 13.3836 40.0003 14.1112 40 14.855V27.888C39.9998 30.2322 39.3676 32.5348 38.1675 34.5623C36.9675 36.5898 35.2422 38.2703 33.1664 39.4334L25.461 43.7498C25.1683 43.9138 24.8371 44 24.5 44C24.1629 44 23.8317 43.9138 23.539 43.7498L15.8336 39.4334C13.7573 38.27 12.0316 36.5889 10.8315 34.5607C9.6314 32.5324 8.99955 30.2291 9 27.8842V14.855C9.00008 14.1115 9.22261 13.3844 9.64002 12.7637C10.0574 12.143 10.6514 11.656 11.3482 11.3631L23.7366 6.15368ZM31.6823 22.5437C32.0352 22.1854 32.2305 21.7055 32.2261 21.2073C32.2217 20.7092 32.0179 20.2327 31.6587 19.8804C31.2995 19.5282 30.8135 19.3284 30.3055 19.3241C29.7975 19.3197 29.3081 19.5112 28.9427 19.8573L22.5625 26.1135L20.0573 23.657C19.6919 23.3109 19.2025 23.1194 18.6945 23.1238C18.1865 23.1281 17.7005 23.3279 17.3413 23.6802C16.9821 24.0324 16.7783 24.5089 16.7739 25.007C16.7695 25.5052 16.9648 25.9851 17.3177 26.3434L21.1927 30.1431C21.556 30.4993 22.0487 30.6994 22.5625 30.6994C23.0763 30.6994 23.569 30.4993 23.9323 30.1431L31.6823 22.5437Z" fill="white"/>
+                  </motion.svg>
+                </Link>
               </motion.div>
 
             </div>
