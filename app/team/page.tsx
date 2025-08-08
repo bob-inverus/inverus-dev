@@ -15,7 +15,7 @@ export default function TeamPage() {
             
             {/* Andrew O'Doherty */}
             <div className="group relative">
-              <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
+              <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden relative">
                 <img 
                   src="https://placehold.co/400x400?text=Andrew" 
                   alt="Andrew O'Doherty" 
@@ -36,7 +36,7 @@ export default function TeamPage() {
 
             {/* Jim Anderson */}
             <div className="group relative">
-              <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
+              <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden relative">
                 <img 
                   src="https://placehold.co/400x400?text=Jim" 
                   alt="Jim Anderson" 
@@ -57,7 +57,7 @@ export default function TeamPage() {
 
             {/* Steven Chrust */}
             <div className="group relative">
-              <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
+              <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden relative">
                 <img 
                   src="https://placehold.co/400x400?text=Steven" 
                   alt="Steven Chrust" 
@@ -78,7 +78,7 @@ export default function TeamPage() {
 
             {/* Stephen Rossetter */}
             <div className="group relative">
-              <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
+              <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden relative">
                 <img 
                   src="https://placehold.co/400x400?text=Stephen" 
                   alt="Stephen Rossetter" 
@@ -99,7 +99,7 @@ export default function TeamPage() {
 
             {/* Jeffrey Brodlieb */}
             <div className="group relative">
-              <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
+              <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden relative">
                 <img 
                   src="https://placehold.co/400x400?text=Jeffrey" 
                   alt="Jeffrey Brodlieb" 
@@ -120,7 +120,7 @@ export default function TeamPage() {
 
             {/* Alan Kessman */}
             <div className="group relative">
-              <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
+              <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden relative">
                 <img 
                   src="https://placehold.co/400x400?text=Alan" 
                   alt="Alan Kessman" 
@@ -141,7 +141,7 @@ export default function TeamPage() {
 
             {/* Larry Leibowitz */}
             <div className="group relative">
-              <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
+              <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden relative">
                 <img 
                   src="https://placehold.co/400x400?text=Larry" 
                   alt="Larry Leibowitz" 
@@ -162,7 +162,7 @@ export default function TeamPage() {
 
             {/* David Bell */}
             <div className="group relative">
-              <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
+              <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden relative">
                 <img 
                   src="https://placehold.co/400x400?text=David" 
                   alt="David Bell" 
@@ -183,7 +183,7 @@ export default function TeamPage() {
 
             {/* Keith Turco */}
             <div className="group relative">
-              <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
+              <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden relative">
                 <img 
                   src="https://placehold.co/400x400?text=Keith" 
                   alt="Keith Turco" 
@@ -204,7 +204,7 @@ export default function TeamPage() {
 
             {/* Alan Kessman (duplicate from HTML) */}
             <div className="group relative">
-              <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
+              <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden relative">
                 <img 
                   src="https://placehold.co/400x400?text=Alan" 
                   alt="Alan Kessman" 
@@ -225,7 +225,7 @@ export default function TeamPage() {
 
             {/* Tom Saleh */}
             <div className="group relative">
-              <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
+              <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden relative">
                 <img 
                   src="https://placehold.co/400x400?text=Tom" 
                   alt="Tom Saleh" 
@@ -246,7 +246,7 @@ export default function TeamPage() {
 
             {/* You? - Recruiting Card */}
             <div className="group relative">
-              <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden flex items-center justify-center">
+              <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden flex items-center justify-center relative">
                 <div className="text-6xl text-gray-400 dark:text-gray-600">?</div>
                 {/* Hover Overlay */}
                 <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 overflow-y-auto">

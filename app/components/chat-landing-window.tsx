@@ -424,7 +424,7 @@ export function ChatLandingWindow() {
   return (
     <div className="w-full">
       {/* Section 1: Chat Demo Window */}
-      <section id="chat-demo-section" className="flex flex-col items-center justify-center min-h-[calc(100svh-2rem)] md:min-h-screen w-full px-4 py-2 md:py-8 my-4 md:my-0">
+      <section id="chat-demo-section" className="flex flex-col items-center justify-center h-[100svh] md:min-h-screen w-full px-4 py-0 md:py-8 my-0">
         <div className="w-full max-w-[760px] min-h-[400px] md:min-h-[480px] max-h-[85vh] md:max-h-[80vh] backdrop-filter backdrop-blur-xl rounded-md relative overflow-hidden">
 
                 {/* Main Chat Content */}

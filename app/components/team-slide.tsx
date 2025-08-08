@@ -100,7 +100,7 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                     }}
                     onClick={() => handleCardClick(member.id, member.linkedinUrl)}
                   >
-                    <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
+                    <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden relative">
                       <img
                         src={member.image}
                         alt={member.name}
