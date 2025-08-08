@@ -424,7 +424,7 @@ export function ChatLandingWindow() {
   return (
     <div className="w-full">
       {/* Section 1: Chat Demo Window */}
-      <section id="chat-demo-section" className="flex flex-col items-center justify-center h-screen w-full px-4 py-2 md:py-8">
+      <section id="chat-demo-section" className="flex flex-col items-center justify-center min-h-[calc(100svh-2rem)] md:min-h-screen w-full px-4 py-2 md:py-8 my-4 md:my-0">
         <div className="w-full max-w-[760px] min-h-[400px] md:min-h-[480px] max-h-[85vh] md:max-h-[80vh] backdrop-filter backdrop-blur-xl rounded-md relative overflow-hidden">
 
                 {/* Main Chat Content */}
@@ -809,7 +809,7 @@ export function ChatLandingWindow() {
 
 
       {/* Section 2: Trust Protocol */}
-    <section id="trust-protocol-section" className="flex flex-col items-center justify-center h-screen w-full px-4 py-2 md:py-8">
+    <section id="trust-protocol-section" className="flex flex-col items-center justify-center min-h-[calc(100svh-2rem)] md:min-h-screen w-full px-4 py-2 md:py-8 my-4 md:my-0">
       <div className="w-full max-w-6xl mx-auto">
         <div className="grid w-full grid-cols-1 items-stretch gap-8">
           <div className="grid w-full grid-cols-1 max-w-4xl mx-auto">
@@ -913,28 +913,28 @@ export function ChatLandingWindow() {
       </section>
 
       {/* Section 3: Architecture of Trust */}
-      <section id="architecture-section" className="flex flex-col items-center justify-center h-screen w-full px-4 py-2 md:py-8">
+      <section id="architecture-section" className="flex flex-col items-center justify-center min-h-[calc(100svh-2rem)] md:min-h-screen w-full px-4 py-2 md:py-8 my-4 md:my-0">
         <div className="w-full max-w-6xl mx-auto">
-          <div className="relative w-full">
-            
-            {/* Team Navigation Arrow - Right side centered within section */}
-            <motion.button
-              onClick={() => setIsTeamSlideOpen(true)}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 group flex items-center justify-center text-blue-500 hover:text-blue-600 transition-colors duration-300 cursor-pointer z-10"
-              aria-label="View team"
-              whileHover={{ x: 5 }}
-            >
-              <motion.div
-                animate={{ x: [0, 8, 0] }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              >
-                <ChevronRight size={28} className="text-blue-500 group-hover:text-blue-600" />
-              </motion.div>
-            </motion.button>
+          <div className="relative w-full pr-12 md:pr-24">
+             
+             {/* Team Navigation Arrow - Right side centered within section */}
+             <motion.button
+               onClick={() => setIsTeamSlideOpen(true)}
+               className="absolute right-3 md:right-6 top-1/2 transform -translate-y-1/2 group flex items-center justify-center text-blue-500 hover:text-blue-600 transition-colors duration-300 cursor-pointer z-10"
+               aria-label="View team"
+               whileHover={{ x: 5 }}
+             >
+               <motion.div
+                 animate={{ x: [0, 8, 0] }}
+                 transition={{
+                   duration: 2,
+                   repeat: Infinity,
+                   ease: "easeInOut"
+                 }}
+               >
+                 <ChevronRight size={28} className="text-blue-500 group-hover:text-blue-600" />
+               </motion.div>
+             </motion.button>
 
             {/* Header Section */}
             <div className="flex flex-col items-center text-center mb-6 md:mb-12">
@@ -1119,7 +1119,7 @@ export function ChatLandingWindow() {
       </section>
 
             {/* CTA Section + Footer Combined - Full Viewport */}
-      <section id="cta-section" className="flex flex-col items-center justify-center h-screen w-full px-4 py-2 md:py-8">
+      <section id="cta-section" className="flex flex-col items-center justify-center min-h-[calc(100svh-2rem)] md:min-h-screen w-full px-4 py-2 md:py-8 my-4 md:my-0">
         {/* CTA Content */}
         <div className="w-full max-w-6xl mx-auto flex-1 flex items-center justify-center">
           <div className="w-full">

@@ -22,7 +22,7 @@ export default function TeamPage() {
                   className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" 
                 />
                 {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 overflow-y-auto">
                   <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Andrew O'Doherty</p>
                   <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">Architect of Signal & Structure</p>
                   <div className="flex gap-2 mb-3">
@@ -43,7 +43,7 @@ export default function TeamPage() {
                   className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" 
                 />
                 {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 overflow-y-auto">
                   <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Jim Anderson</p>
                   <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">Infrastructure Whisperer</p>
                   <div className="flex gap-2 mb-3">
@@ -64,7 +64,7 @@ export default function TeamPage() {
                   className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" 
                 />
                 {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 overflow-y-auto">
                   <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Steven Chrust</p>
                   <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">Fracture Forger</p>
                   <div className="flex gap-2 mb-3">
@@ -85,7 +85,7 @@ export default function TeamPage() {
                   className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" 
                 />
                 {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 overflow-y-auto">
                   <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Stephen Rossetter</p>
                   <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">Chief Financial Officer</p>
                   <div className="flex gap-2 mb-3">
@@ -106,7 +106,7 @@ export default function TeamPage() {
                   className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" 
                 />
                 {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 overflow-y-auto">
                   <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Jeffrey Brodlieb</p>
                   <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">Business Strategy</p>
                   <div className="flex gap-2 mb-3">
@@ -127,7 +127,7 @@ export default function TeamPage() {
                   className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" 
                 />
                 {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 overflow-y-auto">
                   <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Alan Kessman</p>
                   <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">Steward of Systems</p>
                   <div className="flex gap-2 mb-3">
@@ -148,7 +148,7 @@ export default function TeamPage() {
                   className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" 
                 />
                 {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 overflow-y-auto">
                   <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Larry Leibowitz</p>
                   <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">Market Mechanic</p>
                   <div className="flex gap-2 mb-3">
@@ -169,7 +169,7 @@ export default function TeamPage() {
                   className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" 
                 />
                 {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 overflow-y-auto">
                   <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">David Bell</p>
                   <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">Brand Signal Theorist</p>
                   <div className="flex gap-2 mb-3">
@@ -190,7 +190,7 @@ export default function TeamPage() {
                   className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" 
                 />
                 {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 overflow-y-auto">
                   <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Keith Turco</p>
                   <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">GTM Alchemist</p>
                   <div className="flex gap-2 mb-3">
@@ -211,7 +211,7 @@ export default function TeamPage() {
                   className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" 
                 />
                 {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 overflow-y-auto">
                   <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Alan Kessman</p>
                   <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">Steward of Systems</p>
                   <div className="flex gap-2 mb-3">
@@ -232,7 +232,7 @@ export default function TeamPage() {
                   className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" 
                 />
                 {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 overflow-y-auto">
                   <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">Tom Saleh</p>
                   <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">Cycle-Honed Instinct</p>
                   <div className="flex gap-2 mb-3">
@@ -249,7 +249,7 @@ export default function TeamPage() {
               <div className="w-full aspect-square bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden flex items-center justify-center">
                 <div className="text-6xl text-gray-400 dark:text-gray-600">?</div>
                 {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 overflow-y-auto">
                   <p className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-1">You?</p>
                   <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1">Signal Catalyst</p>
                   <div className="flex gap-2 mb-3">

@@ -107,7 +107,7 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                         className="w-full h-full object-cover transition-all duration-300 grayscale group-hover:grayscale-0"
                       />
                       {/* Hover/Click Overlay - Desktop: hover, Mobile: click to reveal */}
-                      <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-2 md:p-4">
+                      <div className="absolute inset-0 bg-white/95 dark:bg-gray-900/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col p-2 md:p-4 overflow-y-auto">
                         {/* Company Logos - Top */}
                         <div className="flex justify-center items-center gap-2 md:gap-6 mb-2 md:mb-4 flex-1">
                           {member.companies.map((company, index) => (
@@ -127,7 +127,7 @@ export function TeamSlide({ isOpen, onClose }: TeamSlideProps) {
                             <LinkedInIcon size={12} />
                           </div>
                           <p className="text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 mb-1 md:mb-2">{member.title}</p>
-                          <p className="text-xs md:text-sm text-gray-700 dark:text-gray-300 leading-snug mb-1 md:mb-2 overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>{member.description}</p>
+                          <p className="text-xs md:text-sm text-gray-700 dark:text-gray-300 leading-snug mb-1 md:mb-2">{member.description}</p>
                           
 
                         </div>
