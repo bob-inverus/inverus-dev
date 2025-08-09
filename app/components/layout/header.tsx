@@ -23,8 +23,8 @@ export function Header({ hasSidebar }: { hasSidebar: boolean }) {
 
   if (!hasSidebar) {
     return (
-      <header className="h-app-header pointer-events-none fixed top-0 right-0 left-0 z-50">
-        <div className="relative mx-auto flex h-full max-w-full items-center justify-between bg-transparent px-4 sm:px-6 lg:bg-transparent lg:px-8">
+      <header className="h-app-header pointer-events-none fixed top-0 right-0 left-0 z-50 bg-background">
+        <div className="relative mx-auto flex h-full max-w-full items-center justify-between px-4 sm:px-6 lg:px-8 bg-background">
           <div className="flex flex-1 items-center justify-between">
             {/* Logo and APP_NAME on the left */}
             <div className="pointer-events-auto flex items-center gap-3">
@@ -62,7 +62,7 @@ export function Header({ hasSidebar }: { hasSidebar: boolean }) {
 
   // Header for sidebar layout
   return (
-    <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+    <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 bg-background">
       <div className="flex items-center gap-2 px-4">
         <SidebarTrigger className="-ml-1" />
       </div>

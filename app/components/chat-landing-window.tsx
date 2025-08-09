@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "motion/react"
 import Link from "next/link"
+import { TextLoop } from "@/components/ui/text-loop"
 
 import { Loader } from "@/components/prompt-kit/loader"
 import {
@@ -213,14 +214,32 @@ export function ChatLandingWindow() {
     console.log(`Current section changed to: ${currentSection}, Show arrow: ${showScrollArrow}`)
   }, [currentSection, showScrollArrow])
 
-  // ChatGPT-style sliding placeholder animation with smooth infinite cycling
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentPlaceholderIndex(prev => (prev + 1) % 20)
-    }, 3000)
-    
-    return () => clearInterval(interval)
-  }, [])
+  // Placeholder texts (shared by both inputs)
+  const placeholders = [
+    "Ask InVerus to verify someone...",
+    "Try \"Jasmine Kaur\" or \"Elon Musk\"",
+    "Curious how someone shows up online?",
+    "Run a sample Trust Score.",
+    "What's their digital signal say?",
+    "Don't guess. Check the signal.",
+    "Verify this person's identity",
+    "Check their online presence",
+    "What's their trust rating?",
+    "Run identity verification",
+    "Analyze digital footprint",
+    "Verify social media profiles",
+    "Check professional background",
+    "Validate online credentials",
+    "Assess digital reputation",
+    "Verify business identity",
+    "Check public records",
+    "Analyze trust signals",
+    "Validate online activity",
+    "Check identity authenticity",
+  ]
+
+  // Track current index if needed
+  useEffect(() => {}, [])
 
   // Handle section detection using Intersection Observer
   useEffect(() => {
@@ -459,46 +478,14 @@ export function ChatLandingWindow() {
                   <div className="flex flex-col">
                     {/* ChatGPT-style animated placeholder - hide when typing */}
                     {!prompt.trim() && (
-                      <div className="pointer-events-none absolute left-0 top-0 w-full select-none px-4 pt-4 text-gray-500 dark:text-gray-400">
-                        <div 
-                          className="transition-transform duration-700"
-                          style={{ 
-                            transform: `translateY(-${currentPlaceholderIndex * 1.5}rem)`,
-                            transitionTimingFunction: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                          }}
-                        >
-                          {[
-                            "Ask InVerus to verify someone...",
-                            "Try \"Jasmine Kaur\" or \"Elon Musk\"",
-                            "Curious how someone shows up online?",
-                            "Run a sample Trust Score.",
-                            "What's their digital signal say?",
-                            "Don't guess. Check the signal.",
-                            "Verify this person's identity",
-                            "Check their online presence",
-                            "What's their trust rating?",
-                            "Run identity verification",
-                            "Analyze digital footprint",
-                            "Verify social media profiles",
-                            "Check professional background",
-                            "Validate online credentials",
-                            "Assess digital reputation",
-                            "Verify business identity",
-                            "Check public records",
-                            "Analyze trust signals",
-                            "Validate online activity",
-                            "Check identity authenticity"
-                          ].map((text, index) => (
-                            <div
-                              key={index}
-                              className={`overflow-hidden text-ellipsis whitespace-nowrap transition-opacity duration-500 h-6 ${
-                                index === currentPlaceholderIndex ? 'opacity-100' : 'opacity-0'
-                              }`}
-                            >
+                      <div className="pointer-events-none absolute left-0 top-0 w-full select-none px-4 pt-4 text-gray-500 dark:text-gray-400 h-6">
+                        <TextLoop interval={3} className="h-6 leading-6 align-middle">
+                          {placeholders.map((text) => (
+                            <span key={text} className="block h-6 overflow-hidden text-ellipsis whitespace-nowrap">
                               {text}
-                            </div>
+                            </span>
                           ))}
-                        </div>
+                        </TextLoop>
                       </div>
                     )}
 
@@ -729,46 +716,14 @@ export function ChatLandingWindow() {
                   <div className="flex flex-col">
                     {/* ChatGPT-style animated placeholder - hide when typing */}
                     {!prompt.trim() && (
-                      <div className="pointer-events-none absolute left-0 top-0 w-full select-none px-4 pt-4 text-gray-500 dark:text-gray-400">
-                        <div 
-                          className="transition-transform duration-700"
-                          style={{ 
-                            transform: `translateY(-${currentPlaceholderIndex * 1.5}rem)`,
-                            transitionTimingFunction: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                          }}
-                        >
-                          {[
-                            "Ask InVerus to verify someone...",
-                            "Try \"Jasmine Kaur\" or \"Elon Musk\"",
-                            "Curious how someone shows up online?",
-                            "Run a sample Trust Score.",
-                            "What's their digital signal say?",
-                            "Don't guess. Check the signal.",
-                            "Verify this person's identity",
-                            "Check their online presence",
-                            "What's their trust rating?",
-                            "Run identity verification",
-                            "Analyze digital footprint",
-                            "Verify social media profiles",
-                            "Check professional background",
-                            "Validate online credentials",
-                            "Assess digital reputation",
-                            "Verify business identity",
-                            "Check public records",
-                            "Analyze trust signals",
-                            "Validate online activity",
-                            "Check identity authenticity"
-                          ].map((text, index) => (
-                            <div
-                              key={index}
-                              className={`overflow-hidden text-ellipsis whitespace-nowrap transition-opacity duration-500 h-6 ${
-                                index === currentPlaceholderIndex ? 'opacity-100' : 'opacity-0'
-                              }`}
-                            >
+                      <div className="pointer-events-none absolute left-0 top-0 w-full select-none px-4 pt-4 text-gray-500 dark:text-gray-400 h-6">
+                        <TextLoop interval={3} className="h-6 leading-6 align-middle">
+                          {placeholders.map((text) => (
+                            <span key={text} className="block h-6 overflow-hidden text-ellipsis whitespace-nowrap">
                               {text}
-                            </div>
+                            </span>
                           ))}
-                        </div>
+                        </TextLoop>
                       </div>
                     )}
 
