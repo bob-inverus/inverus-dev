@@ -309,6 +309,36 @@ export function ChatLandingWindow() {
     }
   }
 
+  // Helper: Scroll to section with desktop centering and mobile/top alignment
+  const scrollToSectionById = (targetId: string) => {
+    const targetElement = document.getElementById(targetId)
+    if (!targetElement) {
+      console.error(`Target element not found: ${targetId}`)
+      return
+    }
+
+    const viewportHeight = window.innerHeight
+    const elementHeight = targetElement.offsetHeight
+    const elementTop = targetElement.getBoundingClientRect().top + window.scrollY
+    const isMobile = window.matchMedia('(max-width: 767px)').matches
+
+    // On mobile or when element is taller than viewport, align to top
+    if (isMobile || elementHeight >= viewportHeight) {
+      window.scrollTo({
+        top: elementTop,
+        behavior: 'smooth'
+      })
+      return
+    }
+
+    // Center in viewport on larger screens
+    const targetTop = Math.max(0, elementTop - (viewportHeight - elementHeight) / 2)
+    window.scrollTo({
+      top: targetTop,
+      behavior: 'smooth'
+    })
+  }
+
   // Handle arrow click with debugging
   const handleArrowClick = () => {
     const targetId = getNextSectionId()
@@ -319,18 +349,8 @@ export function ChatLandingWindow() {
     console.log(`Current section: ${currentSection}`)
     console.log(`Targeting: ${targetId}`)
     
-    const targetElement = document.getElementById(targetId)
-    if (targetElement) {
-      const targetPosition = targetElement.offsetTop
-      console.log(`Target element position: ${targetPosition}px`)
-      console.log('Scrolling to target...')
-      targetElement.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      })
-    } else {
-      console.error(`Target element not found: ${targetId}`)
-    }
+    console.log('Scrolling to target...')
+    scrollToSectionById(targetId)
   }
 
   const generateMockResult = (query: string) => {
@@ -764,7 +784,7 @@ export function ChatLandingWindow() {
 
 
       {/* Section 2: Trust Protocol */}
-    <section id="trust-protocol-section" className="flex flex-col items-center justify-center min-h-[calc(100svh-2rem)] md:min-h-screen w-full px-4 py-2 md:py-8 my-4 md:my-0">
+    <section id="trust-protocol-section" className="flex flex-col items-center justify-center min-h-[calc(100svh-2rem)] md:min-h-screen w-full px-4 py-12 md:py-16">
       <div className="w-full max-w-6xl mx-auto">
         <div className="grid w-full grid-cols-1 items-stretch gap-8">
           <div className="grid w-full grid-cols-1 max-w-4xl mx-auto">
@@ -868,7 +888,7 @@ export function ChatLandingWindow() {
       </section>
 
       {/* Section 3: Architecture of Trust */}
-      <section id="architecture-section" className="flex flex-col items-center justify-center min-h-[calc(100svh-2rem)] md:min-h-screen w-full px-4 py-2 md:py-8 my-4 md:my-0">
+      <section id="architecture-section" className="flex flex-col items-center justify-center min-h-[calc(100svh-2rem)] md:min-h-screen w-full px-4 py-12 md:py-16">
         <div className="w-full max-w-6xl mx-auto">
           <div className="relative w-full pr-12 md:pr-24">
              
@@ -1250,12 +1270,9 @@ export function ChatLandingWindow() {
         isOpen={isTeamSlideOpen}
         onClose={() => {
           setIsTeamSlideOpen(false)
-          // Scroll back to architecture section
+          // Scroll back to architecture section using helper for consistent alignment
           setTimeout(() => {
-            document.getElementById('architecture-section')?.scrollIntoView({
-              behavior: 'smooth',
-              block: 'center'
-            })
+            scrollToSectionById('architecture-section')
           }, 500)
         }}
       />

@@ -12,7 +12,17 @@ import { getSources } from "./get-sources"
 import { Reasoning } from "./reasoning"
 import { SearchImages } from "./search-images"
 import { SourcesList } from "./sources-list"
+import { useMemo } from "react"
+import { CircularChart } from "@/components/common/circular-chart"
 
+
+type IdentityScoringPart = {
+  type: "identity-scoring"
+  query: string
+  count: number
+  results: any[]
+  top: any | null
+}
 
 type MessageAssistantProps = {
   children: string
@@ -37,6 +47,17 @@ export function MessageAssistant({
 }: MessageAssistantProps) {
   const { preferences } = useUserPreferences()
   const sources = getSources(parts)
+  const identityScoring = useMemo(() => {
+    const p = parts?.find((part: any) => {
+      if (part?.type !== "tool-invocation") return false
+      const content = part?.toolInvocation?.result?.content
+      if (!Array.isArray(content)) return false
+      return content.some((c: any) => c?.type === "identity-scoring")
+    }) as any
+    const contentArr = p?.toolInvocation?.result?.content as any[] | undefined
+    const scoring = contentArr?.find((c: any) => c?.type === "identity-scoring") as IdentityScoringPart | undefined
+    return scoring
+  }, [parts])
 
   const reasoningParts = parts?.find((part) => part.type === "reasoning")
   const contentNullOrEmpty = children === null || children === ""
@@ -90,6 +111,27 @@ export function MessageAssistant({
           >
             {children}
           </MessageContent>
+        )}
+
+        {/* Identity scoring charts: render only after text streaming finishes */}
+        {(!isLastStreaming && identityScoring?.top) && (
+          <div className="mt-6">
+            <div className="flex justify-center gap-8">
+              <CircularChart
+                score={Math.round(identityScoring?.top?.TSRaw)}
+                title="Trust Score"
+                size={120}
+              />
+              <CircularChart
+                score={Math.round(identityScoring?.top?.CS)}
+                title="Confidence Score"
+                size={120}
+              />
+            </div>
+            <div className="mt-4 text-center text-sm text-muted-foreground">
+              Based on inVerus Digital Identity Scoring
+            </div>
+          </div>
         )}
 
         {sources && sources.length > 0 && <SourcesList sources={sources} />}

@@ -1,6 +1,12 @@
 import { tool } from "ai"
 import { z } from "zod"
 import { createClient } from "@/lib/supabase/server"
+import { computeDataQualityScore } from "@/scoring/dataQuality"
+import { computeSourceTrustworthiness } from "@/scoring/sourceTrustworthiness"
+import { computeConsortiumReputation } from "@/scoring/consortiumReputation"
+import { computeRawTrustScore } from "@/scoring/rawTrustScore"
+import { computeConfidenceScore } from "@/scoring/confidenceScore"
+import { computeFinalScores } from "@/scoring/finalScore"
 
 interface SearchResult {
   [key: string]: any
@@ -1046,7 +1052,124 @@ export const searchUserDataTool = tool({
         response += `\n\n📊 **Found ${data.count} total matches** - I'm showing you the most relevant ones. If you need to see more results or want to narrow down your search, just let me know!`
       }
 
-      return response
+      // Build identity scoring content for the top results (uses available fields)
+      try {
+        const scoringResults = (data.results || []).slice(0, 3).map((record: any) => {
+          const email = record.Email || record.email
+          const phone = record["Mobile Phone"] || record.phone
+          const city = record.city || record.City
+          const state = record.state || record.State
+          const status = record.Status || record.Result
+          const isValid = record["Is Valid"] === true || String(status || "").toLowerCase() === "valid"
+          const regDateRaw = record.reg_date || record.regDate || record.registered_at
+
+          const now = new Date()
+          const parsed = regDateRaw ? new Date(regDateRaw) : null
+          const daysOld = parsed ? Math.max(0, Math.floor((now.getTime() - parsed.getTime()) / (1000 * 60 * 60 * 24))) : 365
+          const lambda = 0.01
+          const FRD = Math.exp(-lambda * daysOld)
+          const FVC = 0.5
+
+          const hasEmail = Boolean(email)
+          const hasPhone = Boolean(phone)
+          const hasLocation = Boolean(city || state)
+
+          const rep = computeConsortiumReputation(
+            [
+              { SCWi: 0.9, DYKi: isValid ? 1 : 0, WDBi: isValid ? 1 : 0, FRDi: FRD, FVC },
+              { SCWi: 0.7, DYKi: isValid ? 1 : 0, WDBi: 0, FRDi: Math.max(0.7, FRD * 0.9), FVC: Math.min(0.7, FVC + 0.1) },
+            ],
+            { WDYK: 0.6, WWDB: 0.4, CF: 1.0 }
+          )
+
+          const raw = computeRawTrustScore(
+            {
+              ScoreIVH: isValid ? 85 : 60,
+              ScoreABD: (hasEmail ? 15 : 0) + (hasPhone ? 15 : 0) + (hasLocation ? 10 : 0) + 55,
+              ScoreDIT: Math.min(100, Math.max(50, 100 - Math.floor(daysOld / 36))),
+              ScoreRIE: daysOld < 30 ? 60 : 70,
+              ScoreIVSD: hasLocation ? 70 : 60,
+              ScoreRep: rep.total * 100,
+              ScoreBeh: 68,
+            },
+            { WIVH: 0.35, WABD: 0.3, WDIT: 0.15, WRIE: 0.1, WIVSD: 0.1, WRep: 0.15, WBeh: 0.15 }
+          )
+
+          const dq = computeDataQualityScore({
+            completeness: (hasEmail ? 15 : 0) + (hasPhone ? 15 : 0) + (hasLocation ? 10 : 0) + 60,
+            consistency: 80,
+            validity: isValid ? 85 : 65,
+            accuracy: 77,
+            timeliness: Math.max(60, 100 - Math.floor(daysOld / 18)),
+            uniqueness: hasEmail ? 85 : 75,
+            precision: 79,
+            usability: (hasEmail ? 10 : 0) + (hasPhone ? 10 : 0) + 70,
+          })
+
+          const st = computeSourceTrustworthiness({
+            security: 85,
+            privacy: 84,
+            ethics: 82,
+            resiliency: 80,
+            robustness: 81,
+            reliability: 86,
+            reputation: 83,
+            transparency: 79,
+            updateFrequency: 78,
+          })
+
+          const conf = computeConfidenceScore({ ScoreDQ: dq.total, ScoreST: st.total }, { WDQ: 0.6, WST: 0.4 })
+          const final = computeFinalScores({
+            TSRaw: raw.total,
+            CS: conf.total,
+            MaxCS: 100,
+            InitialTrustEstimate: raw.total,
+            EmpiricalTrustScore: raw.total * (conf.total / 100),
+          })
+
+          return {
+            person: {
+              name: record.Name || record.name || "Unknown",
+              email,
+              phone,
+              city,
+              state,
+            },
+            TSRaw: raw.total,
+            CS: conf.total,
+            DIS_option1: final.option1.DIS,
+            DIS_option2: final.option2.DIS,
+            breakdown: {
+              raw_trust: raw,
+              consortium_reputation: rep,
+              data_quality: dq,
+              source_trust: st,
+              confidence: conf,
+              final,
+            },
+          }
+        })
+
+        const top = scoringResults[0]
+        const summaryText = top
+          ? `\n\n📈 Scoring Summary (Top Match)\n• Trust Score: ${Math.round(top.TSRaw)}%\n• Confidence Score: ${Math.round(top.CS)}%\n`
+          : ""
+
+        return {
+          content: [
+            { type: "text", text: response + summaryText },
+            {
+              type: "identity-scoring",
+              query,
+              count: data.count,
+              results: scoringResults,
+              top: top ?? null,
+            },
+          ],
+        }
+      } catch (e) {
+        return response
+      }
 
     } catch (error) {
       console.error('Search tool error:', error)

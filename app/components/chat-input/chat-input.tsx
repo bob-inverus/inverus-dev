@@ -1,6 +1,5 @@
 "use client"
 
-import { ModelSelector } from "@/components/common/model-selector/base"
 import {
   PromptInput,
   PromptInputAction,
@@ -154,12 +153,6 @@ export function ChatInput({
                 onFileUpload={onFileUpload}
                 isUserAuthenticated={isUserAuthenticated}
                 model={selectedModel}
-              />
-              <ModelSelector
-                selectedModelId={selectedModel}
-                setSelectedModelId={onSelectModel}
-                isUserAuthenticated={isUserAuthenticated}
-                className="rounded-full"
               />
               {/* Search button removed - database search is always available */}
             </div>

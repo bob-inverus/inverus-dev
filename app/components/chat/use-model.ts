@@ -28,8 +28,9 @@ export function useModel({
 }: UseModelProps) {
   // Calculate the effective model based on priority: chat model > user preferred > default
   const getEffectiveModel = useCallback(() => {
-    return currentChat?.model || user?.preferred_model || MODEL_DEFAULT
-  }, [currentChat?.model, user?.preferred_model])
+    // Force Mistral Large as default for now
+    return "mistral-large-latest"
+  }, [])
 
   const [selectedModel, setSelectedModel] = useState<string>(getEffectiveModel)
 

@@ -11,14 +11,7 @@ import { ModelConfig } from "./types"
 
 // Static models (always available)
 const STATIC_MODELS: ModelConfig[] = [
-  ...mistralModels, // Mistral models as primary fallback
-  ...ollamaModels, // Ollama models when available
-  // ...deepseekModels,
-  // ...claudeModels,
-  // ...grokModels,
-  // ...perplexityModels,
-  // ...geminiModels,
-  // ...openrouterModels,
+  ...mistralModels,
 ]
 
 // Dynamic models cache
@@ -32,49 +25,26 @@ export async function getAllModels(): Promise<ModelConfig[]> {
 
   // Use cache if it's still valid
   if (dynamicModelsCache && now - lastFetchTime < CACHE_DURATION) {
-    return dynamicModelsCache
+    return dynamicModelsCache.filter((m) => m.id === "mistral-large-latest")
   }
 
   try {
-    // Get dynamically detected Ollama models (includes enabled check internally)
-    const detectedOllamaModels = await getOllamaModels()
-
-    // Combine static models (excluding static Ollama models) with detected ones
-    const staticModelsWithoutOllama = STATIC_MODELS.filter(
-      (model) => model.providerId !== "ollama"
-    )
-
-    dynamicModelsCache = [...staticModelsWithoutOllama, ...detectedOllamaModels]
+    // Restrict to Mistral Large only
+    dynamicModelsCache = STATIC_MODELS.filter((m) => m.id === "mistral-large-latest")
 
     lastFetchTime = now
     return dynamicModelsCache
   } catch (error) {
     console.warn("Failed to load dynamic models, using static models:", error)
-    return STATIC_MODELS
+    return STATIC_MODELS.filter((m) => m.id === "mistral-large-latest")
   }
 }
 
 export async function getModelsWithAccessFlags(): Promise<ModelConfig[]> {
   const models = await getAllModels()
 
-  const freeModels = models
-    .filter(
-      (model) =>
-        FREE_MODELS_IDS.includes(model.id) || model.providerId === "ollama"
-    )
-    .map((model) => ({
-      ...model,
-      accessible: true,
-    }))
-
-  const proModels = models
-    .filter((model) => !freeModels.map((m) => m.id).includes(model.id))
-    .map((model) => ({
-      ...model,
-      accessible: false,
-    }))
-
-  return [...freeModels, ...proModels]
+  // Only Mistral Large exposed
+  return models.map((model) => ({ ...model, accessible: true }))
 }
 
 export async function getModelsForProvider(
@@ -83,7 +53,7 @@ export async function getModelsForProvider(
   const models = STATIC_MODELS
 
   const providerModels = models
-    .filter((model) => model.providerId === provider)
+    .filter((model) => model.providerId === provider && model.id === "mistral-large-latest")
     .map((model) => ({
       ...model,
       accessible: true,
@@ -96,13 +66,8 @@ export async function getModelsForProvider(
 export async function getModelsForUserProviders(
   providers: string[]
 ): Promise<ModelConfig[]> {
-  const providerModels = await Promise.all(
-    providers.map((provider) => getModelsForProvider(provider))
-  )
-
-  const flatProviderModels = providerModels.flat()
-
-  return flatProviderModels
+  // Only provide Mistral Large regardless of providers
+  return STATIC_MODELS.filter((m) => m.id === "mistral-large-latest")
 }
 
 // Synchronous function to get model info for simple lookups
@@ -114,7 +79,7 @@ export function getModelInfo(modelId: string): ModelConfig | undefined {
   }
 
   // Fall back to static models for immediate lookup
-  return STATIC_MODELS.find((model) => model.id === modelId)
+  return STATIC_MODELS.find((model) => model.id === modelId && model.id === "mistral-large-latest")
 }
 
 // For backward compatibility - static models only

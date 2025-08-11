@@ -12,6 +12,7 @@ import {
   MessageCircle,
   Crown,
   Zap,
+  BookOpen,
 } from "lucide-react"
 
 import {
@@ -29,6 +30,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import Link from "next/link"
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -191,6 +193,12 @@ export function AppNavUser() {
               <SettingsTrigger />
               <FeedbackTrigger />
               <AppInfoTrigger />
+              <DropdownMenuItem asChild>
+                <Link href="/docs">
+                  <BookOpen />
+                  Documentation
+                </Link>
+              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleSignOut}>

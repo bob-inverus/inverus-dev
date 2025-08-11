@@ -2,6 +2,7 @@ import { SYSTEM_PROMPT_DEFAULT } from "@/lib/config"
 import { getAllModels } from "@/lib/models"
 import { getProviderForModel } from "@/lib/openproviders/provider-map"
 import { searchUserDataTool } from "@/lib/tools/search-tool"
+import { identityScoringTool } from "@/lib/tools/identity-scoring-tool"
 import type { ProviderWithoutOllama } from "@/lib/user-keys"
 import { Attachment } from "@ai-sdk/ui-utils"
 import { Message as MessageAISDK, streamText, ToolSet } from "ai"
@@ -156,6 +157,7 @@ export async function POST(req: Request) {
     // Always include search tool for database queries
     const tools: ToolSet = {
       searchUserData: searchUserDataTool,
+      identityScoring: identityScoringTool,
     }
 
     const result = streamText({

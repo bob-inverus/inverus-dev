@@ -431,7 +431,7 @@ export function ProjectView({ projectId }: ProjectViewProps) {
 
       {/* Fixed input area at bottom - only shown when not in onboarding */}
       {!showOnboarding && (
-        <div className="fixed bottom-8 left-0 right-0 z-10 w-full flex-shrink-0 bg-background/95 backdrop-blur-sm border-t border-border/10 md:left-[var(--sidebar-width)] md:peer-data-[state=collapsed]:left-[var(--sidebar-width-icon)]">
+        <div className="transition-all duration-500 bg-[linear-gradient(to_top,theme(colors.background)_96px,transparent_0)] fixed bottom-0 left-0 right-0 z-0 w-full flex-shrink-0 !pb-6 mt-1 mx-4 sm:mx-2 p-0">
           <motion.div
             className={cn(
               "mx-auto w-full max-w-3xl flex-shrink-0"
@@ -449,14 +449,6 @@ export function ProjectView({ projectId }: ProjectViewProps) {
         </div>
       )}
 
-      {/* Fixed disclaimer at bottom */}
-      <div className="fixed bottom-0 left-0 right-0 z-10 w-full flex-shrink-0 bg-background/95 backdrop-blur-sm md:left-[var(--sidebar-width)] md:peer-data-[state=collapsed]:left-[var(--sidebar-width-icon)]">
-        <div className="mx-auto w-full max-w-3xl flex-shrink-0">
-          <div className="text-muted-foreground text-center text-xs sm:text-sm p-2">
-            AI can make mistakes. Consider checking important information.
-          </div>
-        </div>
-      </div>
 
       {showOnboarding && chats.length > 0 ? (
         <div className="mx-auto w-full max-w-3xl px-4 pt-6 pb-20">
