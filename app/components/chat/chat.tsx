@@ -134,6 +134,17 @@ export function Chat() {
     [messages, status, handleDelete, handleEdit, handleReload]
   )
 
+  // Determine if we should show onboarding - use stable calculation to prevent glitches
+  const showOnboarding = useMemo(() => {
+    if (isChatsLoading) return true
+    return !chatId && (messages.length === 0 || isSubmitting)
+  }, [chatId, messages.length, isChatsLoading, isSubmitting])
+
+  // If we're loading and it's unclear what state we should be in, show onboarding layout
+  const shouldShowCenteredLayout = useMemo(() => {
+    return showOnboarding || isChatsLoading
+  }, [showOnboarding, isChatsLoading])
+
   // Memoize the chat input props
   const chatInputProps = useMemo(
     () => ({
@@ -150,6 +161,29 @@ export function Chat() {
       stop,
       status,
       // Removed enableSearch and setEnableSearch since they're no longer needed
+      useAnimatedPlaceholder: shouldShowCenteredLayout,
+      animatedPlaceholders: [
+        "Ask InVerus to verify someone...",
+        "Try \"Jasmine Kaur\" or \"Elon Musk\"",
+        "Curious how someone shows up online?",
+        "Run a sample Trust Score.",
+        "What's their digital signal say?",
+        "Don't guess. Check the signal.",
+        "Verify this person's identity",
+        "Check their online presence",
+        "What's their trust rating?",
+        "Run identity verification",
+        "Analyze digital footprint",
+        "Verify social media profiles",
+        "Check professional background",
+        "Validate online credentials",
+        "Assess digital reputation",
+        "Verify business identity",
+        "Check public records",
+        "Analyze trust signals",
+        "Validate online activity",
+        "Check identity authenticity",
+      ],
     }),
     [
       input,
@@ -164,7 +198,7 @@ export function Chat() {
       isAuthenticated,
       stop,
       status,
-      // Removed enableSearch and setEnableSearch since they're no longer needed
+      shouldShowCenteredLayout,
     ]
   )
 
@@ -181,23 +215,6 @@ export function Chat() {
   ) {
     return redirect("/")
   }
-
-  // Determine if we should show onboarding - use stable calculation to prevent glitches
-  const showOnboarding = useMemo(() => {
-    // If we're still loading chats, assume onboarding until we know for sure
-    if (isChatsLoading) {
-      return true
-    }
-    
-    // If there's no chatId and no messages, show onboarding
-    // BUT also keep onboarding layout stable during submission to prevent layout jumps
-    return !chatId && (messages.length === 0 || isSubmitting)
-  }, [chatId, messages.length, isChatsLoading, isSubmitting])
-
-  // If we're loading and it's unclear what state we should be in, show onboarding layout
-  const shouldShowCenteredLayout = useMemo(() => {
-    return showOnboarding || isChatsLoading
-  }, [showOnboarding, isChatsLoading])
 
   return (
     <div
@@ -233,11 +250,11 @@ export function Chat() {
                     }}
                   >
                     <div className="text-center w-full flex flex-col items-center">
-                      <h1 className="mb-4 text-3xl font-medium tracking-tight text-center">
-                        Verify an Identity
+                      <h1 className="text-2xl md:text-3xl lg:text-4xl tracking-tighter leading-tight text-center mb-2">
+                        Know Who's Real.
                       </h1>
-                      <h2 className="text-xl font-normal text-gray-600 text-center">
-                        Type or Tap to Build a Check
+                      <h2 className="text-gray-600 dark:text-gray-400 text-base md:text-lg text-center">
+                        The Trust Layer for the Internet.
                       </h2>
                     </div>
                   </motion.div>
@@ -275,7 +292,7 @@ export function Chat() {
 
       {/* Fixed input area at bottom - only shown when not in onboarding */}
       {!shouldShowCenteredLayout && (
-        <div className="transition-all duration-500 bg-[linear-gradient(to_top,theme(colors.background)_96px,transparent_0)] fixed bottom-0 left-0 right-0 z-0 w-full flex-shrink-0 !pb-6 mt-1 p-0">
+        <div className="transition-all duration-500 bg-[linear-gradient(to_top,theme(colors.background)_96px,transparent_0)] fixed bottom-0 left-0 right-0 z-0 w-full flex-shrink-0 !pb-6 mt-1 sm:mx-2 p-0">
           <motion.div
             className={cn(
               "mx-auto w-full max-w-2xl flex-shrink-0 px-0"

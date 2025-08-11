@@ -347,6 +347,29 @@ export function ProjectView({ projectId }: ProjectViewProps) {
       stop,
       status,
       // Removed enableSearch props since they're no longer needed
+      useAnimatedPlaceholder: pathname === `/p/${projectId}`,
+      animatedPlaceholders: [
+        "Ask InVerus to verify someone...",
+        "Try \"Jasmine Kaur\" or \"Elon Musk\"",
+        "Curious how someone shows up online?",
+        "Run a sample Trust Score.",
+        "What's their digital signal say?",
+        "Don't guess. Check the signal.",
+        "Verify this person's identity",
+        "Check their online presence",
+        "What's their trust rating?",
+        "Run identity verification",
+        "Analyze digital footprint",
+        "Verify social media profiles",
+        "Check professional background",
+        "Validate online credentials",
+        "Assess digital reputation",
+        "Verify business identity",
+        "Check public records",
+        "Analyze trust signals",
+        "Validate online activity",
+        "Check identity authenticity",
+      ],
     }),
     [
       input,
@@ -361,6 +384,8 @@ export function ProjectView({ projectId }: ProjectViewProps) {
       isAuthenticated,
       stop,
       status,
+      pathname,
+      projectId,
       // Removed enableSearch props since they're no longer needed
     ]
   )
@@ -417,6 +442,14 @@ export function ProjectView({ projectId }: ProjectViewProps) {
               },
             }}
           >
+            <div className="text-center mb-6">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl tracking-tighter leading-tight text-gray-900 dark:text-gray-100 mb-2">
+                Know Who's Real.
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400 text-base md:text-lg">
+                The Trust Layer for the Internet.
+              </p>
+            </div>
             <ChatInput {...chatInputProps} />
           </motion.div>
         )}
@@ -431,10 +464,10 @@ export function ProjectView({ projectId }: ProjectViewProps) {
 
       {/* Fixed input area at bottom - only shown when not in onboarding */}
       {!showOnboarding && (
-        <div className="transition-all duration-500 bg-[linear-gradient(to_top,theme(colors.background)_96px,transparent_0)] fixed bottom-0 left-0 right-0 z-0 w-full flex-shrink-0 !pb-6 mt-1 p-0">
+        <div className="transition-all duration-500 bg-[linear-gradient(to_top,theme(colors.background)_96px,transparent_0)] sticky bottom-0 z-10 w-full flex-shrink-0 !pb-6 mt-1 p-0">
           <motion.div
             className={cn(
-              "mx-auto w-full max-w-3xl flex-shrink-0"
+              "mx-auto w-full max-w-3xl flex-shrink-0 px-6"
             )}
             layout="position"
             layoutId="chat-input-container"
