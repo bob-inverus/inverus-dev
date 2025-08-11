@@ -431,7 +431,7 @@ export function ProjectView({ projectId }: ProjectViewProps) {
 
       {/* Fixed input area at bottom - only shown when not in onboarding */}
       {!showOnboarding && (
-        <div className="transition-all duration-500 bg-[linear-gradient(to_top,theme(colors.background)_96px,transparent_0)] fixed bottom-0 left-0 right-0 z-0 w-full flex-shrink-0 !pb-6 mt-1 mx-4 sm:mx-2 p-0">
+        <div className="transition-all duration-500 bg-[linear-gradient(to_top,theme(colors.background)_96px,transparent_0)] fixed bottom-0 left-0 right-0 z-0 w-full flex-shrink-0 !pb-6 mt-1 p-0">
           <motion.div
             className={cn(
               "mx-auto w-full max-w-3xl flex-shrink-0"
