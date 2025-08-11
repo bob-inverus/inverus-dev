@@ -6,6 +6,8 @@ import { computeConsortiumReputation } from "@/scoring/consortiumReputation"
 import { computeRawTrustScore } from "@/scoring/rawTrustScore"
 import { computeConfidenceScore } from "@/scoring/confidenceScore"
 import { computeFinalScores } from "@/scoring/finalScore"
+import { deriveDataQualityMetrics, deriveSourceTrustworthinessMetrics } from "@/lib/scoring/derive-metrics"
+import { deriveRawTrustInputs } from "@/lib/scoring/derive-metrics"
 
 interface PersonRecord {
   id: string
@@ -45,41 +47,15 @@ export const identityScoringTool = tool({
       ]
       const rep = computeConsortiumReputation(feedback, { WDYK: 0.6, WWDB: 0.4, CF: 1.0 })
 
+      const rawInputs = deriveRawTrustInputs(person)
       const raw = computeRawTrustScore(
-        {
-          ScoreIVH: hasEmail ? 80 : 60,
-          ScoreABD: hasPhone ? 75 : 55,
-          ScoreDIT: 70,
-          ScoreRIE: 65,
-          ScoreIVSD: hasLocation ? 70 : 60,
-          ScoreRep: rep.total * 100,
-          ScoreBeh: 68,
-        },
+        { ...rawInputs, ScoreRep: rep.total * 100 },
         { WIVH: 0.35, WABD: 0.3, WDIT: 0.15, WRIE: 0.1, WIVSD: 0.1, WRep: 0.15, WBeh: 0.15 }
       )
 
-      const dq = computeDataQualityScore({
-        completeness: hasEmail || hasPhone ? 85 : 70,
-        consistency: 80,
-        validity: 78,
-        accuracy: 77,
-        timeliness: 75,
-        uniqueness: 82,
-        precision: 79,
-        usability: 83,
-      })
+      const dq = computeDataQualityScore(deriveDataQualityMetrics(person))
 
-      const st = computeSourceTrustworthiness({
-        security: 85,
-        privacy: 84,
-        ethics: 82,
-        resiliency: 80,
-        robustness: 81,
-        reliability: 86,
-        reputation: 83,
-        transparency: 79,
-        updateFrequency: 78,
-      })
+      const st = computeSourceTrustworthiness(deriveSourceTrustworthinessMetrics(person))
 
       const conf = computeConfidenceScore({ ScoreDQ: dq.total, ScoreST: st.total }, { WDQ: 0.6, WST: 0.4 })
       const final = computeFinalScores({

@@ -132,4 +132,18 @@ function MarkdownComponent({
 const Markdown = memo(MarkdownComponent)
 Markdown.displayName = "Markdown"
 
+// Small override to render email text with emoji prefix
+// This is a minimal tweak; for full control, a custom renderer would be needed
+export function formatEmail(text: string) {
+  try {
+    const t = String(text)
+    if (t.includes("@") && t.includes(".")) {
+      return `✉️ ${t}`
+    }
+    return t
+  } catch {
+    return text as any
+  }
+}
+
 export { Markdown }

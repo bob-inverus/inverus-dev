@@ -2,9 +2,11 @@ import { NextRequest, NextResponse } from "next/server"
 import { computeDataQualityScore, type DataQualityMetrics } from "@/scoring/dataQuality"
 import { computeSourceTrustworthiness, type SourceTrustworthinessMetrics } from "@/scoring/sourceTrustworthiness"
 import { computeConsortiumReputation, type ReputationFeedbackInput, type ReputationWeights } from "@/scoring/consortiumReputation"
-import { computeRawTrustScore, type RawTrustInputs, type RawTrustWeights } from "@/scoring/rawTrustScore"
+import { computeRawTrustScore, type RawTrustWeights } from "@/scoring/rawTrustScore"
 import { computeConfidenceScore, type ConfidenceWeights } from "@/scoring/confidenceScore"
 import { computeFinalScores } from "@/scoring/finalScore"
+import { deriveDataQualityMetrics, deriveSourceTrustworthinessMetrics, randomizeConfidenceWeights } from "@/lib/scoring/derive-metrics"
+import { deriveRawTrustInputs } from "@/lib/scoring/derive-metrics"
 
 /**
  * Types for the API response
@@ -95,9 +97,9 @@ function mockScoringInputs(person: PersonRecord & Record<string, any>) {
     { SCWi: 0.7, DYKi: isValid ? 1 : 0, WDBi: 0, FRDi: Math.max(0.7, FRD * 0.9), FVC: Math.min(0.7, FVC + 0.1) },
   ]
   const repWeights: ReputationWeights = { WDYK: 0.6, WWDB: 0.4, CF: 1.0 }
-  const rep = computeConsortiumReputation(feedback, repWeights)
-
-  const rawInputs: RawTrustInputs = {
+    const rep = computeConsortiumReputation(feedback, repWeights)
+ 
+  const rawInputs = {
     ScoreIVH,
     ScoreABD,
     ScoreDIT,
@@ -106,7 +108,7 @@ function mockScoringInputs(person: PersonRecord & Record<string, any>) {
     ScoreRep: rep.total * 100, // convert 0–1 style to 0–100 scale if needed
     ScoreBeh,
   }
-
+ 
   const rawWeights: RawTrustWeights = {
     WIVH: 0.35,
     WABD: 0.3,
@@ -155,15 +157,24 @@ export async function POST(request: NextRequest) {
     const matches = mockSearchPeople(query)
 
     const results: ScoredPersonResult[] = matches.map((person) => {
-      const { rawInputs, rawWeights, rep, dqMetrics, stMetrics } = mockScoringInputs(person)
-
+      const rawInputs = deriveRawTrustInputs(person as any)
+      const rawWeights: RawTrustWeights = {
+        WIVH: 0.35,
+        WABD: 0.3,
+        WDIT: 0.15,
+        WRIE: 0.1,
+        WIVSD: 0.1,
+        WRep: 0.15,
+        WBeh: 0.15,
+      }
       // Raw Trust Score
       const raw = computeRawTrustScore(rawInputs, rawWeights)
 
-      // Confidence Score: CS = WDQ*ScoreDQ + WST*ScoreST
-      const dq = computeDataQualityScore(dqMetrics)
-      const st = computeSourceTrustworthiness(stMetrics)
-      const confWeights: ConfidenceWeights = { WDQ: 0.6, WST: 0.4 }
+      // Confidence Score inputs derived per person
+      const dq = computeDataQualityScore(deriveDataQualityMetrics(person as any))
+      const st = computeSourceTrustworthiness(deriveSourceTrustworthinessMetrics(person as any))
+      const cw = randomizeConfidenceWeights(0.4, 0.6)
+      const confWeights: ConfidenceWeights = { WDQ: cw.WDQ, WST: cw.WST }
       const conf = computeConfidenceScore({ ScoreDQ: dq.total, ScoreST: st.total }, confWeights)
 
       // Final scores (both options)
@@ -186,7 +197,10 @@ export async function POST(request: NextRequest) {
         },
         score_breakdown: {
           raw_trust: raw,
-          consortium_reputation: rep,
+          consortium_reputation: computeConsortiumReputation([
+            { SCWi: 0.9, DYKi: 1 as const, WDBi: 1 as const, FRDi: 0.95, FVC: 0.8 },
+            { SCWi: 0.7, DYKi: 1 as const, WDBi: 0 as const, FRDi: 0.9, FVC: 0.6 },
+          ], { WDYK: 0.6, WWDB: 0.4, CF: 1.0 }),
           data_quality: dq,
           source_trust: st,
           confidence: conf,

@@ -5,8 +5,10 @@ import { computeDataQualityScore } from "@/scoring/dataQuality"
 import { computeSourceTrustworthiness } from "@/scoring/sourceTrustworthiness"
 import { computeConsortiumReputation } from "@/scoring/consortiumReputation"
 import { computeRawTrustScore } from "@/scoring/rawTrustScore"
+import { deriveRawTrustInputs } from "@/lib/scoring/derive-metrics"
 import { computeConfidenceScore } from "@/scoring/confidenceScore"
 import { computeFinalScores } from "@/scoring/finalScore"
+import { deriveDataQualityMetrics, deriveSourceTrustworthinessMetrics, randomizeConfidenceWeights } from "@/lib/scoring/derive-metrics"
 
 interface SearchResult {
   [key: string]: any
@@ -1055,6 +1057,8 @@ export const searchUserDataTool = tool({
       // Build identity scoring content for the top results (uses available fields)
       try {
         const scoringResults = (data.results || []).slice(0, 3).map((record: any) => {
+          const rawInputs = deriveRawTrustInputs(record)
+          const rawWeights = { WIVH: 0.35, WABD: 0.3, WDIT: 0.15, WRIE: 0.1, WIVSD: 0.1, WRep: 0.15, WBeh: 0.15 }
           const email = record.Email || record.email
           const phone = record["Mobile Phone"] || record.phone
           const city = record.city || record.City
@@ -1082,43 +1086,13 @@ export const searchUserDataTool = tool({
             { WDYK: 0.6, WWDB: 0.4, CF: 1.0 }
           )
 
-          const raw = computeRawTrustScore(
-            {
-              ScoreIVH: isValid ? 85 : 60,
-              ScoreABD: (hasEmail ? 15 : 0) + (hasPhone ? 15 : 0) + (hasLocation ? 10 : 0) + 55,
-              ScoreDIT: Math.min(100, Math.max(50, 100 - Math.floor(daysOld / 36))),
-              ScoreRIE: daysOld < 30 ? 60 : 70,
-              ScoreIVSD: hasLocation ? 70 : 60,
-              ScoreRep: rep.total * 100,
-              ScoreBeh: 68,
-            },
-            { WIVH: 0.35, WABD: 0.3, WDIT: 0.15, WRIE: 0.1, WIVSD: 0.1, WRep: 0.15, WBeh: 0.15 }
-          )
+          const raw = computeRawTrustScore({ ...rawInputs, ScoreRep: rep.total * 100 }, rawWeights)
 
-          const dq = computeDataQualityScore({
-            completeness: (hasEmail ? 15 : 0) + (hasPhone ? 15 : 0) + (hasLocation ? 10 : 0) + 60,
-            consistency: 80,
-            validity: isValid ? 85 : 65,
-            accuracy: 77,
-            timeliness: Math.max(60, 100 - Math.floor(daysOld / 18)),
-            uniqueness: hasEmail ? 85 : 75,
-            precision: 79,
-            usability: (hasEmail ? 10 : 0) + (hasPhone ? 10 : 0) + 70,
-          })
+          const dq = computeDataQualityScore(deriveDataQualityMetrics(record))
+          const st = computeSourceTrustworthiness(deriveSourceTrustworthinessMetrics(record))
 
-          const st = computeSourceTrustworthiness({
-            security: 85,
-            privacy: 84,
-            ethics: 82,
-            resiliency: 80,
-            robustness: 81,
-            reliability: 86,
-            reputation: 83,
-            transparency: 79,
-            updateFrequency: 78,
-          })
-
-          const conf = computeConfidenceScore({ ScoreDQ: dq.total, ScoreST: st.total }, { WDQ: 0.6, WST: 0.4 })
+          const cw = randomizeConfidenceWeights(0.4, 0.6)
+          const conf = computeConfidenceScore({ ScoreDQ: dq.total, ScoreST: st.total }, { WDQ: cw.WDQ, WST: cw.WST })
           const final = computeFinalScores({
             TSRaw: raw.total,
             CS: conf.total,
@@ -1151,13 +1125,11 @@ export const searchUserDataTool = tool({
         })
 
         const top = scoringResults[0]
-        const summaryText = top
-          ? `\n\n📈 Scoring Summary (Top Match)\n• Trust Score: ${Math.round(top.TSRaw)}%\n• Confidence Score: ${Math.round(top.CS)}%\n`
-          : ""
+        const summaryText = ""
 
         return {
           content: [
-            { type: "text", text: response + summaryText },
+            { type: "text", text: response },
             {
               type: "identity-scoring",
               query,

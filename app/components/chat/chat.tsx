@@ -137,8 +137,8 @@ export function Chat() {
   // Determine if we should show onboarding - use stable calculation to prevent glitches
   const showOnboarding = useMemo(() => {
     if (isChatsLoading) return true
-    return !chatId && (messages.length === 0 || isSubmitting)
-  }, [chatId, messages.length, isChatsLoading, isSubmitting])
+    return messages.length === 0 && !isSubmitting
+  }, [messages.length, isChatsLoading, isSubmitting])
 
   // If we're loading and it's unclear what state we should be in, show onboarding layout
   const shouldShowCenteredLayout = useMemo(() => {
@@ -219,7 +219,7 @@ export function Chat() {
   return (
     <div
       className={cn(
-        "@container/main relative flex h-full flex-col items-center"
+        "@container/main relative flex h-full flex-col items-center justify-end md:justify-center"
       )}
     >
       <DialogAuth open={hasDialogAuth} setOpen={setHasDialogAuth} />
@@ -279,12 +279,21 @@ export function Chat() {
             </div>
           )
         ) : (
-          // Layout with messages/search results - scrollable conversation area
-          <div className="flex-1 w-full flex items-center justify-center min-h-0 overflow-hidden">
-            <div className="w-full h-full overflow-y-auto pb-40">
-              <AnimatePresence initial={false} mode="popLayout">
-                <Conversation key="conversation" {...conversationProps} />
-              </AnimatePresence>
+          // Layout with messages/search results - single scrollable conversation area centered
+          <div className="relative flex h-full w-full flex-col items-center overflow-x-hidden overflow-y-auto">
+            {/* Header overlay spacer for mobile */}
+            <div className="pointer-events-none absolute top-0 right-0 left-0 z-10 mx-auto flex w-full flex-col justify-center">
+              <div className="h-app-header bg-background flex w-full lg:hidden lg:h-0" />
+              <div className="h-app-header bg-background flex w-full mask-b-from-4% mask-b-to-100% lg:hidden" />
+            </div>
+            <div className="flex relative w-full" role="log">
+              <div className="w-full" style={{ height: "100%", width: "100%", overflow: "auto" }}>
+                <div className="flex w-full flex-col items-center pt-20 pb-28" style={{ scrollbarGutter: "stable both-edges" }}>
+                  <AnimatePresence initial={false} mode="popLayout">
+                    <Conversation key="conversation" {...conversationProps} />
+                  </AnimatePresence>
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -292,11 +301,9 @@ export function Chat() {
 
       {/* Fixed input area at bottom - only shown when not in onboarding */}
       {!shouldShowCenteredLayout && (
-        <div className="transition-all duration-500 bg-[linear-gradient(to_top,theme(colors.background)_96px,transparent_0)] fixed bottom-0 left-0 right-0 z-0 w-full flex-shrink-0 !pb-6 mt-1 sm:mx-2 p-0">
+        <div className="transition-all duration-500 bg-[linear-gradient(to_top,theme(colors.background)_96px,transparent_0)] absolute inset-x-0 bottom-0 z-50 mx-auto w-full max-w-3xl flex-shrink-0 p-0 flex justify-center pointer-events-none">
           <motion.div
-            className={cn(
-              "mx-auto w-full max-w-2xl flex-shrink-0 px-0"
-            )}
+            className={cn("w-full max-w-3xl flex-shrink-0 px-0 pointer-events-auto")}
             layout="position"
             layoutId="chat-input-container"
             transition={{
