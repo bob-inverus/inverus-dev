@@ -129,7 +129,7 @@ export function MessageAssistant({
               />
             </div>
             <div className="mt-4 text-center text-sm text-muted-foreground">
-              Based on inVerus Digital Identity Scoring
+              The below charts from identity management scores and etc
             </div>
           </div>
         )}

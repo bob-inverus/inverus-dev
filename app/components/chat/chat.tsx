@@ -14,11 +14,10 @@ import { cn } from "@/lib/utils"
 import { AnimatePresence, motion } from "motion/react"
 import dynamic from "next/dynamic"
 import { redirect } from "next/navigation"
-import { useMemo, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import { useChatCore } from "./use-chat-core"
 import { useChatOperations } from "./use-chat-operations"
 import { useFileUpload } from "./use-file-upload"
-import { LandingHero } from "@/app/components/landing-hero"
 
 const FeedbackWidget = dynamic(
   () => import("./feedback-widget").then((mod) => mod.FeedbackWidget),
@@ -77,6 +76,18 @@ export function Chat() {
     [user?.system_prompt]
   )
 
+  // New state for quoted text
+  const [quotedText, setQuotedText] = useState<{
+    text: string
+    messageId: string
+  }>()
+  const handleQuotedSelected = useCallback(
+    (text: string, messageId: string) => {
+      setQuotedText({ text, messageId })
+    },
+    []
+  )
+
   // Chat operations (utils + handlers) - created first
   const { checkLimitsAndNotify, ensureChatExists, handleDelete, handleEdit } =
     useChatOperations({
@@ -100,7 +111,6 @@ export function Chat() {
     stop,
     hasSentFirstMessageRef,
     isSubmitting,
-    // Removed enableSearch and setEnableSearch since they're no longer needed
     submit,
     handleReload,
     handleInputChange,
@@ -130,20 +140,17 @@ export function Chat() {
       onDelete: handleDelete,
       onEdit: handleEdit,
       onReload: handleReload,
+      onQuote: handleQuotedSelected,
     }),
-    [messages, status, handleDelete, handleEdit, handleReload]
+    [
+      messages,
+      status,
+      handleDelete,
+      handleEdit,
+      handleReload,
+      handleQuotedSelected,
+    ]
   )
-
-  // Determine if we should show onboarding - use stable calculation to prevent glitches
-  const showOnboarding = useMemo(() => {
-    if (isChatsLoading) return true
-    return messages.length === 0 && !isSubmitting
-  }, [messages.length, isChatsLoading, isSubmitting])
-
-  // If we're loading and it's unclear what state we should be in, show onboarding layout
-  const shouldShowCenteredLayout = useMemo(() => {
-    return showOnboarding || isChatsLoading
-  }, [showOnboarding, isChatsLoading])
 
   // Memoize the chat input props
   const chatInputProps = useMemo(
@@ -160,30 +167,7 @@ export function Chat() {
       isUserAuthenticated: isAuthenticated,
       stop,
       status,
-      // Removed enableSearch and setEnableSearch since they're no longer needed
-      useAnimatedPlaceholder: shouldShowCenteredLayout,
-      animatedPlaceholders: [
-        "Ask InVerus to verify someone...",
-        "Try \"Jasmine Kaur\" or \"Elon Musk\"",
-        "Curious how someone shows up online?",
-        "Run a sample Trust Score.",
-        "What's their digital signal say?",
-        "Don't guess. Check the signal.",
-        "Verify this person's identity",
-        "Check their online presence",
-        "What's their trust rating?",
-        "Run identity verification",
-        "Analyze digital footprint",
-        "Verify social media profiles",
-        "Check professional background",
-        "Validate online credentials",
-        "Assess digital reputation",
-        "Verify business identity",
-        "Check public records",
-        "Analyze trust signals",
-        "Validate online activity",
-        "Check identity authenticity",
-      ],
+      quotedText,
     }),
     [
       input,
@@ -198,7 +182,7 @@ export function Chat() {
       isAuthenticated,
       stop,
       status,
-      shouldShowCenteredLayout,
+      quotedText,
     ]
   )
 
@@ -216,106 +200,59 @@ export function Chat() {
     return redirect("/")
   }
 
+  const showOnboarding = !chatId && messages.length === 0
+
   return (
     <div
       className={cn(
-        "@container/main relative flex h-full flex-col items-center justify-end md:justify-center"
+        "@container/main relative flex h-full flex-col items-center justify-center bg-background"
       )}
     >
       <DialogAuth open={hasDialogAuth} setOpen={setHasDialogAuth} />
 
-      {/* Main content area - full height minus fixed bottom elements */}
-      <div className="flex-1 w-full flex flex-col min-h-0 relative">
-        {shouldShowCenteredLayout ? (
-          // Show landing hero for unauthenticated users, regular onboarding for authenticated users
-          !isAuthenticated ? (
-            <LandingHero />
-          ) : (
-            // Centered layout for onboarding (no messages)
-            <div className="flex flex-col items-center justify-center flex-1 w-full min-h-0">
-              <AnimatePresence initial={false} mode="popLayout">
-                {!isChatsLoading && showOnboarding && (
-                  <motion.div
-                    key="onboarding"
-                    className="mx-auto w-full max-w-[50rem] mb-8 px-4"
-                    initial={{ opacity: isChatsLoading ? 1 : 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    layout="position"
-                    layoutId="onboarding"
-                    transition={{
-                      layout: {
-                        duration: 0,
-                      },
-                    }}
-                  >
-                    <div className="text-center w-full flex flex-col items-center">
-                      <h1 className="text-2xl md:text-3xl lg:text-4xl tracking-tighter leading-tight text-center mb-2">
-                        Know Who's Real.
-                      </h1>
-                      <h2 className="text-gray-600 dark:text-gray-400 text-base md:text-lg text-center">
-                        The Trust Layer for the Internet.
-                      </h2>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-              
-              {/* Centered input for onboarding */}
-              <motion.div
-                className={cn(
-                  "mx-auto w-full max-w-2xl flex-shrink-0 px-4"
-                )}
-                layout="position"
-                layoutId="chat-input-container"
-                transition={{
-                  layout: {
-                    duration: !isChatsLoading && messages.length >= 1 && !isSubmitting ? 0.3 : 0,
-                  },
-                }}
-              >
-                <ChatInput {...chatInputProps} />
-              </motion.div>
-            </div>
-          )
-        ) : (
-          // Layout with messages/search results - single scrollable conversation area centered
-          <div className="relative flex h-full w-full flex-col items-center overflow-x-hidden overflow-y-auto">
-            {/* Header overlay spacer for mobile */}
-            <div className="pointer-events-none absolute top-0 right-0 left-0 z-10 mx-auto flex w-full flex-col justify-center">
-              <div className="h-app-header bg-background flex w-full lg:hidden lg:h-0" />
-              <div className="h-app-header bg-background flex w-full mask-b-from-4% mask-b-to-100% lg:hidden" />
-            </div>
-            <div className="flex relative w-full" role="log">
-              <div className="w-full" style={{ height: "100%", width: "100%", overflow: "auto" }}>
-                <div className="flex w-full flex-col items-center pt-20 pb-28" style={{ scrollbarGutter: "stable both-edges" }}>
-                  <AnimatePresence initial={false} mode="popLayout">
-                    <Conversation key="conversation" {...conversationProps} />
-                  </AnimatePresence>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Fixed input area at bottom - only shown when not in onboarding */}
-      {!shouldShowCenteredLayout && (
-        <div className="transition-all duration-500 bg-[linear-gradient(to_top,theme(colors.background)_96px,transparent_0)] absolute inset-x-0 bottom-0 z-50 mx-auto w-full max-w-3xl flex-shrink-0 p-0 flex justify-center pointer-events-none">
+      <AnimatePresence initial={false} mode="popLayout">
+        {showOnboarding ? (
           <motion.div
-            className={cn("w-full max-w-3xl flex-shrink-0 px-0 pointer-events-auto")}
+            key="onboarding"
+            className="mx-auto max-w-[50rem] text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             layout="position"
-            layoutId="chat-input-container"
+            layoutId="onboarding"
             transition={{
               layout: {
-                duration: !isChatsLoading && messages.length >= 1 && !isSubmitting ? 0.3 : 0,
+                duration: 0,
               },
             }}
           >
-            <ChatInput {...chatInputProps} />
+            <h1 className="mb-6 text-3xl font-medium tracking-tight">
+              What&apos;s on your mind?
+            </h1>
           </motion.div>
+        ) : (
+          <div className="flex-1 w-full overflow-hidden pb-24">
+            <Conversation key="conversation" {...conversationProps} />
+          </div>
+        )}
+      </AnimatePresence>
+
+      <motion.div
+        className={cn(
+          "absolute bottom-0 left-0 right-0 z-50 p-4 bg-background"
+        )}
+        layout="position"
+        layoutId="chat-input-container"
+        transition={{
+          layout: {
+            duration: messages.length === 1 ? 0.3 : 0,
+          },
+        }}
+      >
+        <div className="mx-auto w-full max-w-3xl">
+          <ChatInput {...chatInputProps} />
         </div>
-      )}
+      </motion.div>
 
       <FeedbackWidget authUserId={user?.id} />
     </div>

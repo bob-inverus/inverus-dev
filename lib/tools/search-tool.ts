@@ -1018,18 +1018,7 @@ export const searchUserDataTool = tool({
           }
         }
         
-        if (result.confidence_score) {
-          response += `   🎯 Match confidence: ${(result.confidence_score / 100 * 100).toFixed(1)}%\n`
-        }
-        
-        if (result['Is Valid']) {
-          response += `   ✅ Status: ${result['Is Valid'] === 'Y' ? 'Verified' : 'Unverified'}\n`
-        }
-        
-        if (result.match_reasons && result.match_reasons.length > 0) {
-          response += `   🔍 Match reasons: ${result.match_reasons.join(', ')}\n`
-        }
-        
+        // Suppressed match confidence, status, and reasons from chat response
         response += '\n'
       })
 
