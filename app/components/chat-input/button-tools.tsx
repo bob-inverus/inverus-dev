@@ -24,13 +24,13 @@ type Service = {
 const services: Service[] = [
   {
     id: "harvestor",
-    name: "Data Harvesting Service",
+    name: "Power of Internet",
     shortName: "Harvestor",
     icon: Search,
   },
   {
     id: "consortium",
-    name: "Collaborative Verification",
+    name: "Power of Network",
     shortName: "Consortium",
     icon: Users,
   }
@@ -87,7 +87,12 @@ export function ButtonTools({
               <button 
                 key={service.id} 
                 onClick={() => handleServiceSelect(service.id)}
-                className="flex w-full items-center gap-2 rounded-md p-2 text-left text-sm hover:bg-accent dark:hover:bg-[#515151]"
+                className={cn(
+                  "flex w-full items-center gap-2 rounded-md p-2 text-left text-sm transition-colors",
+                  selectedService === service.id 
+                    ? "bg-accent dark:bg-[#515151] hover:bg-accent/80 dark:hover:bg-[#454545]"
+                    : "hover:bg-accent dark:hover:bg-[#515151]"
+                )}
               >
                 <service.icon className="h-4 w-4" />
                 <span>{service.name}</span>
@@ -102,7 +107,7 @@ export function ButtonTools({
           <div className="h-6 w-px bg-border dark:bg-gray-600 self-center" />
           <button 
             onClick={() => onServiceChange?.("")}
-            className="flex h-8 items-center gap-2 rounded-full px-2 text-sm dark:hover:bg-[#3b4045] hover:bg-accent cursor-pointer dark:text-[#99ceff] text-[#2294ff] transition-colors"
+            className="flex h-8 items-center gap-2 rounded-full px-2 text-sm bg-accent dark:bg-[#3b4045] hover:bg-accent/80 dark:hover:bg-[#2e3338] cursor-pointer dark:text-[#99ceff] text-[#2294ff] transition-colors"
           >
             {ActiveServiceIcon && <ActiveServiceIcon className="h-4 w-4" />}
             {selectedServiceData.shortName}

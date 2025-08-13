@@ -54,7 +54,7 @@ export function ChatInput({
   useAnimatedPlaceholder = false,
   animatedPlaceholders = [],
 }: ChatInputProps) {
-  const [selectedService, setSelectedService] = useState<string | undefined>()
+  const [selectedService, setSelectedService] = useState<string | undefined>("harvestor")
   const selectModelConfig = getModelInfo(selectedModel)
   const hasSearchSupport = Boolean(selectModelConfig?.webSearch)
   const isOnlyWhitespace = (text: string) => !/[\s\S]*\S[\s\S]*/.test(text) === false ? false : !/[^\s]/.test(text)
