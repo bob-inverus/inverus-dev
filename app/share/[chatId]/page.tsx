@@ -30,7 +30,7 @@ export async function generateMetadata({
     .single()
 
   const title = chat?.title || "Chat"
-  const description = "A chat in inVerus"
+  const description = "A chat in Zola"
 
   return {
     title,

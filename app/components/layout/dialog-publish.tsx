@@ -9,7 +9,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
 import {
   Drawer,
@@ -17,7 +16,6 @@ import {
   DrawerDescription,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer"
 import { Input } from "@/components/ui/input"
 import {
@@ -30,18 +28,13 @@ import { useChatSession } from "@/lib/chat-store/session/provider"
 import { APP_DOMAIN } from "@/lib/config"
 import { createClient } from "@/lib/supabase/client"
 import { isSupabaseEnabled } from "@/lib/supabase/config"
-import { Check, Copy, Globe, LoaderCircle } from "lucide-react"
+import { Check, Copy, Globe, Spinner } from "@phosphor-icons/react"
 import type React from "react"
 import { useState } from "react"
 
-type DialogPublishProps = {
-  trigger?: React.ReactNode
-}
-
-export function DialogPublish({ trigger }: DialogPublishProps = {}) {
+export function DialogPublish() {
   const [openDialog, setOpenDialog] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [isPublished, setIsPublished] = useState(false)
   const { chatId } = useChatSession()
   const isMobile = useBreakpoint(768)
   const [copied, setCopied] = useState(false)
@@ -70,8 +63,6 @@ export function DialogPublish({ trigger }: DialogPublishProps = {}) {
   }
 
   const handlePublish = async () => {
-    if (isPublished) return
-
     setIsLoading(true)
 
     const supabase = createClient()
@@ -92,17 +83,8 @@ export function DialogPublish({ trigger }: DialogPublishProps = {}) {
     }
 
     if (data) {
-      setIsPublished(true)
-    }
-    
-    setIsLoading(false)
-  }
-
-  // Handle when dialog opens - auto-publish if not published yet
-  const handleOpenChange = (open: boolean) => {
-    setOpenDialog(open)
-    if (open && !isPublished && !isLoading) {
-      handlePublish()
+      setIsLoading(false)
+      setOpenDialog(true)
     }
   }
 
@@ -115,7 +97,7 @@ export function DialogPublish({ trigger }: DialogPublishProps = {}) {
     }, 2000)
   }
 
-  const defaultTrigger = (
+  const trigger = (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
@@ -123,10 +105,11 @@ export function DialogPublish({ trigger }: DialogPublishProps = {}) {
             variant="ghost"
             size="icon"
             className="text-muted-foreground hover:text-foreground hover:bg-muted bg-background rounded-full p-1.5 transition-colors"
+            onClick={handlePublish}
             disabled={isLoading}
           >
             {isLoading ? (
-              <LoaderCircle className="size-5 animate-spin" />
+              <Spinner className="size-5 animate-spin" />
             ) : (
               <Globe className="size-5" />
             )}
@@ -175,37 +158,41 @@ export function DialogPublish({ trigger }: DialogPublishProps = {}) {
 
   if (isMobile) {
     return (
-      <Drawer open={openDialog} onOpenChange={handleOpenChange}>
-        <DrawerTrigger asChild>{trigger || defaultTrigger}</DrawerTrigger>
-        <DrawerContent className="bg-background border-border">
-          <DrawerHeader>
-            <DrawerTitle>Your conversation is now public!</DrawerTitle>
-            <DrawerDescription>
-              Anyone with the link can now view this conversation and may
-              appear in community feeds, featured pages, or search results in
-              the future.
-            </DrawerDescription>
-          </DrawerHeader>
-          <div className="flex flex-col gap-4 px-4 pb-6">{content}</div>
-        </DrawerContent>
-      </Drawer>
+      <>
+        {trigger}
+        <Drawer open={openDialog} onOpenChange={setOpenDialog}>
+          <DrawerContent className="bg-background border-border">
+            <DrawerHeader>
+              <DrawerTitle>Your conversation is now public!</DrawerTitle>
+              <DrawerDescription>
+                Anyone with the link can now view this conversation and may
+                appear in community feeds, featured pages, or search results in
+                the future.
+              </DrawerDescription>
+            </DrawerHeader>
+            <div className="flex flex-col gap-4 px-4 pb-6">{content}</div>
+          </DrawerContent>
+        </Drawer>
+      </>
     )
   }
 
   return (
-    <Dialog open={openDialog} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>{trigger || defaultTrigger}</DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle>Your conversation is now public!</DialogTitle>
-          <DialogDescription>
-            Anyone with the link can now view this conversation and may appear
-            in community feeds, featured pages, or search results in the
-            future.
-          </DialogDescription>
-        </DialogHeader>
-        {content}
-      </DialogContent>
-    </Dialog>
+    <>
+      {trigger}
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Your conversation is now public!</DialogTitle>
+            <DialogDescription>
+              Anyone with the link can now view this conversation and may appear
+              in community feeds, featured pages, or search results in the
+              future.
+            </DialogDescription>
+          </DialogHeader>
+          {content}
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }
