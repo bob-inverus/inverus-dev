@@ -30,7 +30,7 @@ import { createClient } from "@/lib/supabase/client"
 import { isSupabaseEnabled } from "@/lib/supabase/config"
 import { Check, Copy, Globe, LoaderCircle } from "lucide-react"
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 type DialogPublishProps = {
   trigger?: React.ReactNode
@@ -42,6 +42,12 @@ export function DialogPublish({ trigger }: DialogPublishProps = {}) {
   const { chatId } = useChatSession()
   const isMobile = useBreakpoint(768)
   const [copied, setCopied] = useState(false)
+  const [isPublished, setIsPublished] = useState(false)
+
+  // Check if chat is already published on mount
+  useEffect(() => {
+    checkIfPublished()
+  }, [chatId])
 
   if (!isSupabaseEnabled) {
     return null
@@ -67,6 +73,9 @@ export function DialogPublish({ trigger }: DialogPublishProps = {}) {
   }
 
   const handlePublish = async () => {
+    console.log("Publishing chat:", chatId)
+    console.log("Already published:", isPublished)
+    
     setIsLoading(true)
 
     const supabase = createClient()
@@ -82,13 +91,32 @@ export function DialogPublish({ trigger }: DialogPublishProps = {}) {
       .select()
       .single()
 
+    console.log("Publish result:", { data, error })
+
     if (error) {
       console.error(error)
     }
 
     if (data) {
-      setIsLoading(false)
-      setOpenDialog(true)
+      setIsPublished(true)
+    }
+    
+    setIsLoading(false)
+  }
+
+  // Check if chat is already published
+  const checkIfPublished = async () => {
+    const supabase = createClient()
+    if (!supabase) return
+    
+    const { data } = await supabase
+      .from("chats")
+      .select("public")
+      .eq("id", chatId)
+      .single()
+    
+    if (data?.public) {
+      setIsPublished(true)
     }
   }
 
@@ -130,7 +158,7 @@ export function DialogPublish({ trigger }: DialogPublishProps = {}) {
   // Handle when dialog opens - auto-publish if not published yet
   const handleOpenChange = (open: boolean) => {
     setOpenDialog(open)
-    if (open && !isLoading) {
+    if (open && !isLoading && !isPublished) {
       handlePublish()
     }
   }
