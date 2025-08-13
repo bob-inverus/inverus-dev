@@ -29,9 +29,9 @@ export function Header({ hasSidebar }: { hasSidebar: boolean }) {
             <div className="flex flex-1 items-center gap-2">
               <Link
                 href="/"
-                className="pointer-events-auto inline-flex items-center text-xl font-medium tracking-tight"
+                className="pointer-events-auto inline-flex items-center text-2xl font-medium tracking-tight"
               >
-                <InverusIcon className="mr-1 size-4" />
+                <InverusIcon className="mr-2 size-8" />
                 {APP_NAME}
               </Link>
             </div>
