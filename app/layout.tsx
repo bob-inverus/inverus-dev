@@ -33,9 +33,9 @@ const ibmPlexMono = IBM_Plex_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "inVerus",
+  title: "inVerus App | Your Trust & Confidence Dashboard",
   description:
-    "inVerus is the identity verification assistant. It helps you verify your identity by asking you a few questions.",
+    "Real-time verification scores for people, content, and agents. Monitor, validate, and prove digital trust across your network.",
 }
 
 export default async function RootLayout({
