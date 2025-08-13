@@ -8,7 +8,7 @@ import {
   MorphingPopoverTrigger,
 } from "@/components/motion-primitives/morphing-popover"
 import { isSupabaseEnabled } from "@/lib/supabase/config"
-import { QuestionMark } from "@phosphor-icons/react"
+import { HelpCircle } from "lucide-react"
 import { motion } from "motion/react"
 import { useState } from "react"
 
@@ -66,7 +66,7 @@ export function FeedbackWidget({ authUserId }: FeedbackWidgetProps) {
               delay: isOpen ? 0 : TRANSITION_POPOVER.duration / 2,
             }}
           >
-            <QuestionMark className="text-foreground size-4" />
+            <HelpCircle className="text-foreground size-4" />
           </motion.span>
         </MorphingPopoverTrigger>
         <MorphingPopoverContent

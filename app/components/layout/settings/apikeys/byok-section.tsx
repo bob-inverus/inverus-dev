@@ -24,7 +24,7 @@ import { toast } from "@/components/ui/toast"
 import { fetchClient } from "@/lib/fetch"
 import { useModel } from "@/lib/model-store/provider"
 import { cn } from "@/lib/utils"
-import { PlusIcon } from "@phosphor-icons/react"
+import { Plus } from "lucide-react"
 import { useMutation } from "@tanstack/react-query"
 import { Loader2, Trash2 } from "lucide-react"
 import { useState } from "react"
@@ -246,7 +246,7 @@ export function ByokSection() {
             "border-primary border-dashed"
           )}
         >
-          <PlusIcon className="size-4" />
+                          <Plus className="size-4" />
         </button>
       </div>
 

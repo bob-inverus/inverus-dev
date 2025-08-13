@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useUser } from "@/lib/user-store/provider"
-import { User } from "@phosphor-icons/react"
+import { User } from "lucide-react"
 
 export function UserProfile() {
   const { user } = useUser()

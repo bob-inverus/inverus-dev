@@ -9,15 +9,13 @@ import {
   MorphingDialogTrigger,
 } from "@/components/motion-primitives/morphing-dialog"
 import {
-  MessageAction,
-  MessageActions,
   Message as MessageContainer,
   MessageContent,
 } from "@/components/prompt-kit/message"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { Message as MessageType } from "@ai-sdk/react"
-import { Check, Copy, Trash } from "@phosphor-icons/react"
+import { Check, Copy, Trash2 } from "lucide-react"
 import Image from "next/image"
 import { useRef, useState } from "react"
 
@@ -173,47 +171,30 @@ export function MessageUser({
           {children}
         </MessageContent>
       )}
-      <MessageActions className="flex gap-0 opacity-0 transition-opacity duration-0 group-hover:opacity-100">
-        <MessageAction tooltip={copied ? "Copied!" : "Copy text"} side="bottom">
-          <button
-            className="hover:bg-accent/60 text-muted-foreground hover:text-foreground flex size-7.5 items-center justify-center rounded-full bg-transparent transition"
-            aria-label="Copy text"
-            onClick={copyToClipboard}
-            type="button"
-          >
-            {copied ? (
-              <Check className="size-4" />
-            ) : (
-              <Copy className="size-4" />
-            )}
-          </button>
-        </MessageAction>
-        {/* @todo: add when ready */}
-        {/* <MessageAction
-          tooltip={isEditing ? "Save" : "Edit"}
-          side="bottom"
-          delayDuration={0}
+      <div className="flex items-center gap-1 justify-start opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+        <button
+          className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground rounded-full h-8 w-8"
+          aria-label="Copy text"
+          onClick={copyToClipboard}
+          type="button"
         >
-          <button
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-transparent transition"
-            aria-label="Edit"
-            onClick={() => setIsEditing(!isEditing)}
-            type="button"
-          >
-            <PencilSimple className="size-4" />
-          </button>
-        </MessageAction> */}
-        <MessageAction tooltip="Delete" side="bottom">
-          <button
-            className="hover:bg-accent/60 text-muted-foreground hover:text-foreground flex size-7.5 items-center justify-center rounded-full bg-transparent transition"
-            aria-label="Delete"
-            onClick={handleDelete}
-            type="button"
-          >
-            <Trash className="size-4" />
-          </button>
-        </MessageAction>
-      </MessageActions>
+          {copied ? (
+            <Check className="size-4" />
+          ) : (
+            <Copy className="size-4" />
+          )}
+          <span className="sr-only">Copy message</span>
+        </button>
+        <button
+          className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground rounded-full h-8 w-8"
+          aria-label="Delete"
+          onClick={handleDelete}
+          type="button"
+        >
+          <Trash2 className="size-4" />
+          <span className="sr-only">Delete message</span>
+        </button>
+      </div>
     </MessageContainer>
   )
 }

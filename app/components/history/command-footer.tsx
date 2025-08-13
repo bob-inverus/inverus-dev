@@ -4,7 +4,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { useUserPreferences } from "@/lib/user-preference-store/provider"
-import { ArrowsOutSimpleIcon } from "@phosphor-icons/react"
+import { Maximize2 } from "lucide-react"
 import React, { useState } from "react"
 
 export function CommandFooter() {
@@ -28,7 +28,7 @@ export function CommandFooter() {
                     )
                   }}
                 >
-                  <ArrowsOutSimpleIcon className="size-4" />
+                  <Maximize2 className="size-4" />
                 </button>
               </TooltipTrigger>
               <TooltipContent>

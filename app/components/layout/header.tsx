@@ -3,78 +3,42 @@
 import { HistoryTrigger } from "@/app/components/history/history-trigger"
 import { AppInfoTrigger } from "@/app/components/layout/app-info/app-info-trigger"
 import { ButtonNewChat } from "@/app/components/layout/button-new-chat"
+import { UserMenu } from "@/app/components/layout/user-menu"
 
 import { useBreakpoint } from "@/app/hooks/use-breakpoint"
 import { InverusIcon } from "@/components/icons/inverus"
 import { Button } from "@/components/ui/button"
-import { SidebarTrigger } from "@/components/ui/sidebar"
-import { Separator } from "@/components/ui/separator"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { APP_NAME } from "@/lib/config"
 import { useUser } from "@/lib/user-store/provider"
 import { Info } from "lucide-react"
 import Link from "next/link"
-import { DialogPublish } from "./dialog-publish"
 
 export function Header({ hasSidebar }: { hasSidebar: boolean }) {
   const isMobile = useBreakpoint(768)
   const { user } = useUser()
 
-  const isLoggedIn = !!user
+  // A user is truly authenticated if they exist and are not anonymous/guest
+  const isAuthenticated = !!user && !user.anonymous && user.id !== "guest"
 
-  if (!hasSidebar) {
     return (
-      <header className="h-app-header pointer-events-none fixed top-0 right-0 left-0 z-50 bg-background">
-        <div className="relative mx-auto flex h-full max-w-full items-center justify-between px-4 sm:px-6 lg:px-8 bg-background">
+    <header className="h-app-header pointer-events-none fixed top-0 right-0 left-0 z-50">
+      <div className="relative mx-auto flex h-full max-w-full items-center justify-between bg-transparent px-4 sm:px-6 lg:bg-transparent lg:px-8">
           <div className="flex flex-1 items-center justify-between">
-            {/* Logo and APP_NAME on the left */}
-            <div className="pointer-events-auto flex items-center gap-3">
-              <Link href="/" className="flex items-center gap-3">
-                <div className="text-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <InverusIcon className="size-7" />
-                </div>
-                <span className="text-foreground text-xl font-medium">{APP_NAME}</span>
+          <div className="-ml-0.5 flex flex-1 items-center gap-2 lg:-ml-2.5">
+            <div className="flex flex-1 items-center gap-2">
+              <Link
+                href="/"
+                className="pointer-events-auto inline-flex items-center text-xl font-medium tracking-tight"
+              >
+                <InverusIcon className="mr-1 size-4" />
+                {APP_NAME}
               </Link>
             </div>
-            
-            {!isLoggedIn ? (
-              <div className="pointer-events-auto">
-                <Link
-                  href="/auth"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-gray-400 hover:text-gray-200 transition-colors"
-                >
-                  Go to App ↗
-                </Link>
-              </div>
-            ) : (
-              <div className="pointer-events-auto flex items-center gap-2">
-                <DialogPublish />
-                <ButtonNewChat />
-                {!hasSidebar && <HistoryTrigger />}
-              </div>
-            )}
           </div>
-        </div>
-      </header>
-    )
-  }
-
-  // Header for sidebar layout
-  return (
-    <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 bg-background">
-      <div className="flex items-center gap-2 px-4">
-        <SidebarTrigger className="-ml-1" />
-      </div>
-      <div className="flex flex-1 items-center justify-end gap-2">
-        {isLoggedIn && (
-          <>
-            <DialogPublish />
-            <ButtonNewChat />
-          </>
-        )}
-        {!isLoggedIn && (
-          <>
+          <div />
+          {!isAuthenticated ? (
+            <div className="pointer-events-auto flex flex-1 items-center justify-end gap-4">
             <AppInfoTrigger
               trigger={
                 <Button
@@ -87,14 +51,21 @@ export function Header({ hasSidebar }: { hasSidebar: boolean }) {
                 </Button>
               }
             />
-            <Link
-              href="/auth"
-              className="font-base text-muted-foreground hover:text-foreground text-base transition-colors"
-            >
+              <ThemeToggle variant="button" size="sm" />
+              <Button asChild variant="outline" size="sm">
+                <Link href="/auth">
               Login
             </Link>
-          </>
+              </Button>
+            </div>
+          ) : (
+            <div className="pointer-events-auto flex flex-1 items-center justify-end gap-2">
+              <ButtonNewChat />
+              <HistoryTrigger />
+              <UserMenu />
+            </div>
         )}
+        </div>
       </div>
     </header>
   )

@@ -14,6 +14,9 @@ type ConversationProps = {
   onDelete: (id: string) => void
   onEdit: (id: string, newText: string) => void
   onReload: () => void
+  onQuote?: (text: string, messageId: string) => void
+  isAuthenticated?: boolean
+  onSignIn?: () => void
 }
 
 export function Conversation({
@@ -22,22 +25,24 @@ export function Conversation({
   onDelete,
   onEdit,
   onReload,
+  onQuote,
+  isAuthenticated,
+  onSignIn,
 }: ConversationProps) {
   const initialMessageCount = useRef(messages.length)
-
 
   if (!messages || messages.length === 0)
     return <div className="h-full w-full"></div>
 
   return (
-    <div className="relative flex h-full w-full flex-col items-center">
+    <div className="relative flex h-full w-full flex-col items-center overflow-x-hidden overflow-y-auto">
       <div className="pointer-events-none absolute top-0 right-0 left-0 z-10 mx-auto flex w-full flex-col justify-center">
         <div className="h-app-header bg-background flex w-full lg:hidden lg:h-0" />
         <div className="h-app-header bg-background flex w-full mask-b-from-4% mask-b-to-100% lg:hidden" />
       </div>
       <ChatContainerRoot className="relative w-full">
         <ChatContainerContent
-          className="flex w-full flex-col items-center pt-20 pb-32"
+          className="flex w-full flex-col items-center pt-20 pb-4"
           style={{
             scrollbarGutter: "stable both-edges",
             scrollbarWidth: "none",
@@ -62,6 +67,9 @@ export function Conversation({
                 hasScrollAnchor={hasScrollAnchor}
                 parts={message.parts}
                 status={status}
+                onQuote={onQuote}
+                isAuthenticated={isAuthenticated}
+                onSignIn={onSignIn}
               >
                 {message.content}
               </Message>

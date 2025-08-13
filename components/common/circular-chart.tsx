@@ -6,9 +6,10 @@ export interface CircularChartProps {
   score: number
   title: string
   size?: number
+  maskedValue?: string
 }
 
-export function CircularChart({ score, title, size = 120 }: CircularChartProps) {
+export function CircularChart({ score, title, size = 120, maskedValue }: CircularChartProps) {
   const [animatedScore, setAnimatedScore] = useState(0)
   const [animatedOffset, setAnimatedOffset] = useState(0)
 
@@ -78,8 +79,14 @@ export function CircularChart({ score, title, size = 120 }: CircularChartProps) 
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">{animatedScore}</span>
-          <span className="ml-0.5 text-sm font-medium text-gray-500">%</span>
+          {maskedValue ? (
+            <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">{maskedValue}</span>
+          ) : (
+            <>
+              <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">{animatedScore}</span>
+              <span className="ml-0.5 text-sm font-medium text-gray-500">%</span>
+            </>
+          )}
         </div>
       </div>
       <div className="mt-3 text-center">

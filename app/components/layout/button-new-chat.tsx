@@ -4,7 +4,7 @@ import { useKeyShortcut } from "@/app/hooks/use-key-shortcut"
 import { useChats } from "@/lib/chat-store/chats/provider"
 import { useUser } from "@/lib/user-store/provider"
 import { usePathname, useRouter } from "next/navigation"
-import { Edit } from "lucide-react"
+import { BadgePlus } from "lucide-react"
 
 export function ButtonNewChat() {
   const pathname = usePathname()
@@ -43,7 +43,7 @@ export function ButtonNewChat() {
       onClick={handleNewChat}
       title="New chat (⌘⇧U)"
     >
-      <Edit className="size-5" />
+      <BadgePlus className="size-5" />
       <span className="sr-only">New chat</span>
     </button>
   )

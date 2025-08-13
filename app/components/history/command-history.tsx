@@ -30,7 +30,7 @@ import type { Chats } from "@/lib/chat-store/types"
 import { useChatPreview } from "@/lib/hooks/use-chat-preview"
 import { useUserPreferences } from "@/lib/user-preference-store/provider"
 import { cn } from "@/lib/utils"
-import { Check, PencilSimple, TrashSimple, X } from "@phosphor-icons/react"
+import { Check, Pencil, Trash2, X } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useCallback, useMemo, useRef, useState } from "react"
 import { ChatPreviewPanel } from "./chat-preview-panel"
@@ -238,7 +238,7 @@ function CommandItemRow({
                 disabled={!!editingId || !!deletingId}
                 aria-label="Edit"
               >
-                <PencilSimple className="group-hover/edit:text-primary size-4 transition-colors duration-150" />
+                                        <Pencil className="group-hover/edit:text-primary size-4 transition-colors duration-150" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Edit</TooltipContent>
@@ -257,7 +257,7 @@ function CommandItemRow({
                 disabled={!!editingId || !!deletingId}
                 aria-label="Delete"
               >
-                <TrashSimple className="group-hover/delete:text-primary size-4 transition-colors duration-150" />
+                                        <Trash2 className="group-hover/delete:text-primary size-4 transition-colors duration-150" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Delete</TooltipContent>

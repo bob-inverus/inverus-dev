@@ -1,60 +1,51 @@
 "use client"
 
 import { useBreakpoint } from "@/app/hooks/use-breakpoint"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+import { useUser } from "@/lib/user-store/provider"
+import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer"
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
-import { Settings } from "lucide-react"
-import type React from "react"
+import { Sparkles } from "lucide-react"
 import { useState } from "react"
-import { SettingsContent } from "./settings-content"
+import { SettingsContent } from "../settings/settings-content"
 
-type SettingsTriggerProps = {
-  onOpenChange?: (open: boolean) => void
-}
-
-export function SettingsTrigger({ onOpenChange }: SettingsTriggerProps = {}) {
-  const [open, setOpen] = useState(false)
+export function UpgradeTrigger() {
+  const { user } = useUser()
   const isMobile = useBreakpoint(768)
+  const [isOpen, setIsOpen] = useState(false)
 
-  const handleOpenChange = (newOpen: boolean) => {
-    setOpen(newOpen)
-    onOpenChange?.(newOpen)
+  // Don't show upgrade if user is already pro or enterprise
+  if (user?.tier === "pro" || user?.tier === "enterprise") {
+    return null
   }
 
   const trigger = (
     <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-      <Settings className="size-4" />
-      <span>Settings</span>
+      <Sparkles className="size-4" />
+      <span>Upgrade to Pro</span>
     </DropdownMenuItem>
   )
 
   if (isMobile) {
     return (
-      <Drawer open={open} onOpenChange={handleOpenChange}>
+      <Drawer open={isOpen} onOpenChange={setIsOpen}>
         <DrawerTrigger asChild>{trigger}</DrawerTrigger>
         <DrawerContent>
-          <SettingsContent isDrawer />
+          <SettingsContent isDrawer defaultTab="account" onClose={() => setIsOpen(false)} />
         </DrawerContent>
       </Drawer>
     )
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="flex h-[80%] min-h-[480px] w-full flex-col gap-0 p-0 sm:max-w-[768px]">
         <DialogHeader className="border-border border-b px-6 py-5">
           <DialogTitle>Settings</DialogTitle>
         </DialogHeader>
-        <SettingsContent />
+        <SettingsContent defaultTab="account" onClose={() => setIsOpen(false)} />
       </DialogContent>
     </Dialog>
   )
-}
+} 

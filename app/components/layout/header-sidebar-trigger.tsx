@@ -7,7 +7,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
-import { SidebarSimpleIcon } from "@phosphor-icons/react"
+import { Menu } from "lucide-react"
 
 type HeaderSidebarTriggerProps = React.HTMLAttributes<HTMLButtonElement>
 
@@ -31,7 +31,7 @@ export function HeaderSidebarTrigger({
           )}
           {...props}
         >
-          <SidebarSimpleIcon size={20} />
+          <Menu size={20} />
           <span className="sr-only">Toggle sidebar</span>
         </button>
       </TooltipTrigger>

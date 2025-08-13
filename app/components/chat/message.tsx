@@ -15,6 +15,10 @@ type MessageProps = {
   hasScrollAnchor?: boolean
   parts?: MessageType["parts"]
   status?: "streaming" | "ready" | "submitted" | "error"
+  className?: string
+  onQuote?: (text: string, messageId: string) => void
+  isAuthenticated?: boolean
+  onSignIn?: () => void
 }
 
 export function Message({
@@ -29,6 +33,10 @@ export function Message({
   hasScrollAnchor,
   parts,
   status,
+  className,
+  onQuote,
+  isAuthenticated,
+  onSignIn,
 }: MessageProps) {
   const [copied, setCopied] = useState(false)
 
@@ -65,6 +73,8 @@ export function Message({
         hasScrollAnchor={hasScrollAnchor}
         parts={parts}
         status={status}
+        isAuthenticated={isAuthenticated}
+        onSignIn={onSignIn}
       >
         {children}
       </MessageAssistant>

@@ -5,13 +5,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { isSupabaseEnabled } from "@/lib/supabase/config"
 import { cn, isDev } from "@/lib/utils"
 import {
-  CubeIcon,
-  GearSixIcon,
-  KeyIcon,
-  PaintBrushIcon,
-  PlugsConnectedIcon,
-  XIcon,
-} from "@phosphor-icons/react"
+  Box,
+  Settings,
+  Key,
+  Paintbrush2,
+  Zap,
+  X,
+} from "lucide-react"
 import { BadgeCheck } from "lucide-react"
 import { useState } from "react"
 import { ByokSection } from "./apikeys/byok-section"
@@ -27,7 +27,7 @@ import { ModelVisibilitySettings } from "./models/model-visibility-settings"
 import { AccountSection } from "./account/account-section"
 
 type SettingsContentProps = {
-  onClose: () => void
+  onClose?: () => void
   isDrawer?: boolean
   defaultTab?: TabType
 }
@@ -52,7 +52,7 @@ export function SettingsContent({
         <div className="border-border mb-2 flex items-center justify-between border-b px-4 pb-2">
           <h2 className="text-lg font-medium">Settings</h2>
           <Button variant="ghost" size="icon" onClick={onClose}>
-            <XIcon className="size-4" />
+            <X className="size-4" />
           </Button>
         </div>
       )}
@@ -74,14 +74,14 @@ export function SettingsContent({
                   value="general"
                   className="ml-6 flex shrink-0 items-center gap-2"
                 >
-                  <GearSixIcon className="size-4" />
+                  <Settings className="size-4" />
                   <span>General</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="appearance"
                   className="flex shrink-0 items-center gap-2"
                 >
-                  <PaintBrushIcon className="size-4" />
+                  <Paintbrush2 className="size-4" />
                   <span>Appearance</span>
                 </TabsTrigger>
                 {isSupabaseEnabled && (
@@ -97,21 +97,21 @@ export function SettingsContent({
                   value="apikeys"
                   className="flex shrink-0 items-center gap-2"
                 >
-                  <KeyIcon className="size-4" />
+                  <Key className="size-4" />
                   <span>API Keys</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="models"
                   className="flex shrink-0 items-center gap-2"
                 >
-                  <CubeIcon className="size-4" />
+                  <Box className="size-4" />
                   <span>Models</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="connections"
                   className="flex shrink-0 items-center gap-2"
                 >
-                  <PlugsConnectedIcon className="size-4" />
+                  <Zap className="size-4" />
                   <span>Connections</span>
                 </TabsTrigger>
               </TabsList>
@@ -163,7 +163,7 @@ export function SettingsContent({
                   className="w-full justify-start rounded-md px-3 py-2 text-left"
                 >
                   <div className="flex items-center gap-2">
-                    <GearSixIcon className="size-4" />
+                    <Settings className="size-4" />
                     <span>General</span>
                   </div>
                 </TabsTrigger>
@@ -173,7 +173,7 @@ export function SettingsContent({
                   className="w-full justify-start rounded-md px-3 py-2 text-left"
                 >
                   <div className="flex items-center gap-2">
-                    <PaintBrushIcon className="size-4" />
+                    <Paintbrush2 className="size-4" />
                     <span>Appearance</span>
                   </div>
                 </TabsTrigger>
@@ -195,7 +195,7 @@ export function SettingsContent({
                   className="w-full justify-start rounded-md px-3 py-2 text-left"
                 >
                   <div className="flex items-center gap-2">
-                    <KeyIcon className="size-4" />
+                    <Key className="size-4" />
                     <span>API Keys</span>
                   </div>
                 </TabsTrigger>
@@ -204,7 +204,7 @@ export function SettingsContent({
                   className="w-full justify-start rounded-md px-3 py-2 text-left"
                 >
                   <div className="flex items-center gap-2">
-                    <CubeIcon className="size-4" />
+                    <Box className="size-4" />
                     <span>Models</span>
                   </div>
                 </TabsTrigger>
@@ -213,7 +213,7 @@ export function SettingsContent({
                   className="w-full justify-start rounded-md px-3 py-2 text-left"
                 >
                   <div className="flex items-center gap-2">
-                    <PlugsConnectedIcon className="size-4" />
+                    <Zap className="size-4" />
                     <span>Connections</span>
                   </div>
                 </TabsTrigger>

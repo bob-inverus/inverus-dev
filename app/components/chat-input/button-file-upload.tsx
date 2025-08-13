@@ -17,7 +17,7 @@ import {
 import { getModelInfo } from "@/lib/models"
 import { isSupabaseEnabled } from "@/lib/supabase/config"
 import { cn } from "@/lib/utils"
-import { FileArrowUp, Paperclip } from "@phosphor-icons/react"
+import { Upload, Paperclip } from "lucide-react"
 import React from "react"
 import { PopoverContentAuth } from "./popover-content-auth"
 
@@ -121,7 +121,7 @@ export function ButtonFileUpload({
       </Tooltip>
       <FileUploadContent>
         <div className="border-input bg-background flex flex-col items-center rounded-lg border border-dashed p-8">
-          <FileArrowUp className="text-muted-foreground size-8" />
+                            <Upload className="text-muted-foreground size-8" />
           <span className="mt-4 mb-1 text-lg font-medium">Drop files here</span>
           <span className="text-muted-foreground text-sm">
             Drop any files here to add it to the conversation

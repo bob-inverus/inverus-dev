@@ -8,10 +8,11 @@ import {
 } from "@/components/prompt-kit/prompt-input"
 import { Button } from "@/components/ui/button"
 import { getModelInfo } from "@/lib/models"
-import { ArrowUpIcon, StopIcon } from "@phosphor-icons/react"
-import { useCallback, useMemo } from "react"
+import { ArrowUp, Square } from "lucide-react"
+import { useCallback, useMemo, useState } from "react"
 import { ButtonFileUpload } from "./button-file-upload"
 import { ButtonSearch } from "./button-search"
+import { ButtonTools } from "./button-tools"
 import { FileList } from "./file-list"
 import { TextLoop } from "@/components/ui/text-loop"
 
@@ -29,6 +30,7 @@ type ChatInputProps = {
   isUserAuthenticated: boolean
   stop: () => void
   status?: "submitted" | "streaming" | "ready" | "error"
+  disabled?: boolean
   // Removed setEnableSearch and enableSearch props since search button was removed
   useAnimatedPlaceholder?: boolean
   animatedPlaceholders?: string[]
@@ -47,15 +49,24 @@ export function ChatInput({
   isUserAuthenticated,
   stop,
   status,
+  disabled = false,
   // Removed setEnableSearch and enableSearch props
   useAnimatedPlaceholder = false,
   animatedPlaceholders = [],
 }: ChatInputProps) {
+  const [selectedService, setSelectedService] = useState<string | undefined>()
   const selectModelConfig = getModelInfo(selectedModel)
   const hasSearchSupport = Boolean(selectModelConfig?.webSearch)
   const isOnlyWhitespace = (text: string) => !/[\s\S]*\S[\s\S]*/.test(text) === false ? false : !/[^\s]/.test(text)
 
   const handleSend = useCallback(() => {
+    if (disabled) {
+      // Trigger auth popup when trying to send while disabled
+      const triggerAuthEvent = new CustomEvent('triggerAuth')
+      window.dispatchEvent(triggerAuthEvent)
+      return
+    }
+
     if (isSubmitting) {
       return
     }
@@ -66,10 +77,18 @@ export function ChatInput({
     }
 
     onSend()
-  }, [isSubmitting, onSend, status, stop])
+  }, [isSubmitting, onSend, status, stop, disabled])
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
+      if (disabled) {
+        e.preventDefault()
+        // Trigger auth popup when trying to type while disabled
+        const triggerAuthEvent = new CustomEvent('triggerAuth')
+        window.dispatchEvent(triggerAuthEvent)
+        return
+      }
+
       if (isSubmitting) {
         e.preventDefault()
         return
@@ -89,7 +108,7 @@ export function ChatInput({
         onSend()
       }
     },
-    [isSubmitting, onSend, status, value]
+    [isSubmitting, onSend, status, value, disabled]
   )
 
   const handlePaste = useCallback(
@@ -161,6 +180,13 @@ export function ChatInput({
             placeholder={useAnimatedPlaceholder ? "" : "Ask me anything or search for people in the database..."}
             onKeyDown={handleKeyDown}
             onPaste={handlePaste}
+            onClick={() => {
+              if (disabled) {
+                const triggerAuthEvent = new CustomEvent('triggerAuth')
+                window.dispatchEvent(triggerAuthEvent)
+              }
+            }}
+            disabled={disabled}
             className="min-h-[44px] pt-3 pl-4 text-base leading-[1.3] sm:text-base md:text-base bg-transparent resize-none"
           />
           
@@ -171,6 +197,10 @@ export function ChatInput({
                 isUserAuthenticated={isUserAuthenticated}
                 model={selectedModel}
               />
+              <ButtonTools
+                selectedService={selectedService}
+                onServiceChange={setSelectedService}
+              />
               {/* Search button removed - database search is always available */}
             </div>
             <PromptInputAction
@@ -180,15 +210,15 @@ export function ChatInput({
                 size="sm"
                 className="size-9 rounded-full transition-all duration-300 ease-out text-white"
                 style={{ backgroundColor: '#006DED' }}
-                disabled={!value || isSubmitting || isOnlyWhitespace(value)}
+                disabled={disabled || !value || isSubmitting || isOnlyWhitespace(value)}
                 type="button"
                 onClick={handleSend}
                 aria-label={status === "streaming" ? "Stop" : "Send message"}
               >
                 {status === "streaming" ? (
-                  <StopIcon className="size-4" />
+                  <Square className="size-4" />
                 ) : (
-                  <ArrowUpIcon className="size-4" />
+                  <ArrowUp className="size-4" />
                 )}
               </Button>
             </PromptInputAction>

@@ -3,12 +3,16 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { createContext, ReactNode, useContext } from "react"
 
+export type LayoutType = "sidebar" | "fullscreen"
+
 type UserPreferences = {
+  layout: LayoutType
   showConversationPreviews: boolean
   hiddenModels: string[] // Array of model IDs that should be hidden
 }
 
 const defaultPreferences: UserPreferences = {
+  layout: "fullscreen",
   showConversationPreviews: true,
   hiddenModels: [],
 }
@@ -17,6 +21,7 @@ const PREFERENCES_STORAGE_KEY = "user-preferences"
 
 interface UserPreferencesContextType {
   preferences: UserPreferences
+  setLayout: (layout: LayoutType) => void
   setShowConversationPreviews: (enabled: boolean) => void
   toggleModelVisibility: (modelId: string) => void
   isModelHidden: (modelId: string) => boolean
@@ -78,7 +83,9 @@ export function UserPreferencesProvider({
 
   const updatePreferences = mutation.mutate
 
-
+  const setLayout = (layout: LayoutType) => {
+    updatePreferences({ layout })
+  }
 
   const setShowConversationPreviews = (enabled: boolean) => {
     updatePreferences({ showConversationPreviews: enabled })
@@ -102,6 +109,7 @@ export function UserPreferencesProvider({
     <UserPreferencesContext.Provider
       value={{
         preferences,
+        setLayout,
         setShowConversationPreviews,
         toggleModelVisibility,
         isModelHidden,

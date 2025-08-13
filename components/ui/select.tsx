@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { CaretDown, CaretUp, Check } from "@phosphor-icons/react"
+import { ChevronDown, ChevronUp, Check } from "lucide-react"
 import * as SelectPrimitive from "@radix-ui/react-select"
 import * as React from "react"
 
@@ -43,7 +43,7 @@ function SelectTrigger({
     >
       {children}
       <SelectPrimitive.Icon asChild>
-        <CaretDown className="size-4 opacity-50" />
+        <ChevronDown className="size-4 opacity-50" />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   )
@@ -147,7 +147,7 @@ function SelectScrollUpButton({
       )}
       {...props}
     >
-      <CaretUp className="size-4" />
+      <ChevronUp className="size-4" />
     </SelectPrimitive.ScrollUpButton>
   )
 }
@@ -165,7 +165,7 @@ function SelectScrollDownButton({
       )}
       {...props}
     >
-      <CaretDown className="size-4" />
+      <ChevronDown className="size-4" />
     </SelectPrimitive.ScrollDownButton>
   )
 }
