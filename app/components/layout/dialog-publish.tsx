@@ -33,7 +33,7 @@ import type React from "react"
 import { useState, useEffect } from "react"
 
 type DialogPublishProps = {
-  trigger?: React.ReactNode
+  trigger?: React.ReactNode | ((opts: { isLoading: boolean; onClick: () => void }) => React.ReactNode)
 }
 
 export function DialogPublish({ trigger }: DialogPublishProps = {}) {
@@ -164,26 +164,35 @@ export function DialogPublish({ trigger }: DialogPublishProps = {}) {
   }
 
   // Use custom trigger if provided, otherwise use default
-  const finalTrigger = trigger 
-    ? (
-        <div
-          onClick={async () => {
-            if (isLoading) return
-            // 1) Let the caller's button play its press animation briefly
-            await new Promise((r) => setTimeout(r, 180))
-            // 2) Ensure chat is public in the background (idempotent)
-            if (!isPublished) {
-              await handlePublish()
-            }
-            // 3) Open the dialog
-            setOpenDialog(true)
-          }}
-          style={{ display: 'inline-block' }}
-        >
-          {trigger}
-        </div>
-      )
-    : triggerElement
+  const finalTrigger = typeof trigger === "function"
+    ? trigger({
+        isLoading,
+        onClick: async () => {
+          if (isLoading) return
+          await new Promise((r) => setTimeout(r, 180))
+          if (!isPublished) {
+            await handlePublish()
+          }
+          setOpenDialog(true)
+        },
+      })
+    : trigger
+      ? (
+          <div
+            onClick={async () => {
+              if (isLoading) return
+              await new Promise((r) => setTimeout(r, 180))
+              if (!isPublished) {
+                await handlePublish()
+              }
+              setOpenDialog(true)
+            }}
+            style={{ display: 'inline-block' }}
+          >
+            {trigger}
+          </div>
+        )
+      : triggerElement
 
   const content = (
     <>
@@ -225,14 +234,10 @@ export function DialogPublish({ trigger }: DialogPublishProps = {}) {
         <Drawer open={openDialog} onOpenChange={handleOpenChange}>
           <DrawerContent className="bg-background border-border">
             <DrawerHeader>
-              <DrawerTitle>Your conversation is now public!</DrawerTitle>
-              <DrawerDescription>
-                Anyone with the link can now view this conversation and may
-                appear in community feeds, featured pages, or search results in
-                the future.
-              </DrawerDescription>
+              <DrawerTitle>Share</DrawerTitle>
+              <DrawerDescription>Make this chat public and share it.</DrawerDescription>
             </DrawerHeader>
-            <div className="flex flex-col gap-4 px-4 pb-6">{content}</div>
+            {content}
           </DrawerContent>
         </Drawer>
       </>
@@ -245,12 +250,8 @@ export function DialogPublish({ trigger }: DialogPublishProps = {}) {
       <Dialog open={openDialog} onOpenChange={handleOpenChange}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>Your conversation is now public!</DialogTitle>
-            <DialogDescription>
-              Anyone with the link can now view this conversation and may appear
-              in community feeds, featured pages, or search results in the
-              future.
-            </DialogDescription>
+            <DialogTitle>Share</DialogTitle>
+            <DialogDescription>Make this chat public and share it.</DialogDescription>
           </DialogHeader>
           {content}
         </DialogContent>

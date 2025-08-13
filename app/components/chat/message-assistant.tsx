@@ -19,6 +19,7 @@ import { SearchImages } from "./search-images"
 import { SourcesList } from "./sources-list"
 import { useMemo, useState } from "react"
 import { CircularChart } from "@/components/common/circular-chart"
+import { LoaderCircle } from "lucide-react"
 
 // Function to mask sensitive data in message content for unauthenticated users
 function maskMessageContent(content: string, isAuthenticated?: boolean): string {
@@ -337,20 +338,20 @@ export function MessageAssistant({
               <TooltipContent>{copied ? "Copied!" : "Copy"}</TooltipContent>
             </Tooltip>
             <DialogPublish 
-              trigger={
-                <button 
-                  className={cn(
-                    "inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground rounded-full gap-1 bg-background size-8",
-                    pressedButton === 'share' && "scale-95 bg-accent"
-                  )}
-                  type="button" 
-                  aria-haspopup="dialog" 
-                  aria-expanded="false"
-                  onClick={() => animatePress('share')}
+              trigger={({ isLoading, onClick }) => (
+                <button
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-background hover:bg-accent transition"
+                  onClick={onClick}
+                  disabled={isLoading}
+                  aria-label="Share"
                 >
-                  <Share className="w-4 h-4" />
+                  {isLoading ? (
+                    <LoaderCircle className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Share className="h-4 w-4" />
+                  )}
                 </button>
-              } 
+              )}
             />
             <Tooltip>
               <TooltipTrigger asChild>
