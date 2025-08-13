@@ -20,12 +20,14 @@ import { useUser } from "@/lib/user-store/provider"
 import { 
   BookOpen, 
   LogOut,
-  BadgeCheck
+  BadgeCheck,
+  Sun
 } from "lucide-react"
 import Link from "next/link"
 import { AppInfoTrigger } from "./app-info/app-info-trigger"
 import { FeedbackTrigger } from "./feedback/feedback-trigger"
 import { SettingsTrigger } from "./settings/settings-trigger"
+import { ThemeSwitcher } from "./theme-switcher"
 import { UpgradeTrigger } from "./upgrade/upgrade-trigger"
 
 export function UserMenu() {
@@ -111,6 +113,23 @@ export function UserMenu() {
         
         <DropdownMenuGroup>
           <SettingsTrigger />
+          <div 
+            role="menuitem" 
+            data-slot="dropdown-menu-item" 
+            data-variant="default" 
+            className="focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:!text-destructive [&_svg:not([class*='text-'])]:text-muted-foreground relative flex items-center gap-2 rounded-sm px-2 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[inset]:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 cursor-pointer py-1 hover:bg-transparent!" 
+            tabIndex={-1} 
+            data-orientation="vertical" 
+            data-radix-collection-item=""
+          >
+            <div className="flex items-center justify-between w-full px-0">
+              <div className="flex items-center gap-2">
+                <Sun className="size-4" />
+                <span className="text-sm">Theme</span>
+              </div>
+              <ThemeSwitcher />
+            </div>
+          </div>
           <FeedbackTrigger />
           <AppInfoTrigger />
           <DropdownMenuItem asChild>
