@@ -32,7 +32,11 @@ import { Check, Copy, Globe, Spinner } from "@phosphor-icons/react"
 import type React from "react"
 import { useState } from "react"
 
-export function DialogPublish() {
+type DialogPublishProps = {
+  trigger?: React.ReactNode
+}
+
+export function DialogPublish({ trigger }: DialogPublishProps = {}) {
   const [openDialog, setOpenDialog] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { chatId } = useChatSession()
@@ -97,7 +101,7 @@ export function DialogPublish() {
     }, 2000)
   }
 
-  const trigger = (
+  const triggerElement = (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
@@ -105,7 +109,7 @@ export function DialogPublish() {
             variant="ghost"
             size="icon"
             className="text-muted-foreground hover:text-foreground hover:bg-muted bg-background rounded-full p-1.5 transition-colors"
-            onClick={handlePublish}
+            onClick={() => setOpenDialog(true)}
             disabled={isLoading}
           >
             {isLoading ? (
@@ -122,6 +126,23 @@ export function DialogPublish() {
       </Tooltip>
     </TooltipProvider>
   )
+
+  // Handle when dialog opens - auto-publish if not published yet
+  const handleOpenChange = (open: boolean) => {
+    setOpenDialog(open)
+    if (open && !isLoading) {
+      handlePublish()
+    }
+  }
+
+  // Use custom trigger if provided, otherwise use default
+  const finalTrigger = trigger 
+    ? (
+        <div onClick={() => setOpenDialog(true)} style={{ display: 'inline-block' }}>
+          {trigger}
+        </div>
+      )
+    : triggerElement
 
   const content = (
     <>
@@ -159,8 +180,8 @@ export function DialogPublish() {
   if (isMobile) {
     return (
       <>
-        {trigger}
-        <Drawer open={openDialog} onOpenChange={setOpenDialog}>
+        {finalTrigger}
+        <Drawer open={openDialog} onOpenChange={handleOpenChange}>
           <DrawerContent className="bg-background border-border">
             <DrawerHeader>
               <DrawerTitle>Your conversation is now public!</DrawerTitle>
@@ -179,8 +200,8 @@ export function DialogPublish() {
 
   return (
     <>
-      {trigger}
-      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+      {finalTrigger}
+      <Dialog open={openDialog} onOpenChange={handleOpenChange}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>Your conversation is now public!</DialogTitle>
