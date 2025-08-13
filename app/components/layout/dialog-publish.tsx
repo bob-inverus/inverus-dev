@@ -166,7 +166,20 @@ export function DialogPublish({ trigger }: DialogPublishProps = {}) {
   // Use custom trigger if provided, otherwise use default
   const finalTrigger = trigger 
     ? (
-        <div onClick={() => setOpenDialog(true)} style={{ display: 'inline-block' }}>
+        <div
+          onClick={async () => {
+            if (isLoading) return
+            // 1) Let the caller's button play its press animation briefly
+            await new Promise((r) => setTimeout(r, 180))
+            // 2) Ensure chat is public in the background (idempotent)
+            if (!isPublished) {
+              await handlePublish()
+            }
+            // 3) Open the dialog
+            setOpenDialog(true)
+          }}
+          style={{ display: 'inline-block' }}
+        >
           {trigger}
         </div>
       )
