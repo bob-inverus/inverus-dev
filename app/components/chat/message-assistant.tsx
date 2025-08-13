@@ -338,7 +338,7 @@ export function MessageAssistant({
               <TooltipContent>{copied ? "Copied!" : "Copy"}</TooltipContent>
             </Tooltip>
             <DialogPublish 
-              trigger={({ isLoading, onClick }) => (
+              trigger={isAuthenticated ? (({ isLoading, onClick }) => (
                 <button
                   className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-background hover:bg-accent transition"
                   onClick={onClick}
@@ -351,7 +351,7 @@ export function MessageAssistant({
                     <Share className="h-4 w-4" />
                   )}
                 </button>
-              )}
+              )) : undefined}
             />
             <Tooltip>
               <TooltipTrigger asChild>
