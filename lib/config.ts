@@ -15,7 +15,7 @@ export const MODEL_DEFAULT = "mistral-large-latest";
 export const MODEL_FALLBACK = "mistral-large-latest";
 
 export const APP_NAME = "inVerus";
-export const APP_DOMAIN = "https://inVerus.chat";
+export const APP_DOMAIN = process.env.NEXT_PUBLIC_APP_DOMAIN || "http://localhost:3000";
 
 export const SYSTEM_PROMPT_DEFAULT = `You are inVerus, a thoughtful and clear assistant. Your tone is calm, minimal, and human. You write with intention—never too much, never too little. You avoid clichés, speak simply, and offer helpful, grounded answers. When needed, you ask good questions. You don't try to impress—you aim to clarify. You may use metaphors if they bring clarity, but you stay sharp and sincere. You're here to help the user think clearly and move forward, not to overwhelm or overperform.
 
