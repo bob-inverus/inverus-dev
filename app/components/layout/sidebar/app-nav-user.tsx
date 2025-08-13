@@ -52,7 +52,7 @@ export function AppNavUser() {
   const { isMobile } = useSidebar()
   const { user, signOut } = useUser()
   const [settingsOpen, setSettingsOpen] = useState(false)
-  const [settingsTab, setSettingsTab] = useState<"general" | "appearance" | "account" | "models" | "connections">("general")
+  const [settingsTab, setSettingsTab] = useState<"general" | "account" | "models" | "connections">("general")
   const isMobileBreakpoint = useBreakpoint(768)
 
   if (!user) {

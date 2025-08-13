@@ -8,7 +8,6 @@ import {
   Box,
   Settings,
   Key,
-  Paintbrush2,
   Zap,
   X,
 } from "lucide-react"
@@ -16,7 +15,6 @@ import { BadgeCheck } from "lucide-react"
 import { useState } from "react"
 import { ByokSection } from "./apikeys/byok-section"
 import { InteractionPreferences } from "./appearance/interaction-preferences"
-import { ThemeSelection } from "./appearance/theme-selection"
 import { ConnectionsPlaceholder } from "./connections/connections-placeholder"
 import { DeveloperTools } from "./connections/developer-tools"
 import { OllamaSection } from "./connections/ollama-section"
@@ -32,7 +30,7 @@ type SettingsContentProps = {
   defaultTab?: TabType
 }
 
-type TabType = "general" | "appearance" | "account" | "models" | "connections"
+type TabType = "general" | "account" | "models" | "connections"
 
 export function SettingsContent({
   onClose,
@@ -77,13 +75,6 @@ export function SettingsContent({
                   <Settings className="size-4" />
                   <span>General</span>
                 </TabsTrigger>
-                <TabsTrigger
-                  value="appearance"
-                  className="flex shrink-0 items-center gap-2"
-                >
-                  <Paintbrush2 className="size-4" />
-                  <span>Appearance</span>
-                </TabsTrigger>
                 {isSupabaseEnabled && (
                   <TabsTrigger
                     value="account"
@@ -120,17 +111,13 @@ export function SettingsContent({
             {/* Mobile tabs content */}
             <TabsContent value="general" className="space-y-6 px-6">
               <UserProfile />
+              <InteractionPreferences />
               {isSupabaseEnabled && (
                 <>
                   <ModelPreferences />
                   <AccountManagement />
                 </>
               )}
-            </TabsContent>
-
-            <TabsContent value="appearance" className="space-y-6 px-6">
-              <ThemeSelection />
-              <InteractionPreferences />
             </TabsContent>
 
             {isSupabaseEnabled && (
@@ -165,16 +152,6 @@ export function SettingsContent({
                   <div className="flex items-center gap-2">
                     <Settings className="size-4" />
                     <span>General</span>
-                  </div>
-                </TabsTrigger>
-
-                <TabsTrigger
-                  value="appearance"
-                  className="w-full justify-start rounded-md px-3 py-2 text-left"
-                >
-                  <div className="flex items-center gap-2">
-                    <Paintbrush2 className="size-4" />
-                    <span>Appearance</span>
                   </div>
                 </TabsTrigger>
 
@@ -224,17 +201,13 @@ export function SettingsContent({
             <div className="flex-1 overflow-auto px-6 pt-4">
               <TabsContent value="general" className="mt-0 space-y-6">
                 <UserProfile />
+                <InteractionPreferences />
                 {isSupabaseEnabled && (
                   <>
                     <ModelPreferences />
                     <AccountManagement />
                   </>
                 )}
-              </TabsContent>
-
-              <TabsContent value="appearance" className="mt-0 space-y-6">
-                <ThemeSelection />
-                <InteractionPreferences />
               </TabsContent>
 
               {isSupabaseEnabled && (
