@@ -337,22 +337,24 @@ export function MessageAssistant({
               </TooltipTrigger>
               <TooltipContent>{copied ? "Copied!" : "Copy"}</TooltipContent>
             </Tooltip>
-            <DialogPublish 
-              trigger={isAuthenticated ? (({ isLoading, onClick }) => (
-                <button
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-background hover:bg-accent transition"
-                  onClick={onClick}
-                  disabled={isLoading}
-                  aria-label="Share"
-                >
-                  {isLoading ? (
-                    <LoaderCircle className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Share className="h-4 w-4" />
-                  )}
-                </button>
-              )) : undefined}
-            />
+            {isAuthenticated && (
+              <DialogPublish 
+                trigger={({ isLoading, onClick }) => (
+                  <button
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-background hover:bg-accent transition"
+                    onClick={onClick}
+                    disabled={isLoading}
+                    aria-label="Share"
+                  >
+                    {isLoading ? (
+                      <LoaderCircle className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Share className="h-4 w-4" />
+                    )}
+                  </button>
+                )}
+              />
+            )}
             <Tooltip>
               <TooltipTrigger asChild>
                 <button 
