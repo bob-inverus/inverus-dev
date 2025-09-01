@@ -3,6 +3,7 @@ import {
   MessageContent,
 } from "@/components/prompt-kit/message"
 import { useUserPreferences } from "@/lib/user-preference-store/provider"
+import { useUser } from "@/lib/user-store/provider"
 import { cn } from "@/lib/utils"
 import type { Message as MessageAISDK } from "@ai-sdk/react"
 import { RotateCcw, Copy, Share, ThumbsUp, ThumbsDown, Check } from "lucide-react"
@@ -13,6 +14,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { toast } from "@/components/ui/toast"
 import { getSources } from "./get-sources"
 import { Reasoning } from "./reasoning"
 import { SearchImages } from "./search-images"
@@ -161,6 +163,7 @@ type MessageAssistantProps = {
   status?: "streaming" | "ready" | "submitted" | "error"
   isAuthenticated?: boolean
   onSignIn?: () => void
+  messageId?: string
 }
 
 export function MessageAssistant({
@@ -174,20 +177,88 @@ export function MessageAssistant({
   status,
   isAuthenticated,
   onSignIn,
+  messageId,
 }: MessageAssistantProps) {
   const { preferences } = useUserPreferences()
+  const { user } = useUser()
   const [voteState, setVoteState] = useState<'upvote' | 'downvote' | null>(null)
   const [pressedButton, setPressedButton] = useState<string | null>(null)
+  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false)
 
-  // Handle vote actions
-  const handleUpvote = () => {
-    setVoteState(voteState === 'upvote' ? null : 'upvote')
-    animatePress('upvote')
+  // Submit feedback to API
+  const submitFeedback = async (type: 'upvote' | 'downvote') => {
+    if (!user?.id) {
+      toast({
+        title: "Please login to provide feedback",
+        status: "error",
+      })
+      return
+    }
+
+    if (!messageId) {
+      toast({
+        title: "Unable to save feedback - message ID missing",
+        status: "error",
+      })
+      return
+    }
+
+    setIsSubmittingFeedback(true)
+
+    try {
+      const response = await fetch('/api/feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: children.substring(0, 500), // Limit message length
+          messageId,
+          type,
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to submit feedback')
+      }
+
+      toast({
+        title: `Feedback submitted! Thank you for the ${type === 'upvote' ? 'positive' : 'constructive'} feedback.`,
+        status: "success",
+      })
+    } catch (error) {
+      console.error('Error submitting feedback:', error)
+      toast({
+        title: `Failed to submit feedback: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        status: "error",
+      })
+      // Revert the vote state on error
+      setVoteState(null)
+    } finally {
+      setIsSubmittingFeedback(false)
+    }
   }
 
-  const handleDownvote = () => {
-    setVoteState(voteState === 'downvote' ? null : 'downvote')
+  // Handle vote actions
+  const handleUpvote = async () => {
+    const newVoteState = voteState === 'upvote' ? null : 'upvote'
+    setVoteState(newVoteState)
+    animatePress('upvote')
+    
+    if (newVoteState === 'upvote') {
+      await submitFeedback('upvote')
+    }
+  }
+
+  const handleDownvote = async () => {
+    const newVoteState = voteState === 'downvote' ? null : 'downvote'
+    setVoteState(newVoteState)
     animatePress('downvote')
+    
+    if (newVoteState === 'downvote') {
+      await submitFeedback('downvote')
+    }
   }
 
   // Handle press animations
@@ -361,12 +432,18 @@ export function MessageAssistant({
                   className={cn(
                     "inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 hover:bg-accent hover:text-accent-foreground rounded-full h-8 w-8",
                     voteState === 'upvote' && "bg-green-100 text-green-600 dark:bg-green-900/20 dark:text-green-400",
-                    pressedButton === 'upvote' && "scale-95"
+                    pressedButton === 'upvote' && "scale-95",
+                    isSubmittingFeedback && "opacity-50 cursor-not-allowed"
                   )}
                   type="button" 
                   onClick={handleUpvote}
+                  disabled={isSubmittingFeedback}
                 >
-                  <ThumbsUp className="w-4 h-4" />
+                  {isSubmittingFeedback && voteState === 'upvote' ? (
+                    <LoaderCircle className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <ThumbsUp className="w-4 h-4" />
+                  )}
                   <span className="sr-only">Upvote</span>
                 </button>
               </TooltipTrigger>
@@ -378,12 +455,18 @@ export function MessageAssistant({
                   className={cn(
                     "inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 hover:bg-accent hover:text-accent-foreground rounded-full h-8 w-8",
                     voteState === 'downvote' && "bg-red-100 text-red-600 dark:bg-red-900/20 dark:text-red-400",
-                    pressedButton === 'downvote' && "scale-95"
+                    pressedButton === 'downvote' && "scale-95",
+                    isSubmittingFeedback && "opacity-50 cursor-not-allowed"
                   )}
                   type="button" 
                   onClick={handleDownvote}
+                  disabled={isSubmittingFeedback}
                 >
-                  <ThumbsDown className="w-4 h-4" />
+                  {isSubmittingFeedback && voteState === 'downvote' ? (
+                    <LoaderCircle className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <ThumbsDown className="w-4 h-4" />
+                  )}
                   <span className="sr-only">Downvote</span>
                 </button>
               </TooltipTrigger>

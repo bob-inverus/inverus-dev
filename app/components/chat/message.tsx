@@ -75,6 +75,7 @@ export function Message({
         status={status}
         isAuthenticated={isAuthenticated}
         onSignIn={onSignIn}
+        messageId={id}
       >
         {children}
       </MessageAssistant>

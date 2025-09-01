@@ -54,7 +54,7 @@ export default function Article({
               className="group inline-flex h-12 w-auto items-center rounded-full px-4 gap-2 shadow-sm overflow-hidden"
             >
               Verify inVerus
-              <div className="shrink-0 rounded-full bg-black/20 p-1.5 backdrop-blur-sm transition-colors group-hover:bg-black/30">
+              <div className="shrink-0 rounded-full bg-blue-600 text-white p-1.5 backdrop-blur-sm transition-colors group-hover:bg-blue-300">
                 <ArrowUpRight className="h-4 w-4 text-white" />
               </div>
             </Button>
