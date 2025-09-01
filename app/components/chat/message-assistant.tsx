@@ -14,7 +14,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { toast } from "@/components/ui/toast"
+
 import { getSources } from "./get-sources"
 import { Reasoning } from "./reasoning"
 import { SearchImages } from "./search-images"
@@ -188,18 +188,12 @@ export function MessageAssistant({
   // Submit feedback to API
   const submitFeedback = async (type: 'upvote' | 'downvote') => {
     if (!user?.id) {
-      toast({
-        title: "Please login to provide feedback",
-        status: "error",
-      })
+      // Silently return if user is not authenticated
       return
     }
 
     if (!messageId) {
-      toast({
-        title: "Unable to save feedback - message ID missing",
-        status: "error",
-      })
+      // Silently return if message ID is missing
       return
     }
 
@@ -223,16 +217,10 @@ export function MessageAssistant({
         throw new Error(errorData.error || 'Failed to submit feedback')
       }
 
-      toast({
-        title: `Feedback submitted! Thank you for the ${type === 'upvote' ? 'positive' : 'constructive'} feedback.`,
-        status: "success",
-      })
+      // Feedback submitted silently - no toast notification
     } catch (error) {
       console.error('Error submitting feedback:', error)
-      toast({
-        title: `Failed to submit feedback: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        status: "error",
-      })
+      // Silently handle errors - no toast notification
       // Revert the vote state on error
       setVoteState(null)
     } finally {
