@@ -47,6 +47,7 @@ import { Drawer, DrawerContent } from "@/components/ui/drawer"
 import { SettingsContent } from "../settings/settings-content"
 import { useBreakpoint } from "@/app/hooks/use-breakpoint"
 import { USER_TIERS, type UserTier } from "@/app/types/user"
+import { DowngradeTrigger } from "../downgrade/downgrade-trigger"
 
 export function AppNavUser() {
   const { isMobile } = useSidebar()
@@ -181,14 +182,30 @@ export function AppNavUser() {
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem onClick={handleUpgradeToPro}>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
+            {/* Show upgrade/downgrade section based on user tier */}
+            {(() => {
+              const showUpgrade = userTier !== "enterprise"
+              const showDowngrade = userTier !== "basic"
+              const hasAnyOption = showUpgrade || showDowngrade
+              
+              if (!hasAnyOption) return null
+              
+              return (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    {showUpgrade && (
+                      <DropdownMenuItem onClick={handleUpgradeToPro}>
+                        <Sparkles />
+                        {userTier === "basic" ? "Upgrade to Pro" : "Upgrade to Enterprise"}
+                      </DropdownMenuItem>
+                    )}
+                    {showDowngrade && <DowngradeTrigger />}
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                </>
+              )
+            })()}
             <DropdownMenuGroup>
               <SettingsTrigger />
               <FeedbackTrigger />

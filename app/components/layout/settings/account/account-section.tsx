@@ -5,8 +5,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress"
 import { useUser } from "@/lib/user-store/provider"
 import { USER_TIERS, type UserTier } from "@/app/types/user"
-import { BadgeCheck, Crown, Zap, Building, Mail } from "lucide-react"
+import { BadgeCheck, Crown, Zap, Building, Mail, ChevronDown } from "lucide-react"
 import { UpgradeButton } from "@/app/components/stripe/upgrade-button"
+import { DowngradeButton } from "@/app/components/stripe/downgrade-button"
 
 export function AccountSection() {
   const { user } = useUser()
@@ -66,15 +67,27 @@ export function AccountSection() {
                 {tierInfo.name}
               </Badge>
             </div>
-            {userTier !== "enterprise" && (
-              <UpgradeButton 
-                tier={userTier === "basic" ? "pro" : "enterprise"}
-                size="sm" 
-                variant="outline"
-              >
-                {userTier === "basic" ? "Upgrade to Pro" : "Upgrade to Enterprise"}
-              </UpgradeButton>
-            )}
+            <div className="flex gap-2">
+              {userTier !== "enterprise" && (
+                <UpgradeButton 
+                  tier={userTier === "basic" ? "pro" : "enterprise"}
+                  size="sm" 
+                  variant="outline"
+                >
+                  {userTier === "basic" ? "Upgrade to Pro" : "Upgrade to Enterprise"}
+                </UpgradeButton>
+              )}
+              {userTier !== "basic" && (
+                <DowngradeButton 
+                  targetTier={userTier === "enterprise" ? "pro" : "basic"}
+                  size="sm"
+                  variant="outline"
+                >
+                  <ChevronDown className="mr-1 size-3" />
+                  {userTier === "enterprise" ? "Change to Pro" : "Change to Basic"}
+                </DowngradeButton>
+              )}
+            </div>
           </div>
 
           {/* Credits */}
@@ -158,6 +171,47 @@ export function AccountSection() {
                       Upgrade
                     </UpgradeButton>
                   )}
+                </div>
+              ))}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Plan Management */}
+      {userTier !== "basic" && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Plan Management</CardTitle>
+            <CardDescription>
+              Change your plan to better fit your needs
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {Object.entries(USER_TIERS)
+              .filter(([tier]) => {
+                if (userTier === "enterprise") return tier === "pro" || tier === "basic"
+                if (userTier === "pro") return tier === "basic"
+                return false
+              })
+              .map(([tier, info]) => (
+                <div key={tier} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center gap-2">
+                    {getTierIcon(tier as UserTier)}
+                    <div>
+                      <div className="font-medium">{info.name}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {info.isCustomCredits ? "Custom credits" : `${info.credits} credits`}
+                      </div>
+                    </div>
+                  </div>
+                  <DowngradeButton 
+                    targetTier={tier as UserTier}
+                    size="sm"
+                    variant="outline"
+                  >
+                    <ChevronDown className="mr-1 size-3" />
+                    Change Plan
+                  </DowngradeButton>
                 </div>
               ))}
           </CardContent>
