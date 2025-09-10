@@ -31,14 +31,43 @@ export function UserProvider({
   const [isLoading, setIsLoading] = useState(false)
 
   const refreshUser = async () => {
-    if (!user?.id) return
+    if (!user?.id) {
+      console.log('❌ RefreshUser: No user ID available')
+      return
+    }
 
+    console.log('🔄 RefreshUser: Starting refresh for user:', user.id)
+    console.log('🔄 RefreshUser: Current user tier:', user.tier)
+    
     setIsLoading(true)
     try {
       const updatedUser = await fetchUserProfile(user.id)
-      if (updatedUser) setUser(updatedUser)
+      if (updatedUser) {
+        console.log('✅ RefreshUser: Got updated user data:', {
+          id: updatedUser.id,
+          tier: updatedUser.tier,
+          credits: updatedUser.credits
+        })
+        
+        // Check if tier actually changed
+        if (user.tier !== updatedUser.tier) {
+          console.log('🎉 RefreshUser: Tier changed!', {
+            oldTier: user.tier,
+            newTier: updatedUser.tier
+          })
+        } else {
+          console.log('⚠️ RefreshUser: Tier unchanged:', updatedUser.tier)
+        }
+        
+        setUser(updatedUser)
+      } else {
+        console.log('❌ RefreshUser: No updated user data received')
+      }
+    } catch (error) {
+      console.error('❌ RefreshUser: Error during refresh:', error)
     } finally {
       setIsLoading(false)
+      console.log('🔄 RefreshUser: Refresh completed')
     }
   }
 

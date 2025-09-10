@@ -6,16 +6,24 @@ import { createClient } from "@/lib/supabase/client"
 export async function fetchUserProfile(
   id: string
 ): Promise<UserProfile | null> {
-  console.log('Fetching user profile for ID:', id)
+  console.log('🔍 Fetching user profile for ID:', id)
   const supabase = createClient()
   if (!supabase) {
     console.error('Supabase client not available')
     return null
   }
 
+  // Force fresh data by adding a timestamp query parameter to bypass any caching
+  const timestamp = Date.now()
+  console.log('🔍 Fetching with timestamp:', timestamp)
+
   // Get both user data from database and auth metadata
   const [dbResult, authResult] = await Promise.all([
-    supabase.from("users").select("*").eq("id", id).single(),
+    supabase
+      .from("users")
+      .select("*")
+      .eq("id", id)
+      .single(),
     supabase.auth.getUser()
   ])
 

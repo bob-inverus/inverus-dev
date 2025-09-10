@@ -19,15 +19,43 @@ export function UpgradeSuccessToast() {
       const tierName = tier.charAt(0).toUpperCase() + tier.slice(1)
       const icon = tier === 'enterprise' ? '👑' : tier === 'pro' ? '⚡' : '✅'
       
+      console.log('🎉 Processing upgrade success:', { tier, tierName })
+      
       toast.success(`Upgrade Successful! 🎉`, {
         description: `Welcome to ${tierName}! Your new features are now active.`,
         duration: 5000,
       })
       
-      // Refresh user data multiple times to ensure badge updates
-      setTimeout(() => refreshUser(), 1000)
-      setTimeout(() => refreshUser(), 3000)
-      setTimeout(() => refreshUser(), 5000)
+      // Aggressive refresh strategy - refresh immediately and multiple times
+      console.log('🔄 Starting user refresh sequence...')
+      
+      // Immediate refresh
+      refreshUser().then(() => {
+        console.log('✅ Immediate refresh completed')
+      }).catch(err => {
+        console.error('❌ Immediate refresh failed:', err)
+      })
+      
+      // Additional refreshes with exponential backoff
+      setTimeout(() => {
+        console.log('🔄 Refresh attempt 1 (1s)')
+        refreshUser().then(() => console.log('✅ Refresh 1 completed')).catch(err => console.error('❌ Refresh 1 failed:', err))
+      }, 1000)
+      
+      setTimeout(() => {
+        console.log('🔄 Refresh attempt 2 (3s)')
+        refreshUser().then(() => console.log('✅ Refresh 2 completed')).catch(err => console.error('❌ Refresh 2 failed:', err))
+      }, 3000)
+      
+      setTimeout(() => {
+        console.log('🔄 Refresh attempt 3 (5s)')
+        refreshUser().then(() => console.log('✅ Refresh 3 completed')).catch(err => console.error('❌ Refresh 3 failed:', err))
+      }, 5000)
+      
+      setTimeout(() => {
+        console.log('🔄 Final refresh attempt (10s)')
+        refreshUser().then(() => console.log('✅ Final refresh completed')).catch(err => console.error('❌ Final refresh failed:', err))
+      }, 10000)
       
       // Clean up URL parameters
       const url = new URL(window.location.href)
