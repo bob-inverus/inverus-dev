@@ -11,6 +11,143 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      api_keys: {
+        Row: {
+          id: string
+          user_id: string
+          key_name: string
+          key_hash: string
+          key_prefix: string
+          permissions: string[]
+          total_requests: number
+          last_used_at: string | null
+          requests_today: number
+          requests_this_month: number
+          daily_reset_at: string
+          monthly_reset_at: string
+          is_active: boolean
+          created_at: string
+          updated_at: string
+          expires_at: string | null
+          last_ip_address: string | null
+          allowed_origins: string[] | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          key_name: string
+          key_hash: string
+          key_prefix: string
+          permissions?: string[]
+          total_requests?: number
+          last_used_at?: string | null
+          requests_today?: number
+          requests_this_month?: number
+          daily_reset_at?: string
+          monthly_reset_at?: string
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+          expires_at?: string | null
+          last_ip_address?: string | null
+          allowed_origins?: string[] | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          key_name?: string
+          key_hash?: string
+          key_prefix?: string
+          permissions?: string[]
+          total_requests?: number
+          last_used_at?: string | null
+          requests_today?: number
+          requests_this_month?: number
+          daily_reset_at?: string
+          monthly_reset_at?: string
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+          expires_at?: string | null
+          last_ip_address?: string | null
+          allowed_origins?: string[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "api_keys_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      api_usage_logs: {
+        Row: {
+          id: string
+          api_key_id: string
+          user_id: string
+          endpoint: string
+          method: string
+          status_code: number
+          response_time_ms: number | null
+          tokens_used: number
+          credits_consumed: number
+          ip_address: string | null
+          user_agent: string | null
+          referer: string | null
+          error_message: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          api_key_id: string
+          user_id: string
+          endpoint: string
+          method: string
+          status_code: number
+          response_time_ms?: number | null
+          tokens_used?: number
+          credits_consumed?: number
+          ip_address?: string | null
+          user_agent?: string | null
+          referer?: string | null
+          error_message?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          api_key_id?: string
+          user_id?: string
+          endpoint?: string
+          method?: string
+          status_code?: number
+          response_time_ms?: number | null
+          tokens_used?: number
+          credits_consumed?: number
+          ip_address?: string | null
+          user_agent?: string | null
+          referer?: string | null
+          error_message?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "api_usage_logs_api_key_id_fkey"
+            columns: ["api_key_id"]
+            isOneToOne: false
+            referencedRelation: "api_keys"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "api_usage_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       projects: {
         Row: {
           id: string
@@ -420,6 +557,56 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      increment_api_usage: {
+        Args: {
+          key_id: string
+          ip?: string
+        }
+        Returns: undefined
+      }
+      get_api_key_with_user: {
+        Args: {
+          key_hash: string
+        }
+        Returns: {
+          key_id: string
+          user_id: string
+          user_email: string
+          user_tier: string
+          user_credits: number
+          key_name: string
+          permissions: string[]
+          requests_today: number
+          requests_this_month: number
+          is_active: boolean
+          expires_at: string | null
+          allowed_origins: string[] | null
+        }[]
+      }
+      get_user_api_stats: {
+        Args: {
+          user_uuid: string
+        }
+        Returns: {
+          total_requests: number
+          requests_today: number
+          requests_this_month: number
+          active_keys: number
+          last_request_at: string | null
+        }[]
+      }
+      reset_daily_api_counters: {
+        Args: {}
+        Returns: undefined
+      }
+      reset_monthly_api_counters: {
+        Args: {}
+        Returns: undefined
+      }
+      cleanup_old_api_logs: {
+        Args: {}
+        Returns: undefined
+      }
       search_user_data: {
         Args: {
           search_term: string

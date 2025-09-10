@@ -14,6 +14,7 @@ import {
 import { BadgeCheck } from "lucide-react"
 import { useState } from "react"
 import { ByokSection } from "./apikeys/byok-section"
+import { ApiKeysSection } from "./api/api-keys-section"
 import { InteractionPreferences } from "./appearance/interaction-preferences"
 import { ConnectionsPlaceholder } from "./connections/connections-placeholder"
 import { DeveloperTools } from "./connections/developer-tools"
@@ -127,7 +128,7 @@ export function SettingsContent({
             )}
 
             <TabsContent value="apikeys" className="px-6">
-              <ByokSection />
+              <ApiKeysSection />
             </TabsContent>
 
             <TabsContent value="models" className="px-6">
@@ -217,7 +218,7 @@ export function SettingsContent({
               )}
 
               <TabsContent value="apikeys" className="mt-0 space-y-6">
-                <ByokSection />
+                <ApiKeysSection />
               </TabsContent>
 
               <TabsContent value="models" className="mt-0 space-y-6">
