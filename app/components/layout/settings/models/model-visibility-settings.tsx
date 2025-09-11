@@ -1,13 +1,18 @@
 "use client"
 
 import { Switch } from "@/components/ui/switch"
+import { useModel } from "@/lib/model-store/provider"
 import { PROVIDERS } from "@/lib/providers"
 import { useUserPreferences } from "@/lib/user-preference-store/provider"
 import { useState } from "react"
-import { useSettingsModels } from "./use-settings-models"
 
 export function ModelVisibilitySettings() {
-  const { models } = useSettingsModels()
+  const { models: allModels } = useModel()
+  
+  // Filter out Mistral models for settings UI (keep only custom models)
+  const models = allModels.filter(model => 
+    model.id === "harvestor" || model.id === "consortium"
+  )
   const { toggleModelVisibility, isModelHidden } = useUserPreferences()
   const [searchQuery, setSearchQuery] = useState("")
   const [optimisticStates, setOptimisticStates] = useState<

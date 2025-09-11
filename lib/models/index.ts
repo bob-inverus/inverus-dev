@@ -53,21 +53,6 @@ export async function getModelsWithAccessFlags(): Promise<ModelConfig[]> {
   return models.map((model) => ({ ...model, accessible: true }))
 }
 
-// Function to get models for settings UI (excludes Mistral models)
-export async function getModelsForSettings(): Promise<ModelConfig[]> {
-  const allModels = await getAllModels()
-  return allModels.filter((m) => 
-    m.id === "harvestor" || m.id === "consortium"
-  )
-}
-
-export async function getModelsForSettingsWithAccessFlags(): Promise<ModelConfig[]> {
-  const models = await getModelsForSettings()
-  return models.map((model) => ({
-    ...model,
-    accessible: true,
-  }))
-}
 
 export async function getModelsForProvider(
   provider: string
