@@ -24,6 +24,9 @@ export class ApiKeyService {
     request: CreateApiKeyRequest,
     userTier: UserTier
   ): Promise<ApiKeyWithSecret | null> {
+    console.log('ApiKeyService.createApiKey - Starting creation for user:', userId, 'tier:', userTier)
+    console.log('ApiKeyService.createApiKey - Request:', request)
+    
     // Check if user tier allows API access
     if (userTier === 'basic') {
       throw new Error('API access requires Pro or Enterprise tier')
@@ -31,35 +34,40 @@ export class ApiKeyService {
 
     const supabase = createServiceClient()
     if (!supabase) {
+      console.error('ApiKeyService.createApiKey - Failed to create service client')
       throw new Error('Database connection failed')
     }
 
     // Check existing API key count limits
+    console.log('ApiKeyService.createApiKey - Checking existing active keys for user:', userId)
     const { data: existingKeys, error: countError } = await supabase
       .from('api_keys')
       .select('id')
       .eq('user_id', userId)
       .eq('is_active', true)
 
+    console.log('ApiKeyService.createApiKey - Existing keys query result:', { count: existingKeys?.length || 0, error: countError })
+
     if (countError) {
+      console.error('ApiKeyService.createApiKey - Error checking existing keys:', countError)
       throw new Error(`Failed to check existing keys: ${countError.message}`)
     }
 
     const maxKeys = userTier === 'enterprise' ? 10 : 3
+    console.log('ApiKeyService.createApiKey - Key limit check:', { existing: existingKeys?.length || 0, max: maxKeys })
+    
     if (existingKeys && existingKeys.length >= maxKeys) {
+      console.error('ApiKeyService.createApiKey - Max keys exceeded:', { existing: existingKeys.length, max: maxKeys })
       throw new Error(`Maximum ${maxKeys} API keys allowed for ${userTier} tier`)
     }
 
     // Generate the API key
+    console.log('ApiKeyService.createApiKey - Generating new key')
     const { key, hash, prefix } = this.generateApiKey()
-    
-    console.log('Generated API key info:')
-    console.log('- Full key length:', key.length)
-    console.log('- Full key starts with:', key.substring(0, 20))
-    console.log('- Prefix (stored) length:', prefix.length)
-    console.log('- Prefix (stored) starts with:', prefix.substring(0, 20))
+    console.log('ApiKeyService.createApiKey - Generated key prefix:', prefix.substring(0, 10) + '...')
 
     // Insert into database
+    console.log('ApiKeyService.createApiKey - Inserting into database')
     const { data, error } = await supabase
       .from('api_keys')
       .insert({
@@ -74,10 +82,14 @@ export class ApiKeyService {
       .select()
       .single()
 
+    console.log('ApiKeyService.createApiKey - Database insert result:', { error, hasData: !!data })
+
     if (error) {
+      console.error('ApiKeyService.createApiKey - Database insert error:', error)
       throw new Error(`Failed to create API key: ${error.message}`)
     }
 
+    console.log('ApiKeyService.createApiKey - Successfully created API key:', data?.id)
     return {
       apiKey: data as ApiKey,
       secretKey: key

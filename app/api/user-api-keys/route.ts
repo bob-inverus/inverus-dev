@@ -301,27 +301,45 @@ export async function PUT(request: NextRequest) {
       )
     }
 
-    // Generate new key
-    const result = await ApiKeyService.createApiKey(user.id, {
-      key_name: existingKey.key_name,
-      permissions: existingKey.permissions,
-      allowed_origins: existingKey.allowed_origins || undefined,
-      expires_at: existingKey.expires_at
-    }, userProfile.tier)
+    // Generate new key data
+    console.log('PUT /api/user-api-keys - Regenerating key for user:', user.id, 'with tier:', userProfile.tier)
+    console.log('PUT /api/user-api-keys - Existing key data:', existingKey)
+    
+    // Generate new key components
+    const crypto = await import('crypto')
+    const newKey = `sk_live_${crypto.randomBytes(32).toString('hex')}`
+    const newHash = crypto.createHash('sha256').update(newKey).digest('hex')
+    
+    console.log('PUT /api/user-api-keys - Generated new key components')
+    
+    // Update the existing key record with new key data
+    const { data: updatedKey, error: updateError } = await supabase
+      .from('api_keys')
+      .update({
+        key_hash: newHash,
+        key_prefix: newKey,
+        updated_at: new Date().toISOString(),
+        is_active: true // Ensure it's active
+      })
+      .eq('id', keyId)
+      .eq('user_id', user.id)
+      .select()
+      .single()
 
-    if (!result || !result.secretKey) {
+    console.log('PUT /api/user-api-keys - Update result:', { error: updateError, hasData: !!updatedKey })
+
+    if (updateError || !updatedKey) {
+      console.error('PUT /api/user-api-keys - Failed to update API key:', updateError)
       return NextResponse.json(
         { error: 'Failed to regenerate API key' },
         { status: 500 }
       )
     }
 
-    // Deactivate the old key
-    await supabase
-      .from('api_keys')
-      .update({ is_active: false })
-      .eq('id', keyId)
-      .eq('user_id', user.id)
+    const result = {
+      apiKey: updatedKey,
+      secretKey: newKey
+    }
 
     return NextResponse.json({
       message: 'API key regenerated successfully',
@@ -331,8 +349,19 @@ export async function PUT(request: NextRequest) {
 
   } catch (error) {
     console.error('Error regenerating API key:', error)
+    
+    // Log the full error details for debugging
+    if (error instanceof Error) {
+      console.error('Error message:', error.message)
+      console.error('Error stack:', error.stack)
+      return NextResponse.json(
+        { error: `Failed to regenerate API key: ${error.message}` },
+        { status: 500 }
+      )
+    }
+    
     return NextResponse.json(
-      { error: 'Failed to regenerate API key' },
+      { error: 'Failed to regenerate API key: Unknown error' },
       { status: 500 }
     )
   }

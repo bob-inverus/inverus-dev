@@ -1,9 +1,11 @@
 import Anthropic from "@/components/icons/anthropic"
 import Claude from "@/components/icons/claude"
+import { ConsortiumIcon } from "@/components/icons/consortium-icon"
 import DeepSeek from "@/components/icons/deepseek"
 import Gemini from "@/components/icons/gemini"
 import Google from "@/components/icons/google"
 import Grok from "@/components/icons/grok"
+import { HarvestorIcon } from "@/components/icons/harvestor-icon"
 import Meta from "@/components/icons/meta"
 import Mistral from "@/components/icons/mistral"
 import Ollama from "@/components/icons/ollama"
@@ -20,6 +22,16 @@ export type Provider = {
 }
 
 export const PROVIDERS: Provider[] = [
+  {
+    id: "harvestor",
+    name: "Harvestor",
+    icon: HarvestorIcon,
+  },
+  {
+    id: "consortium",
+    name: "Consortium", 
+    icon: ConsortiumIcon,
+  },
   {
     id: "openrouter",
     name: "OpenRouter",

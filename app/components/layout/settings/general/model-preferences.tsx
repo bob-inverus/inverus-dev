@@ -1,17 +1,28 @@
 "use client"
 
-import { ModelSelector } from "@/components/common/model-selector/base"
-import { MODEL_DEFAULT } from "@/lib/config"
 import { useUser } from "@/lib/user-store/provider"
 import { useState } from "react"
+import { CustomModelSelector } from "./custom-model-selector"
 import { SystemPromptSection } from "./system-prompt"
 
 export function ModelPreferences() {
   const { user, updateUser } = useUser()
   const [selectedModelId, setSelectedModelId] = useState<string | null>(null)
 
-  const effectiveModelId =
-    selectedModelId ?? user?.preferred_model ?? MODEL_DEFAULT
+  // Map existing preferred models to our custom options, default to harvestor
+  const getEffectiveModelId = () => {
+    const userPreferredModel = selectedModelId ?? user?.preferred_model
+    
+    // Map existing model IDs to our custom options
+    if (userPreferredModel === "consortium" || userPreferredModel?.includes("consortium")) {
+      return "consortium"
+    }
+    
+    // Default to harvestor for any other model or no model
+    return "harvestor"
+  }
+
+  const effectiveModelId = getEffectiveModelId()
 
   const handleModelSelection = async (value: string) => {
     setSelectedModelId(value)
@@ -22,13 +33,11 @@ export function ModelPreferences() {
     <div className="space-y-6">
       <div>
         <h3 className="mb-3 text-sm font-medium">Preferred model</h3>
-        <div className="relative">
-          <ModelSelector
-            selectedModelId={effectiveModelId}
-            setSelectedModelId={handleModelSelection}
-            className="w-full"
-          />
-        </div>
+        <CustomModelSelector
+          selectedModelId={effectiveModelId}
+          onModelChange={handleModelSelection}
+          className="w-full"
+        />
         <p className="text-muted-foreground mt-2 text-xs">
           This model will be used by default for new conversations.
         </p>

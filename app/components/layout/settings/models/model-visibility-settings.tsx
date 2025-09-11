@@ -1,13 +1,13 @@
 "use client"
 
 import { Switch } from "@/components/ui/switch"
-import { useModel } from "@/lib/model-store/provider"
 import { PROVIDERS } from "@/lib/providers"
 import { useUserPreferences } from "@/lib/user-preference-store/provider"
 import { useState } from "react"
+import { useSettingsModels } from "./use-settings-models"
 
 export function ModelVisibilitySettings() {
-  const { models } = useModel()
+  const { models } = useSettingsModels()
   const { toggleModelVisibility, isModelHidden } = useUserPreferences()
   const [searchQuery, setSearchQuery] = useState("")
   const [optimisticStates, setOptimisticStates] = useState<

@@ -191,19 +191,15 @@ export function AppNavUser() {
               if (!hasAnyOption) return null
               
               return (
-                <>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuGroup>
-                    {showUpgrade && (
-                      <DropdownMenuItem onClick={handleUpgradeToPro}>
-                        <Sparkles />
-                        {userTier === "basic" ? "Upgrade to Pro" : "Upgrade to Enterprise"}
-                      </DropdownMenuItem>
-                    )}
-                    {showDowngrade && <DowngradeTrigger />}
-                  </DropdownMenuGroup>
-                  <DropdownMenuSeparator />
-                </>
+                <DropdownMenuGroup>
+                  {showUpgrade && (
+                    <DropdownMenuItem onClick={handleUpgradeToPro}>
+                      <Sparkles />
+                      {userTier === "basic" ? "Upgrade to Pro" : "Upgrade to Enterprise"}
+                    </DropdownMenuItem>
+                  )}
+                  {showDowngrade && <DowngradeTrigger />}
+                </DropdownMenuGroup>
               )
             })()}
             <DropdownMenuGroup>

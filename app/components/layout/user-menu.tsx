@@ -105,11 +105,15 @@ export function UserMenu() {
         
         <DropdownMenuSeparator />
         
-        <DropdownMenuGroup>
-          <UpgradeTrigger />
-        </DropdownMenuGroup>
-        
-        <DropdownMenuSeparator />
+        {userTier === "basic" && (
+          <>
+            <DropdownMenuGroup>
+              <UpgradeTrigger />
+            </DropdownMenuGroup>
+            
+            <DropdownMenuSeparator />
+          </>
+        )}
         
         <DropdownMenuGroup>
           <SettingsTrigger />

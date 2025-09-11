@@ -1,5 +1,6 @@
 import { FREE_MODELS_IDS } from "../config"
 import { claudeModels } from "./data/claude"
+import { customModels } from "./data/custom"
 import { deepseekModels } from "./data/deepseek"
 import { geminiModels } from "./data/gemini"
 import { grokModels } from "./data/grok"
@@ -11,6 +12,7 @@ import { ModelConfig } from "./types"
 
 // Static models (always available)
 const STATIC_MODELS: ModelConfig[] = [
+  ...customModels,
   ...mistralModels,
 ]
 
@@ -25,26 +27,46 @@ export async function getAllModels(): Promise<ModelConfig[]> {
 
   // Use cache if it's still valid
   if (dynamicModelsCache && now - lastFetchTime < CACHE_DURATION) {
-    return dynamicModelsCache.filter((m) => m.id === "mistral-large-latest")
+    return dynamicModelsCache
   }
 
   try {
-    // Restrict to Mistral Large only
-    dynamicModelsCache = STATIC_MODELS.filter((m) => m.id === "mistral-large-latest")
+    // Include custom models and Mistral Large (needed for chat functionality)
+    dynamicModelsCache = STATIC_MODELS.filter((m) => 
+      m.id === "mistral-large-latest" || m.id === "harvestor" || m.id === "consortium"
+    )
 
     lastFetchTime = now
     return dynamicModelsCache
   } catch (error) {
     console.warn("Failed to load dynamic models, using static models:", error)
-    return STATIC_MODELS.filter((m) => m.id === "mistral-large-latest")
+    return STATIC_MODELS.filter((m) => 
+      m.id === "mistral-large-latest" || m.id === "harvestor" || m.id === "consortium"
+    )
   }
 }
 
 export async function getModelsWithAccessFlags(): Promise<ModelConfig[]> {
   const models = await getAllModels()
 
-  // Only Mistral Large exposed
+  // All models accessible
   return models.map((model) => ({ ...model, accessible: true }))
+}
+
+// Function to get models for settings UI (excludes Mistral models)
+export async function getModelsForSettings(): Promise<ModelConfig[]> {
+  const allModels = await getAllModels()
+  return allModels.filter((m) => 
+    m.id === "harvestor" || m.id === "consortium"
+  )
+}
+
+export async function getModelsForSettingsWithAccessFlags(): Promise<ModelConfig[]> {
+  const models = await getModelsForSettings()
+  return models.map((model) => ({
+    ...model,
+    accessible: true,
+  }))
 }
 
 export async function getModelsForProvider(
@@ -75,11 +97,17 @@ export async function getModelsForUserProviders(
 export function getModelInfo(modelId: string): ModelConfig | undefined {
   // First check the cache if it exists
   if (dynamicModelsCache) {
-    return dynamicModelsCache.find((model) => model.id === modelId)
+    const cachedModel = dynamicModelsCache.find((model) => model.id === modelId)
+    if (cachedModel) return cachedModel
   }
 
-  // Fall back to static models for immediate lookup
-  return STATIC_MODELS.find((model) => model.id === modelId && model.id === "mistral-large-latest")
+  // Fall back to all static models for immediate lookup (including Mistral)
+  return STATIC_MODELS.find((model) => model.id === modelId)
+}
+
+// Function to get all models including hidden ones (for internal use)
+export function getAllModelsIncludingHidden(): ModelConfig[] {
+  return STATIC_MODELS
 }
 
 // For backward compatibility - static models only
